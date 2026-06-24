@@ -72,12 +72,12 @@
             </div>
           {%- when 'email_form' -%}
             <div {{ block.shopify_attributes }}>
-              {% form 'customer', class: 'newsletter-form' %}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-form__field-wrapper">
+              {% form 'customer', class: 'newsletter-form newsletter-form--stacked' %}
+                <input type="hidden" name="contact[tags]" value="newsletter, password-page">
+                <div class="newsletter-form__field-wrapper newsletter-form__field-wrapper--stacked">
                   <div class="field">
                     <input
-                      id="NewsletterForm--{{ section.id }}"
+                      id="NewsletterEmail--{{ section.id }}"
                       type="email"
                       name="contact[email]"
                       class="field__input"
@@ -96,21 +96,36 @@
                       placeholder="{{ 'newsletter.label' | t }}"
                       required
                     >
-                    <label class="field__label" for="NewsletterForm--{{ section.id }}">
+                    <label class="field__label" for="NewsletterEmail--{{ section.id }}">
                       {{ 'newsletter.label' | t }}
                     </label>
-                    <button
-                      type="submit"
-                      class="newsletter-form__button field__button"
-                      name="commit"
-                      id="Subscribe"
-                      aria-label="{{ 'newsletter.button_label' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
                   </div>
+                  {%- if block.settings.show_phone -%}
+                    {%- assign phone_label = block.settings.phone_label | default: 'Phone number' -%}
+                    <div class="field">
+                      <input
+                        id="NewsletterPhone--{{ section.id }}"
+                        type="tel"
+                        name="contact[phone]"
+                        class="field__input"
+                        value="{{ form.phone }}"
+                        autocomplete="tel"
+                        pattern="[\d\s()+\-]*"
+                        placeholder="{{ phone_label | escape }}"
+                      >
+                      <label class="field__label" for="NewsletterPhone--{{ section.id }}">
+                        {{ phone_label }}
+                      </label>
+                    </div>
+                  {%- endif -%}
+                  <button
+                    type="submit"
+                    class="newsletter-form__join button"
+                    name="commit"
+                    id="Subscribe"
+                  >
+                    {{ block.settings.button_label | default: 'JOIN THE LIST' }}
+                  </button>
                   {%- if form.errors -%}
                     <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">
                       <span class="svg-wrapper">
@@ -133,6 +148,11 @@
                     </span>
                     {{- 'newsletter.success' | t }}
                   </h3>
+                {%- endif -%}
+                {%- if block.settings.opt_in_text != blank -%}
+                  <div class="newsletter-form__optin rte">
+                    {{ block.settings.opt_in_text }}
+                  </div>
                 {%- endif -%}
               {% endform %}
             </div>
@@ -386,7 +406,33 @@
     {
       "type": "email_form",
       "name": "t:sections.email-signup-banner.blocks.email_form.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_phone",
+          "label": "Show phone number field",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "phone_label",
+          "label": "Phone field label",
+          "default": "Phone number"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Submit button text",
+          "default": "JOIN THE LIST"
+        },
+        {
+          "type": "richtext",
+          "id": "opt_in_text",
+          "label": "Opt-in / consent text",
+          "default": "<p>By submitting your email or phone number, you agree to receive updates, promotional messages, and notifications from Sundaze. Message and data rates may apply. You can unsubscribe at any time.</p>"
+        }
+      ]
     }
   ],
   "presets": [
