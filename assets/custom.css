@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Arial Black';
+  src: url('arial_black.woff') format('woff');
+}
+.sf-collection-name {
+  font-family: 'Arial Black', serif;
+  text-transform: uppercase;
+}
+.hash-collection-name {
+  font-family: 'Arial Black', serif;
+text-transform: uppercase;
+/* font-size: clamp(18px, 2.5vw, 24px); */
+font-size: 24px;
+}
+@media(max-width:550px) {
+    .spl-wrap .spl-anim {
+        opacity: 1;
+    }
+}

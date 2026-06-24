@@ -1,0 +1,881 @@
+{% doc %}
+  @prompt
+    Light gray background section: #f7f7f7
+    Width: 100%
+    Padding top: 48px bottom: 48px
+    Padding left: 20px right: 20px desktop
+    Padding left: 10px right: 10px mobile
+    Border radius on entire section: 20px
+    
+    Heading:
+    - Text: "Premium Rosin-Infused"
+    - Font: Georgia bold (or Playfair Display bold)
+    - NOT italic
+    - Size: 34px desktop / 24px mobile
+    - Color: #111111
+    - Align: center
+    - Margin bottom: 14px
+    
+    Paragraph:
+    - Text: "Crafted with 1.5G of whole bud flower and 0.5G of cold
+      cure 90u–120u rosin derived from bubble hash, every Sundaze
+      hand roll is made for smooth flavor, proper airflow, and a
+      premium burn from first spark to final pull."
+    - Font: system sans-serif regular
+    - Size: 15px
+    - Color: #555555
+    - Align: center
+    - Line height: 1.7
+    - Max width: 500px
+    - Centered horizontally
+    - Margin bottom: 32px
+    
+    4 Badge Cards in ONE horizontal row:
+    - Width: 100%
+    - Layout: 4 equal columns desktop / 2 columns mobile
+    - Gap: 12px
+    - No outer border on row
+    
+    Card 1 — No Smalls:
+    - Background: #ffffff
+    - Border radius: 14px
+    - Padding: 24px 16px
+    - Box shadow: 0px 1px 6px rgba(0,0,0,0.07)
+    - Align: center
+    - Icon: [NO-SMALLS-ICON.png]
+    - Icon size: 64px x 64px
+    - Icon margin bottom: 10px
+    - Label: "No Smalls"
+    - Label font: sans-serif semi-bold
+    - Label size: 13px
+    - Label color: #111111
+    - Label align: center
+    
+    Card 2 — No Trim:
+    - Background: #ffffff
+    - Border radius: 14px
+    - Padding: 24px 16px
+    - Box shadow: 0px 1px 6px rgba(0,0,0,0.07)
+    - Align: center
+    - Icon: [NO-TRIM-ICON.png]
+    - Icon size: 64px x 64px
+    - Icon margin bottom: 10px
+    - Label: "No Trim"
+    - Label font: sans-serif semi-bold
+    - Label size: 13px
+    - Label color: #111111
+    - Label align: center
+    
+    Card 3 — Cold Cure Rosin:
+    - Background: #ffffff
+    - Border radius: 14px
+    - Padding: 24px 16px
+    - Box shadow: 0px 1px 6px rgba(0,0,0,0.07)
+    - Align: center
+    - Icon: [COLD-CURE-ICON.png]
+    - Icon size: 64px x 64px
+    - Icon margin bottom: 10px
+    - Label: "Cold Cure" line break "Rosin"
+    - Label font: sans-serif semi-bold
+    - Label size: 13px
+    - Label color: #111111
+    - Label align: center
+    
+    Card 4 — Fully Flushed:
+    - Background: #ffffff
+    - Border radius: 14px
+    - Padding: 24px 20px
+    - Box shadow: 0px 1px 6px rgba(0,0,0,0.07)
+    - Text align: left
+    
+      Top row — icon + title side by side:
+      - Icon: [FULLY-FLUSHED-ICON.png]
+      - Icon size: 24px x 24px
+      - Icon color: teal/mint #4db8a4
+      - Gap between icon and title: 8px
+      - Title: "Fully Flushed"
+      - Title font: sans-serif bold
+      - Title size: 14px
+      - Title color: #111111
+    
+      Below top row:
+      - Subtext: "Flushed before harvest to support white ash
+        and a cleaner, smoother burn."
+      - Font: sans-serif regular
+      - Size: 12px
+      - Color: #777777
+      - Line height: 1.6
+      - Margin top: 8px
+      - Text align: left, Light gray background section: #f7f7f7
+    Width: 100%
+    Padding top: 48px bottom: 48px
+    Padding left: 20px right: 20px desktop
+    Padding left: 10px right: 10px mobile
+    
+    Heading:
+    - Text: "Premium Rosin-Infused"
+    - Font: Georgia bold (or Playfair Display bold)
+    - NOT italic
+    - Size: 34px desktop / 24px mobile
+    - Color: #111111
+    - Align: center
+    - Margin bottom: 14px
+    
+    Paragraph:
+    - Text: "Crafted with 1.5G of whole bud flower and 0.5G of cold
+      cure 90u–120u rosin derived from bubble hash, every Sundaze
+      hand roll is made for smooth flavor, proper airflow, and a
+      premium burn from first spark to final pull."
+    - Font: sans-serif regular
+    - Size: 15px
+    - Color: #555555
+    - Align: center
+    - Line height: 1.7
+    - Max width: 500px
+    - Centered horizontally
+    - Margin bottom: 32px
+    
+    4 cards in ONE single horizontal row:
+    - display: flex
+    - flex-direction: row
+    - flex-wrap: nowrap
+    - gap: 12px
+    - width: 100%
+    - Each card width: 25%
+    
+    Card 1 — No Smalls:
+    - Background: #fef7f0
+    - Border radius: 14px
+    - Padding: 24px 16px
+    - Box shadow: none
+    - Align: center
+    - Icon: [NO-SMALLS-ICON.png]
+    - Icon size: 64px x 64px
+    - Icon margin bottom: 10px
+    - Label: "No Smalls"
+    - Label font: sans-serif semi-bold
+    - Label size: 13px
+    - Label color: #111111
+    - Label align: center
+    
+    Card 2 — No Trim:
+    - Background: #faf5fb
+    - Border radius: 14px
+    - Padding: 24px 16px
+    - Box shadow: none
+    - Align: center
+    - Icon: [NO-TRIM-ICON.png]
+    - Icon size: 64px x 64px
+    - Icon margin bottom: 10px
+    - Label: "No Trim"
+    - Label font: sans-serif semi-bold
+    - Label size: 13px
+    - Label color: #111111
+    - Label align: center
+    
+    Card 3 — Cold Cure Rosin:
+    - Background: #fdf7ee
+    - Border radius: 14px
+    - Padding: 24px 16px
+    - Box shadow: none
+    - Align: center
+    - Icon: [COLD-CURE-ICON.png]
+    - Icon size: 64px x 64px
+    - Icon margin bottom: 10px
+    - Label: "Cold Cure" line break "Rosin"
+    - Label font: sans-serif semi-bold
+    - Label size: 13px
+    - Label color: #111111
+    - Label align: center
+    
+    Card 4 — Fully Flushed:
+    - Background: #f4f8f5
+    - Border radius: 14px
+    - Padding: 24px 20px
+    - Box shadow: 0px 1px 6px rgba(0,0,0,0.07)
+    - Text align: left
+    
+      Top row — icon + title side by side:
+      - display: flex
+      - flex-direction: row
+      - align-items: center
+      - gap: 8px
+      - Icon: [FULLY-FLUSHED-ICON.png]
+      - Icon size: 24px x 24px
+      - Icon color: teal #4db8a4
+      - Title: "Fully Flushed"
+      - Title font: sans-serif bold
+      - Title size: 14px
+      - Title color: #111111
+    
+      Below top row:
+      - Subtext: "Flushed before harvest to support
+        white ash and a cleaner, smoother burn."
+      - Font: sans-serif regular
+      - Size: 12px
+      - Color: #777777
+      - Line height: 1.6
+      - Margin top: 8px
+      - Text align: left
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-rosin-section-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.section_bg_color }};
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_desktop }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding_desktop }}px;
+    border-radius: 0;
+  }
+
+  .ai-rosin-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: normal;
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    color: {{ block.settings.heading_color }};
+    text-align: center;
+    margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+  }
+
+  .ai-rosin-paragraph-{{ ai_gen_id }} {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: {{ block.settings.paragraph_size }}px;
+    color: {{ block.settings.paragraph_color }};
+    text-align: center;
+    line-height: {{ block.settings.paragraph_line_height }};
+    max-width: {{ block.settings.paragraph_max_width }}px;
+    margin: 0 auto {{ block.settings.paragraph_margin_bottom }}px auto;
+  }
+
+  .ai-rosin-badges-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: {{ block.settings.badge_gap }}px;
+    width: 100%;
+  }
+
+  .ai-rosin-badge-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 0;
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    padding: {{ block.settings.badge_padding_vertical }}px {{ block.settings.badge_padding_horizontal }}px;
+    text-align: center;
+  }
+
+  .ai-rosin-badge-1-{{ ai_gen_id }} {
+    background-color: {{ block.settings.badge_1_bg_color }};
+    box-shadow: {{ block.settings.badge_1_shadow }};
+  }
+
+  .ai-rosin-badge-2-{{ ai_gen_id }} {
+    background-color: {{ block.settings.badge_2_bg_color }};
+    box-shadow: {{ block.settings.badge_2_shadow }};
+  }
+
+  .ai-rosin-badge-3-{{ ai_gen_id }} {
+    background-color: {{ block.settings.badge_3_bg_color }};
+    box-shadow: {{ block.settings.badge_3_shadow }};
+  }
+
+  .ai-rosin-badge-4-{{ ai_gen_id }} {
+    background-color: {{ block.settings.badge_4_bg_color }};
+    box-shadow: {{ block.settings.badge_4_shadow }};
+    padding: {{ block.settings.badge_padding_vertical }}px {{ block.settings.badge_4_padding_horizontal }}px;
+  }
+
+  .ai-rosin-badge-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.badge_icon_size }}px;
+    height: {{ block.settings.badge_icon_size }}px;
+    margin: 0 auto {{ block.settings.badge_icon_margin_bottom }}px auto;
+    display: block;
+  }
+
+  .ai-rosin-badge-icon-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-rosin-badge-label-{{ ai_gen_id }} {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: {{ block.settings.badge_label_size }}px;
+    color: {{ block.settings.badge_label_color }};
+    text-align: center;
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  .ai-rosin-badge-flushed-{{ ai_gen_id }} {
+    text-align: left;
+  }
+
+  .ai-rosin-badge-flushed-top-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: {{ block.settings.flushed_icon_gap }}px;
+    margin-bottom: {{ block.settings.flushed_subtext_margin_top }}px;
+  }
+
+  .ai-rosin-badge-flushed-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.flushed_icon_size }}px;
+    height: {{ block.settings.flushed_icon_size }}px;
+    flex-shrink: 0;
+  }
+
+  .ai-rosin-badge-flushed-icon-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-rosin-badge-flushed-title-{{ ai_gen_id }} {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: {{ block.settings.flushed_title_size }}px;
+    color: {{ block.settings.badge_label_color }};
+    margin: 0;
+  }
+
+  .ai-rosin-badge-flushed-subtext-{{ ai_gen_id }} {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: {{ block.settings.flushed_subtext_size }}px;
+    color: {{ block.settings.flushed_subtext_color }};
+    line-height: {{ block.settings.flushed_subtext_line_height }};
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-rosin-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_mobile }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding_mobile }}px;
+    }
+
+    .ai-rosin-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ai-rosin-badges-{{ ai_gen_id }} {
+      flex-wrap: wrap;
+    }
+
+    .ai-rosin-badge-{{ ai_gen_id }} {
+      flex: 0 0 calc(50% - 6px);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-rosin-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <h2 class="ai-rosin-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+  
+  <p class="ai-rosin-paragraph-{{ ai_gen_id }}">{{ block.settings.paragraph }}</p>
+
+  <div class="ai-rosin-badges-{{ ai_gen_id }}">
+    <div class="ai-rosin-badge-{{ ai_gen_id }} ai-rosin-badge-1-{{ ai_gen_id }}">
+      {% if block.settings.badge_1_icon %}
+        <div class="ai-rosin-badge-icon-{{ ai_gen_id }}">
+          <img
+            src="{{ block.settings.badge_1_icon | image_url: width: 128 }}"
+            alt="{{ block.settings.badge_1_label }}"
+            loading="lazy"
+            width="64"
+            height="64"
+          >
+        </div>
+      {% endif %}
+      <p class="ai-rosin-badge-label-{{ ai_gen_id }}">{{ block.settings.badge_1_label }}</p>
+    </div>
+
+    <div class="ai-rosin-badge-{{ ai_gen_id }} ai-rosin-badge-2-{{ ai_gen_id }}">
+      {% if block.settings.badge_2_icon %}
+        <div class="ai-rosin-badge-icon-{{ ai_gen_id }}">
+          <img
+            src="{{ block.settings.badge_2_icon | image_url: width: 128 }}"
+            alt="{{ block.settings.badge_2_label }}"
+            loading="lazy"
+            width="64"
+            height="64"
+          >
+        </div>
+      {% endif %}
+      <p class="ai-rosin-badge-label-{{ ai_gen_id }}">{{ block.settings.badge_2_label }}</p>
+    </div>
+
+    <div class="ai-rosin-badge-{{ ai_gen_id }} ai-rosin-badge-3-{{ ai_gen_id }}">
+      {% if block.settings.badge_3_icon %}
+        <div class="ai-rosin-badge-icon-{{ ai_gen_id }}">
+          <img
+            src="{{ block.settings.badge_3_icon | image_url: width: 128 }}"
+            alt="{{ block.settings.badge_3_label }}"
+            loading="lazy"
+            width="64"
+            height="64"
+          >
+        </div>
+      {% endif %}
+      <p class="ai-rosin-badge-label-{{ ai_gen_id }}">{{ block.settings.badge_3_label }}</p>
+    </div>
+
+    <div class="ai-rosin-badge-{{ ai_gen_id }} ai-rosin-badge-4-{{ ai_gen_id }} ai-rosin-badge-flushed-{{ ai_gen_id }}">
+      <div class="ai-rosin-badge-flushed-top-{{ ai_gen_id }}">
+        {% if block.settings.badge_4_icon %}
+          <div class="ai-rosin-badge-flushed-icon-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.badge_4_icon | image_url: width: 48 }}"
+              alt="{{ block.settings.badge_4_title }}"
+              loading="lazy"
+              width="24"
+              height="24"
+            >
+          </div>
+        {% endif %}
+        <p class="ai-rosin-badge-flushed-title-{{ ai_gen_id }}">{{ block.settings.badge_4_title }}</p>
+      </div>
+      <p class="ai-rosin-badge-flushed-subtext-{{ ai_gen_id }}">{{ block.settings.badge_4_subtext }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium rosin infused",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Background color",
+      "default": "#f7f7f7"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_padding_desktop",
+      "label": "Padding left/right desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "label": "Padding left/right mobile",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Text",
+      "default": "Premium Rosin-Infused"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Font",
+      "default": "serif"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Size desktop",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Size mobile",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Paragraph"
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph",
+      "label": "Text",
+      "default": "Crafted with 1.5G of whole bud flower and 0.5G of cold cure 90u–120u rosin derived from bubble hash, every Sundaze hand roll is made for smooth flavor, proper airflow, and a premium burn from first spark to final pull."
+    },
+    {
+      "type": "range",
+      "id": "paragraph_size",
+      "label": "Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "paragraph_color",
+      "label": "Color",
+      "default": "#555555"
+    },
+    {
+      "type": "range",
+      "id": "paragraph_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.7
+    },
+    {
+      "type": "range",
+      "id": "paragraph_max_width",
+      "label": "Max width",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "paragraph_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Badges"
+    },
+    {
+      "type": "range",
+      "id": "badge_gap",
+      "label": "Gap",
+      "min": 4,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_vertical",
+      "label": "Padding vertical",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_horizontal",
+      "label": "Padding horizontal",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "badge_icon_size",
+      "label": "Icon size",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "badge_icon_margin_bottom",
+      "label": "Icon margin bottom",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "badge_label_color",
+      "label": "Label color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Badge 1 - No smalls"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_label",
+      "label": "Label",
+      "default": "No Smalls"
+    },
+    {
+      "type": "color",
+      "id": "badge_1_bg_color",
+      "label": "Background color",
+      "default": "#fef7f0"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_shadow",
+      "label": "Box shadow",
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2 - No trim"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_label",
+      "label": "Label",
+      "default": "No Trim"
+    },
+    {
+      "type": "color",
+      "id": "badge_2_bg_color",
+      "label": "Background color",
+      "default": "#faf5fb"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_shadow",
+      "label": "Box shadow",
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3 - Cold cure rosin"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "textarea",
+      "id": "badge_3_label",
+      "label": "Label",
+      "default": "Cold Cure\nRosin"
+    },
+    {
+      "type": "color",
+      "id": "badge_3_bg_color",
+      "label": "Background color",
+      "default": "#fdf7ee"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_shadow",
+      "label": "Box shadow",
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4 - Fully flushed"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_4_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "range",
+      "id": "badge_4_padding_horizontal",
+      "label": "Padding horizontal",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "badge_4_bg_color",
+      "label": "Background color",
+      "default": "#f4f8f5"
+    },
+    {
+      "type": "text",
+      "id": "badge_4_shadow",
+      "label": "Box shadow",
+      "default": "0px 1px 6px rgba(0,0,0,0.07)"
+    },
+    {
+      "type": "range",
+      "id": "flushed_icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "flushed_icon_gap",
+      "label": "Icon gap",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "badge_4_title",
+      "label": "Title",
+      "default": "Fully Flushed"
+    },
+    {
+      "type": "range",
+      "id": "flushed_title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "textarea",
+      "id": "badge_4_subtext",
+      "label": "Subtext",
+      "default": "Flushed before harvest to support white ash and a cleaner, smoother burn."
+    },
+    {
+      "type": "range",
+      "id": "flushed_subtext_size",
+      "label": "Subtext size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "flushed_subtext_color",
+      "label": "Subtext color",
+      "default": "#777777"
+    },
+    {
+      "type": "range",
+      "id": "flushed_subtext_line_height",
+      "label": "Subtext line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.6
+    },
+    {
+      "type": "range",
+      "id": "flushed_subtext_margin_top",
+      "label": "Subtext margin top",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium rosin infused"
+    }
+  ]
+}
+{% endschema %}

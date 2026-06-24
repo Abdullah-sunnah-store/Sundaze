@@ -1,0 +1,142 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_flavors_FKFria": {
+      "type": "sundaze-flavors",
+      "blocks": {
+        "flavor_yCNhyK": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/Dubai_Drip_Cone_Bucket.png",
+            "title": "Dubai Drip",
+            "vibe": "Luxurious",
+            "tags": "Exotic, Bold, Rich",
+            "price": "$22.00",
+            "variant_id": "46411841077409",
+            "link": "shopify://products/dubai-drip-3-5g-thca-flower",
+            "bg_color": "#c4e1b5",
+            "emoji": "🍦"
+          }
+        },
+        "flavor_jMcJ7x": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/Maple_Soaked_Pancakes_Cone_Bucket.png",
+            "title": "Maple Soaked Pancakes",
+            "vibe": "Cozy",
+            "tags": "Warm, Bakery, Sweet",
+            "price": "$20.00",
+            "variant_id": "46410485989537",
+            "link": "shopify://products/maple-soaked-pancakes-3-5g-thca-flower",
+            "bg_color": "#fff8e1",
+            "emoji": "🍦"
+          }
+        },
+        "flavor_gPJzKn": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/Frosty_Shorty_Cone_Bucket.png",
+            "title": "Frosty Shorty",
+            "vibe": "Chill",
+            "tags": "Cool, Smooth, Crisp",
+            "price": "$20.00",
+            "variant_id": "46410413310113",
+            "link": "shopify://products/frosty-shorty-3-5g-thca-flower",
+            "bg_color": "#ce959c",
+            "emoji": "🍦"
+          }
+        },
+        "flavor_AJXCQz": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/Mystic_Candy_Swirl_Cone_Bucket.png",
+            "title": "Mystic Candy Swirl",
+            "vibe": "Euphoric",
+            "tags": "Fruity, Sweet, Candy",
+            "price": "$20.00",
+            "variant_id": "46411672420513",
+            "link": "shopify://products/mystic-candy-swirl-3-5g-thca-flower",
+            "bg_color": "#f3e5f5",
+            "emoji": "🍦"
+          }
+        },
+        "flavor_bXJMyz": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/nugtella-donutte.png",
+            "image_back": "shopify://shop_images/Nugtella.png",
+            "title": "Nugtella Donutte",
+            "vibe": "Decadent",
+            "tags": "Chocolate, Nutty, Sweet",
+            "price": "$15.00",
+            "variant_id": "46412309037217",
+            "link": "shopify://products/donutte-hash-hole-nugtella",
+            "bg_color": "#ebdbd6",
+            "emoji": "🍦"
+          }
+        },
+        "flavor_WQw4qM": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/vanilla-donutte.png",
+            "image_back": "shopify://shop_images/Vanilla.png",
+            "title": "Vanilla Donutte",
+            "vibe": "Elegant",
+            "tags": "Creamy, Smooth, Warm",
+            "price": "$15.00",
+            "variant_id": "46412235931809",
+            "link": "shopify://products/donutte-hash-hole-vanilla",
+            "bg_color": "#fffde7",
+            "emoji": "🍦"
+          }
+        },
+        "flavor_GUw4aw": {
+          "type": "flavor",
+          "settings": {
+            "image": "shopify://shop_images/strawberry-shortcake-donutte.png",
+            "image_back": "shopify://shop_images/Strawberry.png",
+            "title": "Strawberry Donutte",
+            "vibe": "Nostalgic",
+            "tags": "Fruity, Bakery, Creamy",
+            "price": "$15.00",
+            "variant_id": "46412150341793",
+            "link": "shopify://products/donutte-hash-hole-strawberry-shortcake",
+            "bg_color": "#fce4ec",
+            "emoji": "🍦"
+          }
+        }
+      },
+      "block_order": [
+        "flavor_yCNhyK",
+        "flavor_jMcJ7x",
+        "flavor_gPJzKn",
+        "flavor_AJXCQz",
+        "flavor_bXJMyz",
+        "flavor_WQw4qM",
+        "flavor_GUw4aw"
+      ],
+      "name": "Sundaze Flavor Discovery",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_flavors_FKFria"
+  ]
+}

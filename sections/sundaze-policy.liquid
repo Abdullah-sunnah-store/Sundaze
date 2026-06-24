@@ -1,0 +1,677 @@
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --sun-rose:   #c4607a;
+    --sun-mauve:  #a84f6a;
+    --sun-blush:  #e8a0b4;
+    --sun-peach:  #d4926e;
+    --sun-ink:    #1e1118;
+    --sun-text:   rgba(30,17,24,0.82);
+    --sun-muted:  rgba(30,17,24,0.48);
+    --grad-top:   #fff8e8;
+    --grad-bot:   #fde8f0;
+  }
+
+  /* ─── WRAPPER ─── */
+  .spl-wrap {
+    background: linear-gradient(180deg, var(--grad-top) 0%, var(--grad-bot) 100%);
+    color: var(--sun-ink);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .spl-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 54vh;
+    padding: 80px 24px 64px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,230,200,0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 45% at 20% 90%,  rgba(240,190,210,0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 80% 70%,  rgba(255,220,200,0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%);
+    overflow: hidden;
+  }
+
+  .spl-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .spl-hero-eyebrow {
+    position: relative; z-index: 1;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 20px;
+  }
+@media (max-width:700px){
+   .spl-hero-eyebrow{
+    font-size:12px;
+   }
+     .spl-mission-label {
+      font-size:12px;
+     }
+}
+  .spl-hero-title {
+    position: relative; z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 7vw, 72px);
+    font-weight: 900;
+    line-height: 1.08;
+    margin: 0 0 20px;
+    color: var(--sun-ink);
+  }
+
+  .spl-hero-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .spl-hero-desc {
+    position: relative; z-index: 1;
+    max-width: 500px;
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0 0 28px;
+  }
+
+  .spl-hero-pill {
+    position: relative; z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.28);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--sun-mauve);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .spl-hero-pill span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-blush), var(--sun-rose));
+    display: inline-block;
+  }
+
+  .spl-scroll-hint {
+    position: absolute;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--sun-muted);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .spl-scroll-line {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, var(--sun-rose), transparent);
+    animation: spl-pulse 2s ease-in-out infinite;
+  }
+  @keyframes spl-pulse {
+    0%, 100% { opacity: 0.25; }
+    50%       { opacity: 1; }
+  }
+
+  /* ─── DIVIDER ─── */
+  .spl-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,96,122,0.20) 30%, rgba(196,96,122,0.32) 50%, rgba(196,96,122,0.20) 70%, transparent);
+  }
+
+  /* ─── BODY LAYOUT ─── */
+  .spl-body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+  @media (min-width: 768px) {
+    .spl-body {
+      padding: 72px 48px 100px;
+    }
+  }
+
+  /* ─── CONTENT CARD ─── */
+  .spl-content-card {
+    background: rgba(255,255,255,0.60);
+    border: 1px solid rgba(196,96,122,0.14);
+    border-radius: 20px;
+    padding: 48px 52px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 32px rgba(196,96,122,0.07);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spl-content-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sun-blush), var(--sun-rose), var(--sun-blush), transparent);
+  }
+
+  @media (max-width: 640px) {
+    .spl-content-card { padding: 28px 22px; border-radius: 16px; }
+  }
+
+  /* ─── TYPOGRAPHY for settings content ─── */
+  .spl-policy-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    color: var(--sun-ink);
+    line-height: 1.2;
+    margin: 48px 0 16px;
+    padding-top: 4px;
+    position: relative;
+  }
+
+  .spl-policy-content h2:first-child { margin-top: 0; }
+
+  .spl-policy-content h2::after {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--sun-peach), var(--sun-rose));
+    border-radius: 2px;
+    margin-top: 10px;
+  }
+
+  .spl-policy-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(17px, 2.5vw, 22px);
+    font-weight: 700;
+    color: var(--sun-ink);
+    line-height: 1.25;
+    margin: 32px 0 12px;
+  }
+
+  .spl-policy-content p {
+    font-size: 15px;
+    line-height: 1.88;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0 0 18px;
+  }
+
+  .spl-policy-content ul,
+  .spl-policy-content ol {
+    margin: 4px 0 20px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .spl-policy-content ul li,
+  .spl-policy-content ol li {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    padding: 6px 0 6px 22px;
+    position: relative;
+    border-bottom: 1px solid rgba(196,96,122,0.08);
+  }
+  .spl-policy-content ul li:last-child,
+  .spl-policy-content ol li:last-child { border-bottom: none; }
+
+  .spl-policy-content ul li::before {
+    content: '';
+    position: absolute;
+    left: 4px; top: 15px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-blush), var(--sun-rose));
+  }
+
+  .spl-policy-content ol { counter-reset: spl-counter; }
+  .spl-policy-content ol li { counter-increment: spl-counter; }
+  .spl-policy-content ol li::before {
+    content: counter(spl-counter);
+    position: absolute;
+    left: 0; top: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sun-rose);
+    line-height: 1.8;
+    width: 16px;
+    text-align: center;
+  }
+
+  .spl-policy-content strong {
+    font-weight: 600;
+    color: var(--sun-ink);
+  }
+
+  .spl-policy-content em {
+    font-style: italic;
+    color: var(--sun-mauve);
+  }
+
+  .spl-policy-content a {
+    color: var(--sun-rose);
+    text-decoration: underline;
+    text-decoration-color: rgba(196,96,122,0.35);
+    text-underline-offset: 3px;
+    transition: color 0.2s, text-decoration-color 0.2s;
+  }
+  .spl-policy-content a:hover {
+    color: var(--sun-mauve);
+    text-decoration-color: var(--sun-mauve);
+  }
+
+  /* ─── RICHTEXT CONTENT ─── */
+  .spl-policy-content > * + * { margin-top: 0; }
+
+  /* ─── EFFECTIVE DATE BADGE ─── */
+  .spl-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sun-muted);
+    margin-bottom: 36px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .spl-date-badge svg {
+    width: 13px; height: 13px;
+    color: var(--sun-rose);
+    flex-shrink: 0;
+  }
+
+  /* ─── MISSION BAND ─── */
+  .spl-mission {
+    position: relative;
+    padding: 100px 24px;
+    text-align: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 50%,  rgba(255,225,235,0.70) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 0%,   rgba(255,248,230,0.60) 0%, transparent 60%),
+      linear-gradient(180deg, #fde8f0 0%, #fff8e8 100%);
+  }
+  .spl-mission::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .spl-mission-inner {
+    position: relative; z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .spl-mission-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+  .spl-mission-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3.5vw, 32px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.42;
+    color: var(--sun-ink);
+    margin: 0;
+  }
+  .spl-mission-quote strong {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--sun-peach), var(--sun-rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .spl-mission-body {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0;
+  }
+  .spl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .spl-tag {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sun-mauve);
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ─── LEGAL BAND ─── */
+  .spl-legal {
+    background: rgba(196,96,122,0.05);
+    border-top: 1px solid rgba(196,96,122,0.12);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .spl-legal p {
+    max-width: 780px;
+    margin: 0 auto;
+    font-size: 12px;
+    line-height: 1.80;
+    color: var(--sun-muted);
+    font-weight: 300;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  .spl-anim {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .spl-anim.spl-visible { opacity: 1; transform: translateY(0); }
+  .spl-anim[data-delay="1"] { transition-delay: 0.10s; }
+  .spl-anim[data-delay="2"] { transition-delay: 0.20s; }
+  .spl-anim[data-delay="3"] { transition-delay: 0.30s; }
+  .spl-anim[data-delay="4"] { transition-delay: 0.40s; }
+{% endstyle %}
+
+<div class="spl-wrap">
+
+  <!-- ── BLOCKS: hero, promise, legal ── -->
+  {% for block in section.blocks %}
+    {% case block.type %}
+
+      {% when 'hero' %}
+        <div class="spl-hero" {{ block.shopify_attributes }}>
+          {% if block.settings.eyebrow != blank %}
+            <p class="spl-hero-eyebrow spl-anim" data-delay="1">{{ block.settings.eyebrow }}</p>
+          {% endif %}
+          
+          {% if block.settings.page_title != blank %}
+            <h1 class="spl-hero-title spl-anim" data-delay="2">
+              {% assign title_words = block.settings.page_title | split: ' ' %}
+              {% if title_words.size == 1 %}
+                {{ block.settings.page_title }}
+              {% else %}
+                {{ title_words | first }} <em>{{ title_words | slice: 1, 10 | join: ' ' }}</em>
+              {% endif %}
+            </h1>
+          {% endif %}
+          
+          {% if block.settings.hero_desc != blank %}
+            <p class="spl-hero-desc spl-anim" data-delay="3">{{ block.settings.hero_desc }}</p>
+          {% endif %}
+          
+          {% if block.settings.hero_pill != blank %}
+            <div class="spl-hero-pill spl-anim" data-delay="4">
+              <span></span>{{ block.settings.hero_pill }}
+            </div>
+          {% endif %}
+          
+          <div class="spl-scroll-hint" aria-hidden="true">
+            <div class="spl-scroll-line"></div>
+            <span>scroll</span>
+          </div>
+        </div>
+
+        <div class="spl-divider"></div>
+
+      {% when 'content' %}
+        <div class="spl-body" {{ block.shopify_attributes }}>
+          <div class="spl-content-card spl-anim" data-delay="2">
+            {% if block.settings.effective_date != blank %}
+              <div class="spl-date-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Effective Date: {{ block.settings.effective_date }}
+              </div>
+            {% endif %}
+
+            <div class="spl-policy-content">
+              {{ block.settings.policy_content }}
+            </div>
+          </div>
+        </div>
+
+        <div class="spl-divider"></div>
+
+      {% when 'promise' %}
+        <div class="spl-mission" {{ block.shopify_attributes }}>
+          <div class="spl-mission-inner">
+            {% if block.settings.label != blank %}
+              <p class="spl-mission-label spl-anim">{{ block.settings.label }}</p>
+            {% endif %}
+            {% if block.settings.quote != blank %}
+              <blockquote class="spl-mission-quote spl-anim" data-delay="1">
+                {{ block.settings.quote }}
+              </blockquote>
+            {% endif %}
+            {% if block.settings.body_text != blank %}
+              <p class="spl-mission-body spl-anim" data-delay="2">{{ block.settings.body_text }}</p>
+            {% endif %}
+            {% if block.settings.tags != blank %}
+              <div class="spl-tags spl-anim" data-delay="3">
+                {% assign tag_list = block.settings.tags | split: ',' %}
+                {% for tag in tag_list %}
+                  <span class="spl-tag">{{ tag | strip }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+      {% when 'legal' %}
+        {% if block.settings.legal_text != blank %}
+          <div class="spl-legal" {{ block.shopify_attributes }}>
+            <p>{{ block.settings.legal_text }}</p>
+          </div>
+        {% endif %}
+
+    {% endcase %}
+  {% endfor %}
+
+</div>
+
+<script>
+(function() {
+  /* ── Fade-in animation ── */
+  var anims = document.querySelectorAll('.spl-anim');
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('spl-visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+  anims.forEach(function(el) { obs.observe(el); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze Policy",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "hero",
+      "name": "Hero",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "page_title",
+          "label": "Page Title",
+          "default": "Privacy Policy"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow Text",
+          "default": "Legal"
+        },
+        {
+          "type": "textarea",
+          "id": "hero_desc",
+          "label": "Hero Description",
+          "default": "We take your privacy seriously. Here's exactly how we collect, use, and protect your information — no fine print games."
+        },
+        {
+          "type": "text",
+          "id": "hero_pill",
+          "label": "Hero Pill Tag",
+          "default": "Privacy · Security · Transparency"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "Policy Content",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "effective_date",
+          "label": "Effective Date",
+          "default": "January 1, 2024"
+        },
+        {
+          "type": "richtext",
+          "id": "policy_content",
+          "label": "Policy Content",
+          "default": "<h2>Who We Are<\/h2><p>Sundaze is a hemp-derived cannabis brand committed to delivering bold flavors and craft-quality products. When you interact with our website, you're trusting us with your information. We take that seriously.<\/p><h2>What We Collect<\/h2><p>We collect information you provide directly to us, including name, email address, order details, age verification, and any messages you send us through our contact form.<\/p><h2>How We Use Your Information<\/h2><p>We use your information to process orders, send shipping notifications, improve our website, comply with legal obligations, and detect fraud. We only send marketing emails if you've opted in.<\/p><h2>Sharing Your Information<\/h2><p>We do not sell your personal information. We may share data with trusted third parties such as payment processors, shipping partners, and analytics providers — all bound by confidentiality obligations.<\/p><h2>Your Rights<\/h2><p>You have the right to access, correct, or delete your personal data at any time. Contact us at support@sundaze.com to exercise these rights.<\/p>"
+        }
+      ]
+    },
+    {
+      "type": "promise",
+      "name": "Our Promise",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Eyebrow Label",
+          "default": "Our Promise"
+        },
+        {
+          "type": "text",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Wrap a word or phrase in <strong> tags to apply the gradient highlight.",
+          "default": "\"Your privacy, your rights, and your <strong>trust matter to us.<\/strong>\""
+        },
+        {
+          "type": "textarea",
+          "id": "body_text",
+          "label": "Body Text",
+          "default": "Have questions about this policy or how we handle your data? We're real people who read our emails. Reach out at support@sundaze.com and we'll get back to you within 24 hours."
+        },
+        {
+          "type": "text",
+          "id": "tags",
+          "label": "Tags (comma-separated)",
+          "default": "Privacy First, No Data Selling, 21+ Only, Secure Checkout, Community Driven"
+        }
+      ]
+    },
+    {
+      "type": "legal",
+      "name": "Legal Disclaimer",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "legal_text",
+          "label": "Disclaimer Text",
+          "default": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. This product does not claim to diagnose, treat, cure, or prevent any disease and has not been evaluated by the United States Food and Drug Administration (FDA)."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Policy",
+      "blocks": [
+        {
+          "type": "hero",
+          "settings": {
+            "page_title": "Privacy Policy",
+            "eyebrow": "Legal",
+            "hero_desc": "We take your privacy seriously. Here's exactly how we collect, use, and protect your information — no fine print games.",
+            "hero_pill": "Privacy · Security · Transparency"
+          }
+        },
+        {
+          "type": "content",
+          "settings": {
+            "effective_date": "January 1, 2024",
+            "policy_content": "<h2>Who We Are<\/h2><p>Sundaze is a hemp-derived cannabis brand committed to delivering bold flavors and craft-quality products.<\/p>"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "label": "Our Promise",
+            "quote": "\"Your privacy, your rights, and your <strong>trust matter to us.<\/strong>\"",
+            "body_text": "Have questions about this policy or how we handle your data? We're real people who read our emails. Reach out at support@sundaze.com and we'll get back to you within 24 hours.",
+            "tags": "Privacy First, No Data Selling, 21+ Only, Secure Checkout, Community Driven"
+          }
+        },
+        {
+          "type": "legal",
+          "settings": {
+            "legal_text": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

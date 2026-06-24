@@ -1,0 +1,64 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "neapolitan_bucket_product_XkhX8Q": {
+      "type": "neapolitan-bucket-product",
+      "name": "Neapolitan Bucket Product",
+      "settings": {
+        "bucket_page_link": "shopify://pages/neapolitan-bucket",
+        "single_page_link": "shopify://pages/hash-holes-collection",
+        "bg_color": "#f7ece2",
+        "back_link": "",
+        "left_arrow_link": "shopify://pages/neapolitan-bucket",
+        "right_arrow_link": "shopify://pages/hash-holes-collection",
+        "title_top": "Neapolitan",
+        "title_gradient": "Bucket",
+        "flavor_line": "Vanilla • Strawberry Shortcake • Nugtella",
+        "price_fallback": "$45.00",
+        "description": "A dessert-inspired trio of Sundaze buckets featuring Vanilla, Strawberry Shortcake, and Nugtella flavors in one premium Neapolitan collection.",
+        "flavor_notes": "A creamy dessert-style mix of vanilla, strawberry, and chocolate-hazelnut inspired profiles.",
+        "hasholes_image": "shopify://shop_images/WhatsApp_Image_2026-05-21_at_7.53.05_PM.jpg",
+        "bucket_icon": "shopify://shop_images/WhatsApp_Image_2026-05-21_at_7.53.04_PM.jpg",
+        "mixed_product": "mixed-bucket",
+        "bucket_image_mixed": "shopify://shop_images/AllBucket.png",
+        "mixed_acc_desc": "The Mixed Bucket brings all three Neapolitan flavors together in one premium Sundaze collection.",
+        "mixed_acc_flavor": "Vanilla bean, strawberry cake, and chocolate hazelnut — all in one bucket.",
+        "nugtella_product": "nugtella-bucket",
+        "bucket_image_nugtella": "shopify://shop_images/Nugtella_3_2.png",
+        "nugtella_desc": "A decadent chocolate-hazelnut bucket inspired by everyone's favourite spread. Rich, smooth, and unforgettable.",
+        "nugtella_acc_desc": "The Nugtella bucket brings a rich chocolate-hazelnut twist to the Sundaze Farm lineup.",
+        "nugtella_acc_flavor": "Dark chocolate, roasted hazelnut, creamy spread, smooth rosin, exotic flower.",
+        "strawberry_product": "strawberry-shortcake-bucket",
+        "bucket_image_strawberry": "shopify://shop_images/Strawberry_3_1.png",
+        "strawberry_desc": "A sweet strawberry cake-inspired bucket bursting with berry flavour and a smooth, creamy finish.",
+        "strawberry_acc_desc": "The Strawberry Shortcake bucket delivers a sweet, berry-forward flavour wrapped in premium Sundaze packaging.",
+        "strawberry_acc_flavor": "Sweet strawberry, vanilla cake, whipped cream, smooth rosin, exotic flower.",
+        "vanilla_product": "vanilla-bucket",
+        "bucket_image_vanilla": "shopify://shop_images/Nugtella_3_2.png",
+        "vanilla_desc": "A rich, creamy vanilla bucket with smooth flavour and a clean finish. The classic Sundaze experience.",
+        "vanilla_acc_desc": "The Vanilla bucket delivers a smooth, creamy flavour profile in premium Sundaze packaging.",
+        "vanilla_acc_flavor": "Rich vanilla bean, buttery cream, subtle sweetness, smooth rosin, exotic flower."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "neapolitan_bucket_product_XkhX8Q"
+  ]
+}

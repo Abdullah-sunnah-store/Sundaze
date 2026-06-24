@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_faq_EPHrWm": {
+      "type": "sundaze-faq",
+      "name": "Sundaze FAQ",
+      "settings": {
+        "eyebrow": "FAQ",
+        "hero_desc": "At Sundaze, we believe every day deserves a little sunshine. Here are answers to the questions we hear most.",
+        "hero_pill": "Products · Legal · Storage · Orders",
+        "q1": "What is THCa, and how does it differ from THC?",
+        "a1": "THCa (tetrahydrocannabinolic acid) is a non-psychoactive cannabinoid found in raw cannabis. When heated through smoking or vaping, it converts to THC — the compound responsible for the psychoactive effect. Our products contain THCa, ensuring compliance with federal regulations while delivering the desired effects upon use.",
+        "q2": "What's inside a Sundaze hash hole pre-roll?",
+        "a2": "Each hash hole contains 1.5G of whole bud flower wrapped around 0.5G of cold cure rosin infused with 90–120 micron bubble hash. Every one is hand rolled — no smalls, no trim, no shortcuts.",
+        "q3": "Do your products contain any additives or fillers?",
+        "a3": "No. We use only whole bud flower and solventless concentrates. Our products are free from additives, cutting agents, and artificial flavoring. What you taste is pure, craft cannabis.",
+        "q4": "Are Sundaze products federally legal?",
+        "a4": "Yes. All Sundaze products are derived from hemp and contain less than 0.3% Δ9 THC by dry weight, making them compliant with the 2018 Farm Bill.",
+        "q5": "Will Sundaze products show up on a drug test?",
+        "a5": "While our products are federally legal, they may still result in a positive drug test due to the presence of cannabinoids. We advise caution if you are subject to drug testing in your workplace or for any other reason.",
+        "q6": "Can I travel with Sundaze products?",
+        "a6": "While our products are federally legal under the 2018 Farm Bill, individual state laws vary. Always check local and state regulations before traveling with any hemp-derived products, especially across state lines.",
+        "q7": "Are Sundaze products safe to use?",
+        "a7": "Sundaze products are intended for adults 21 and older. Our products are not intended to diagnose, treat, cure, or prevent any disease and have not been evaluated by the FDA. Please consume responsibly and consult a healthcare professional if you have concerns.",
+        "q8": "Can I use Sundaze products if I'm pregnant or on medication?",
+        "a8": "We strongly advise against use if you are pregnant, nursing, or taking prescription medication. Always consult with your healthcare provider before using any hemp-derived product.",
+        "q9": "How should I store my Sundaze products?",
+        "a9": "Store your products in a cool, dry place away from direct sunlight and heat. For optimal freshness — especially flower and pre-rolls — we recommend using an airtight container or the original packaging sealed tight.",
+        "q10": "What's the best way to smoke a hash hole pre-roll?",
+        "a10": "Light the tip slowly and evenly, rotating the pre-roll as you go. Take slow, steady pulls to let the rosin core heat gradually. White ash is a sign of proper airflow and quality — something we take seriously in every roll.",
+        "q11": "Do you offer discreet shipping?",
+        "a11": "Yes. All orders are packaged discreetly with no branding on the outside of the box. Your privacy matters to us.",
+        "q12": "What's your return or guarantee policy?",
+        "a12": "We stand behind every product we make. If you're not satisfied with your order, contact us within 30 days of purchase and we'll make it right. Your experience matters more than anything.",
+        "contact_url": "shopify://pages/contact-us",
+        "legal_text": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. This product does not claim to diagnose, treat, cure, or prevent any disease and has not been evaluated or approved by the United States Food and Drug Administration (FDA)."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_faq_EPHrWm"
+  ]
+}

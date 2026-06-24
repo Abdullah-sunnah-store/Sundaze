@@ -1,0 +1,69 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_policy_Refund": {
+      "type": "sundaze-policy",
+      "blocks": {
+        "hero_block": {
+          "type": "hero",
+          "settings": {
+            "page_title": "Refund Policy",
+            "eyebrow": "Legal",
+            "hero_desc": "We stand behind every product we make. If something's not right, we'll make it right — simple as that.",
+            "hero_pill": "Refunds · Returns · Satisfaction"
+          }
+        },
+        "content_block": {
+          "type": "content",
+          "settings": {
+            "effective_date": "June 1, 2026",
+            "policy_content": "<p><strong>Website:</strong> sundaze.com<br/><strong>Contact:</strong> support@sundaze.com</p><p>Thank you for shopping with Sundaze. Because our products are age-restricted hemp-derived goods, all sales are final.</p><h2>1. No Refunds</h2><p>All purchases from Sundaze are final.</p><p>We do not offer refunds, returns, or exchanges once an order is placed, except where required by law or approved by Sundaze in its sole discretion.</p><p>By placing an order, you acknowledge and agree that:</p><ul><li>Products cannot be returned for a refund.</li><li>Opened products cannot be returned.</li><li>Used products cannot be returned.</li><li>Refused packages are not eligible for a refund.</li><li>Orders shipped to an incorrect address entered by the customer are not eligible for a refund.</li><li>Shipping fees are non-refundable.</li><li>Route/package protection fees, if offered, are non-refundable.</li></ul><h2>2. Order Cancellations</h2><p>Orders may not be canceled once processing has started.</p><p>If you need to request a cancellation, contact us immediately at <strong>support@sundaze.com</strong>. We may approve or deny cancellation requests depending on fulfillment status.</p><p>Sundaze reserves the right to cancel any order for compliance, payment, fraud, inventory, restricted-shipping, or legal reasons.</p><h2>3. Damaged, Missing, or Incorrect Items</h2><p>If your order arrives damaged, missing an item, or contains the wrong item, contact us within <strong>48 hours of delivery</strong> at <strong>support@sundaze.com</strong>.</p><p>Please include:</p><ul><li>Order number</li><li>Full name</li><li>Delivery address</li><li>Photos of the package</li><li>Photos of the damaged or incorrect item</li><li>Photos of the packing slip, if available</li></ul><p>Approved claims may be resolved through a replacement, store credit, or another remedy selected by Sundaze.</p><p>Refunds are not guaranteed.</p><h2>4. Lost or Stolen Packages</h2><p>Sundaze is not responsible for packages marked as delivered by the shipping carrier.</p><p>If your package is marked as delivered but cannot be located, please:</p><ul><li>Check with household members</li><li>Check around the delivery area</li><li>Contact the shipping carrier</li><li>Contact us at <strong>support@sundaze.com</strong> with your order number</li></ul><p>We may assist with carrier information, but replacement or store credit is not guaranteed.</p><h2>5. Failed Delivery or Incorrect Address</h2><p>Customers are responsible for providing complete and accurate shipping information.</p><p>Sundaze is not responsible for:</p><ul><li>Incorrect addresses</li><li>Missing apartment or unit numbers</li><li>Failed delivery attempts</li><li>Refused packages</li><li>Packages returned due to customer error</li><li>Packages delayed or rejected because of age verification or shipping restrictions</li></ul><p>Orders returned to sender are not automatically eligible for a refund.</p><h2>6. Chargebacks</h2><p>If there is an issue with your order, please contact us before filing a chargeback.</p><p>We actively investigate and dispute fraudulent or improper chargebacks.</p><h2>7. Contact</h2><p>For order issues, please contact:</p><p><strong>Sundaze Support</strong><br/><strong>Email:</strong> support@sundaze.com</p>"
+          }
+        },
+        "promise_block": {
+          "type": "promise",
+          "settings": {
+            "label": "Our Promise",
+            "quote": "\"If it's not right, we'll make it right.\"",
+            "body_text": "Not satisfied with your order? We'll make it right. Contact us at support@sundaze.com",
+            "tags": "Real People, No Hassle, Fast Response, Community First"
+          }
+        },
+        "legal_block": {
+          "type": "legal",
+          "disabled": true,
+          "settings": {
+            "legal_text": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. This product does not claim to diagnose, treat, cure, or prevent any disease and has not been evaluated by the United States Food and Drug Administration (FDA)."
+          }
+        }
+      },
+      "block_order": [
+        "hero_block",
+        "content_block",
+        "promise_block",
+        "legal_block"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_policy_Refund"
+  ]
+}

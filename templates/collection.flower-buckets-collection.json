@@ -1,0 +1,65 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "disabled": true,
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "sundaze_flower_banner_ieCteb": {
+      "type": "sundaze-flower-banner",
+      "name": "Sundaze Text Banner",
+      "settings": {
+        "section_bg": "#f7f3ee",
+        "eyebrow": "Premium Collection",
+        "title": "3.5 Flower",
+        "title_accent": "Collection",
+        "description": "The Sundaze 3.5 Flower collection is crafted for those who refuse to settle. Each jar is packed with premium THCA hemp flower, hand-selected for dense trichome coverage, bold terpene profiles, and a smooth, flavorful burn from start to finish.\n\nEvery strain in the lineup is inspired by rich, indulgent flavors — from icy cool finishes to warm, buttery desserts — so every session feels like a treat. Federally legal, lab-tested, and available in all 50 states."
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "disabled": true,
+      "settings": {
+        "products_per_page": 16,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "show_vendor": false,
+        "enable_sorting": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "sundaze_flower_collections_URFaxp": {
+      "type": "sundaze-flower-collections",
+      "name": "Sundaze Collection Card",
+      "settings": {
+        "section_bg": "#ffffff",
+        "section_heading": "Collections",
+        "collection_label": "",
+        "collection_name": "Sundaze 3.5G Flower",
+        "card_link": "shopify://pages/3-5g-thca-flower",
+        "card_image": "shopify://shop_images/Bucket_Series_1.png"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "sundaze_flower_banner_ieCteb",
+    "product-grid",
+    "sundaze_flower_collections_URFaxp"
+  ]
+}

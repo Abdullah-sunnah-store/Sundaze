@@ -1,0 +1,632 @@
+{% doc %}
+  @prompt
+    White background section. Width 100%.
+    Padding top: 48px bottom: 48px
+    Padding left: 20px right: 20px desktop
+    Padding left: 10px right: 10px mobile
+    Max width: 1200px
+    Centered
+    
+    Heading:
+    - Text: "COLLECTIONS"
+    - Font: sans-serif bold
+    - Size: 42px desktop / 28px mobile
+    - Color: #111111
+    - Align: left
+    - Text transform: uppercase
+    - Letter spacing: 2px
+    - Margin bottom: 32px
+    
+    Collection Card:
+    - Width: 100%
+    - Border: 1px solid #e0e0e0
+    - Border radius: 0px
+    - Overflow: hidden
+    - Background: transparent
+    
+    Image block inside card:
+    - Image placeholder: [NEAPOLITAN-COLLECTION.png]
+    - This is the second image provided
+    - Width: 100%
+    - Height: auto
+    - Display: block
+    - Object fit: cover
+    -  border radius: 8px
+    - No padding
+    - No margin
+    
+    Below image — product info:
+    - Padding top: 16px
+    - Padding bottom: 8px
+    - Background: #ffffff
+    
+      Product Title:
+      - Text: "NEAPOLITAN HASH HOLE"
+      - Font: sans-serif bold
+      - Size: 18px
+      - Color: #111111
+      - Text transform: uppercase
+      - Letter spacing: 1px
+      - Margin bottom: 4px
+    
+      Product Price:
+      - Text: "$60.00"
+      - Font: sans-serif regular
+      - Size: 18px
+      - Color: #111111
+      - Margin top: 4px, add some scrolling animation
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-card-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding-top: {{ block.settings.padding_top_desktop }}px;
+    padding-bottom: {{ block.settings.padding_bottom_desktop }}px;
+    padding-left: {{ block.settings.padding_left_desktop }}px;
+    padding-right: {{ block.settings.padding_right_desktop }}px;
+  }
+
+  .ai-collection-card-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-collection-card-heading-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    color: {{ block.settings.heading_color }};
+    text-align: {{ block.settings.heading_alignment }};
+    text-transform: uppercase;
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .ai-collection-card-heading-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }} {
+    width: 100%;
+    border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    background: {{ block.settings.card_background }};
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
+  }
+
+  .ai-collection-card-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .ai-collection-card-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    transform: scale(1.1);
+    transition: transform 0.6s ease-out;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} .ai-collection-card-image-{{ ai_gen_id }} {
+    transform: scale(1);
+  }
+
+  .ai-collection-card-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-collection-card-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-collection-card-info-{{ ai_gen_id }} {
+    padding-top: {{ block.settings.info_padding_top }}px;
+    padding-bottom: {{ block.settings.info_padding_bottom }}px;
+    background: {{ block.settings.info_background }};
+  }
+
+  .ai-collection-card-title-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    text-transform: uppercase;
+    letter-spacing: {{ block.settings.title_letter_spacing }}px;
+    margin: 0 0 {{ block.settings.title_margin_bottom }}px 0;
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} .ai-collection-card-title-{{ ai_gen_id }} {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
+  }
+
+  .ai-collection-card-price-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: {{ block.settings.price_size }}px;
+    color: {{ block.settings.price_color }};
+    margin: {{ block.settings.price_margin_top }}px 0 0 0;
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}.ai-animate-in-{{ ai_gen_id }} .ai-collection-card-price-{{ ai_gen_id }} {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-card-section-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.padding_left_mobile }}px;
+      padding-right: {{ block.settings.padding_right_mobile }}px;
+    }
+
+    .ai-collection-card-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ai-collection-card-heading-{{ ai_gen_id }},
+    .ai-collection-card-{{ ai_gen_id }},
+    .ai-collection-card-image-{{ ai_gen_id }},
+    .ai-collection-card-title-{{ ai_gen_id }},
+    .ai-collection-card-price-{{ ai_gen_id }} {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<collection-card-{{ ai_gen_id }} class="ai-collection-card-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-collection-card-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-collection-card-heading-{{ ai_gen_id }}" data-animate>{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="ai-collection-card-{{ ai_gen_id }}" data-animate>
+      <div class="ai-collection-card-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.product_image %}
+          <img
+            src="{{ block.settings.product_image | image_url: width: 2000 }}"
+            alt="{{ block.settings.product_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.product_image.width }}"
+            height="{{ block.settings.product_image.height }}"
+            class="ai-collection-card-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-collection-card-image-placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-collection-card-info-{{ ai_gen_id }}">
+        {% if block.settings.product_title != blank %}
+          <h3 class="ai-collection-card-title-{{ ai_gen_id }}">{{ block.settings.product_title }}</h3>
+        {% endif %}
+
+        {% if block.settings.product_price != blank %}
+          <div class="ai-collection-card-price-{{ ai_gen_id }}">{{ block.settings.product_price }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</collection-card-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CollectionCard{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.observer = null;
+      }
+
+      connectedCallback() {
+        this.setupScrollAnimation();
+      }
+
+      setupScrollAnimation() {
+        const animateElements = this.querySelectorAll('[data-animate]');
+        
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px 0px -100px 0px',
+          threshold: 0.1
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('ai-animate-in-{{ ai_gen_id }}');
+              this.observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        animateElements.forEach((element) => {
+          this.observer.observe(element);
+        });
+      }
+
+      disconnectedCallback() {
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+      }
+    }
+
+    customElements.define('collection-card-{{ ai_gen_id }}', CollectionCard{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection card",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_left_desktop",
+      "label": "Padding left (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_right_desktop",
+      "label": "Padding right (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mobile",
+      "label": "Padding left (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mobile",
+      "label": "Padding right (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "COLLECTIONS"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Size (desktop)",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Size (mobile)",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#111111"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Background",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Product info"
+    },
+    {
+      "type": "range",
+      "id": "info_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "info_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "info_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product title",
+      "default": "NEAPOLITAN HASH HOLE"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Title letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "label": "Title margin bottom",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "product_price",
+      "label": "Product price",
+      "default": "$60.00"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "price_margin_top",
+      "label": "Price margin top",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection card"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

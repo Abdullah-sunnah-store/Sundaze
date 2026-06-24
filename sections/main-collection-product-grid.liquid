@@ -1,0 +1,951 @@
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{%- unless section.settings.quick_add == 'none' -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+{%- if section.settings.quick_add == 'standard' -%}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- style -%}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  /* ── Design tokens (mirrored from FAQ) ── */
+  :root {
+    --sun-rose:   #c4607a;
+    --sun-mauve:  #a84f6a;
+    --sun-blush:  #e8a0b4;
+    --sun-peach:  #d4926e;
+    --sun-ink:    #1e1118;
+    --sun-text:   rgba(30,17,24,0.82);
+    --sun-muted:  rgba(30,17,24,0.48);
+    --sun-line:   rgba(196,96,122,0.18);
+  }
+ .section-{{ section.id }}-padding{
+   background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,230,200,0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 45% at 20% 90%,  rgba(240,190,210,0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 80% 70%,  rgba(255,220,200,0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%)
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* ── Collection Grid ── */
+  .sdz-collection-wrap {
+    padding: 40px 20px;
+  }
+
+  @media (min-width: 750px) {
+    .sdz-collection-wrap { padding: 60px 40px; }
+  }
+
+  .sdz-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    max-width: 1400px;
+    margin: 0 auto;
+    list-style: none;
+    padding: 0;
+  }
+
+  @media (min-width: 540px)  { .sdz-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 900px)  { .sdz-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1200px) { .sdz-grid { grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr); } }
+
+  /* ── Card ── */
+  .sdz-card {
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    border: 1px solid rgba(255,255,255,0.8);
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--sun-ink);
+    position: relative;
+  }
+
+  .sdz-card.is-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  .sdz-card:hover {
+    box-shadow: 0 20px 52px rgba(0,0,0,0.13);
+    transform: scale(1.025) translateY(-5px);
+  }
+
+  /* ── Image Area ── */
+  .sdz-card__img-wrap {
+    position: relative;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 28px 28px 0 0;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+  }
+
+  .sdz-card__img {
+    width: 78%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 14px rgba(0,0,0,0.14));
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 2;
+    position: relative;
+  }
+
+  .sdz-card:hover .sdz-card__img {
+    transform: scale(1.1);
+  }
+
+  /* ── Dual image stack (hover reveal) ── */
+  .sdz-img-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    perspective: 1000px;
+  }
+
+  .sdz-img-front,
+  .sdz-img-back {
+    grid-area: 1 / 1;
+    width: 78%;
+    height: auto;
+    max-height: 230px;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 14px rgba(0,0,0,0.14));
+    transition: transform 0.48s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.38s ease;
+    transform-origin: bottom center;
+  }
+
+  .sdz-img-front { z-index: 2; }
+
+  .sdz-img-back {
+    z-index: 1;
+    opacity: 0;
+  }
+
+  .sdz-card:hover .sdz-img-front {
+    transform: rotate(-13deg) scale(0.93) translateX(-8px);
+  }
+
+  .sdz-card:hover .sdz-img-back {
+    opacity: 1;
+    transform: rotate(13deg) scale(0.93) translateX(8px);
+  }
+
+  .sdz-card--zoom-only:hover .sdz-img-front {
+    transform: scale(1.1) !important;
+  }
+
+  .sdz-card--zoom-only:hover .sdz-img-back {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+
+  /* ── Badge ── */
+  .sdz-card__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .sdz-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(4px);
+    color: var(--sun-mauve);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .sdz-badge--sale {
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+  }
+
+  .sdz-badge--sold {
+    background: #c0392b;
+    color: #fff;
+  }
+
+  /* ── Wishlist button ── */
+  .sdz-wish-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 10;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+
+  .sdz-wish-btn:hover {
+    border-color: var(--sun-blush);
+    background: #fef0f5;
+    transform: scale(1.12);
+  }
+
+  .sdz-wish-btn:active { transform: scale(0.9); }
+
+  .sdz-wish-btn svg {
+    width: 17px; height: 17px;
+    color: rgba(107,66,38,0.45);
+    transition: fill 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  }
+
+  .sdz-wish-btn.wished { border-color: var(--sun-blush); background: #fef0f5; }
+  .sdz-wish-btn.wished svg { fill: var(--sun-blush); color: var(--sun-blush); }
+  .sdz-wish-btn.wish-pop svg { transform: scale(1.45); }
+
+  /* ── Card Content ── */
+  .sdz-card__content {
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  /* Vendor — matches FAQ eyebrow style */
+  .sdz-card__vendor {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--sun-rose);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Title — Playfair Display, matching FAQ group titles / question style */
+  .sdz-card__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 2.2vw, 22px);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--sun-ink);
+    margin: 0;
+    transition: color 0.25s;
+  }
+
+  .sdz-card:hover .sdz-card__title {
+    color: var(--sun-rose);
+  }
+
+  /* Price row — DM Sans, matching FAQ body weight */
+  .sdz-card__price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sdz-card__price {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--sun-ink);
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  .sdz-card__price--compare {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--sun-muted);
+    text-decoration: line-through;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Add to Cart button — matches sfq-cta-btn style ── */
+  .sdz-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 22px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+    margin-top: auto;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(196,96,122,0.26);
+  }
+
+  .sdz-add-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(196,96,122,0.36);
+  }
+  .sdz-add-btn:active:not(:disabled) { transform: scale(0.97); }
+  .sdz-add-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+  .sdz-add-btn.loading { background: linear-gradient(135deg, #aaa, #888); box-shadow: none; }
+  .sdz-add-btn.added   { background: linear-gradient(135deg, #4caf82, #2d7a5a); }
+  .sdz-add-btn--sold   { background: rgba(30,17,24,0.18); cursor: not-allowed; box-shadow: none; color: var(--sun-muted); }
+
+  .sdz-add-btn .sdz-spinner {
+    display: none;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: sdz-spin 0.7s linear infinite;
+  }
+
+  .sdz-add-btn.loading .sdz-spinner   { display: block; }
+  .sdz-add-btn.loading .sdz-btn-icon,
+  .sdz-add-btn.loading .sdz-btn-text  { display: none; }
+
+  @keyframes sdz-spin { to { transform: rotate(360deg); } }
+
+  /* ── Toast — DM Sans ── */
+  .sdz-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--sun-ink);
+    color: #fff;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+    opacity: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .sdz-toast.show  { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .sdz-toast.error { background: #c0392b; }
+  .sdz-toast.wish  { background: linear-gradient(135deg, var(--sun-blush), #c77dff); }
+
+  /* ── Toolbar — DM Sans ── */
+  .sdz-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    max-width: 1400px;
+    margin: 0 auto 36px;
+    padding: 0 20px;
+  }
+
+  @media (min-width: 750px) { .sdz-toolbar { padding: 0 40px; } }
+
+  .sdz-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Pills — matching sfq-tab style */
+  .sdz-pill {
+    font-family: 'DM Sans', sans-serif;
+    padding: 10px 22px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.50);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.10em;
+    color: var(--sun-muted);
+    cursor: pointer;
+    transition: all 0.25s;
+    backdrop-filter: blur(4px);
+  }
+
+  .sdz-pill:hover {
+    background: rgba(255,255,255,0.72);
+    border-color: rgba(196,96,122,0.40);
+    color: var(--sun-rose);
+    transform: translateY(-1px);
+  }
+
+  .sdz-pill.active {
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 18px rgba(196,96,122,0.28);
+  }
+
+  /* Sort select — DM Sans */
+  .sdz-sort {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border: 1px solid rgba(196,96,122,0.22);
+    border-radius: 50px;
+    padding: 10px 36px 10px 18px;
+    background: rgba(255,255,255,0.50);
+    color: var(--sun-muted);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    backdrop-filter: blur(4px);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c4607a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.25s, color 0.25s;
+  }
+
+  .sdz-sort:hover {
+    border-color: rgba(196,96,122,0.40);
+    color: var(--sun-rose);
+  }
+
+  /* Product count — DM Sans light */
+  .sdz-product-count {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--sun-muted);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Pagination ── */
+  .sdz-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 48px 20px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── Empty state — Playfair Display italic ── */
+  .sdz-empty {
+    text-align: center;
+    padding: 80px 20px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 24px;
+    color: var(--sun-muted);
+  }
+
+  .sdz-empty a {
+    font-family: 'DM Sans', sans-serif;
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+{%- endstyle -%}
+
+<!-- TOAST -->
+<div class="sdz-toast" id="sdzToast" role="status" aria-live="polite">
+  <span id="sdzToastIcon"></span>
+  <span id="sdzToastMsg"></span>
+</div>
+
+<div class="section-{{ section.id }}-padding">
+
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+    <!-- ── Toolbar: Filters + Sort ── -->
+    <div class="sdz-toolbar">
+      <div class="sdz-pills" id="sdzPills">
+        <button class="sdz-pill active" data-filter="all">All</button>
+        <button class="sdz-pill" data-filter="in-stock">In stock</button>
+        <button class="sdz-pill" data-filter="out-of-stock">Out of stock</button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="sdz-product-count">
+          {%- if collection.products_count == collection.all_products_count -%}
+            {{ collection.products_count }} products
+          {%- else -%}
+            {{ collection.products_count }} of {{ collection.all_products_count }}
+          {%- endif -%}
+        </span>
+
+        {%- if section.settings.enable_sorting -%}
+          <select class="sdz-sort" id="sdzSort" aria-label="Sort products">
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>
+                {{ option.name | escape }}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- ── Product Grid ── -->
+    {%- if collection.products.size == 0 -%}
+      <div class="sdz-empty">
+        No products found 🍦<br>
+        <a href="{{ collection.url }}">Clear filters</a>
+      </div>
+    {%- else -%}
+      <div class="sdz-collection-wrap">
+        <div id="sdzEmptyJS" class="sdz-empty" style="display:none;">
+          No products found matching these filters 🍦
+        </div>
+        <ul class="sdz-grid" id="sdzGrid">
+          {%- for product in collection.products -%}
+            {%- assign first_variant = product.first_available_variant | default: product.variants.first -%}
+            {%- assign sold_out = false -%}
+            {%- unless product.available -%}
+              {%- assign sold_out = true -%}
+            {%- endunless -%}
+
+          {%- comment -%} Cycling pastel palette {%- endcomment -%}
+            {%- assign palette = 'fce4ec,fff8e1,e0f7fa,f3e5f5,e8f5e9,fffde7,fce4ec,e3f2fd,fff3e0,f9fbe7,ede7f6,e8eaf6' | split: ',' -%}
+            {%- assign color_index = forloop.index0 | modulo: 12 -%}
+            {%- assign card_bg = palette[color_index] -%}
+
+            {%- assign is_flower = false -%}
+            {%- if product.title contains '3.5G Flower' -%}
+              {%- assign is_flower = true -%}
+            {%- endif -%}
+
+            <li class="sdz-card{% if is_flower %} sdz-card--zoom-only{% endif %}"
+              data-product-tags="{{ product.tags | join: ',' | handleize }}"
+              data-availability="{% if sold_out %}out-of-stock{% else %}in-stock{% endif %}"
+              style="--animation-order: {{ forloop.index }};">
+
+              <a href="{{ product.url }}" class="sdz-card__img-wrap" aria-label="{{ product.title | escape }}" tabindex="-1" style="background: linear-gradient(135deg, #{{ card_bg }} 0%, #{{ card_bg }} 100%);">
+
+                {%- if product.images.size > 1 -%}
+                  <div class="sdz-img-stack">
+                    <img
+                      class="sdz-img-back"
+                      src="{{ product.images[1] | img_url: '600x' }}"
+                      alt="{{ product.title | escape }} secondary"
+                      draggable="false"
+                      {%- if forloop.index > 2 %} loading="lazy"{%- endif -%}
+                      width="600"
+                    >
+                    <img
+                      class="sdz-img-front"
+                      src="{{ product.featured_image | img_url: '600x' }}"
+                      alt="{{ product.title | escape }}"
+                      draggable="false"
+                      {%- if forloop.index > 2 %} loading="lazy"{%- endif -%}
+                      width="600"
+                    >
+                  </div>
+                {%- elsif product.featured_image -%}
+                  <img
+                    class="sdz-card__img"
+                    src="{{ product.featured_image | img_url: '600x' }}"
+                    alt="{{ product.title | escape }}"
+                    draggable="false"
+                    {%- if forloop.index > 2 %} loading="lazy"{%- endif -%}
+                    width="600"
+                  >
+                {%- else -%}
+                  <div style="font-size:60px;opacity:0.4;">🍦</div>
+                {%- endif -%}
+
+                <!-- Badges -->
+                <div class="sdz-card__badge">
+                  {%- if sold_out -%}
+                    <span class="sdz-badge sdz-badge--sold">Sold Out</span>
+                  {%- elsif product.compare_at_price > product.price -%}
+                    <span class="sdz-badge sdz-badge--sale">Sale</span>
+                  {%- endif -%}
+                  {%- if product.tags contains 'new' or product.tags contains 'New' -%}
+                    <span class="sdz-badge">New</span>
+                  {%- endif -%}
+                </div>
+
+                <!-- Wishlist button -->
+                <button
+                  class="sdz-wish-btn"
+                  aria-label="Add {{ product.title | escape }} to wishlist"
+                  data-product-id="{{ product.id }}"
+                  data-product-name="{{ product.title | escape }}"
+                  data-product-price="{{ product.price | money }}"
+                  data-product-image="{{ product.featured_image | img_url: '200x' }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+
+              </a>
+
+              <!-- Card content -->
+              <div class="sdz-card__content">
+                {%- if section.settings.show_vendor -%}
+                  <p class="sdz-card__vendor">{{ product.vendor }}</p>
+                {%- endif -%}
+
+                <a href="{{ product.url }}" style="text-decoration:none;">
+                  <h3 class="sdz-card__title">{{ product.title }}</h3>
+                </a>
+
+                <div class="sdz-card__price-row">
+                  <span class="sdz-card__price">{{ product.price | money }}</span>
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="sdz-card__price--compare">{{ product.compare_at_price | money }}</span>
+                  {%- endif -%}
+                </div>
+
+                {%- if sold_out -%}
+                  <button class="sdz-add-btn sdz-add-btn--sold" disabled>Sold Out</button>
+                {%- else -%}
+                  <button
+                    class="sdz-add-btn"
+                    data-variant-id="{{ first_variant.id }}"
+                    data-product-name="{{ product.title | escape }}">
+                    <div class="sdz-spinner"></div>
+                    <svg class="sdz-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    <span class="sdz-btn-text">Add to Cart</span>
+                  </button>
+                {%- endif -%}
+              </div>
+
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <div class="sdz-pagination">
+            {% render 'pagination', paginate: paginate, anchor: '' %}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  {%- endpaginate -%}
+</div>
+
+<script>
+(function () {
+
+  /* ── Move toast to body ── */
+  const toast = document.getElementById('sdzToast');
+  if (toast) document.body.appendChild(toast);
+
+  /* ── Toast ── */
+  const Toast = {
+    _t: null,
+    show(msg, icon, type) {
+      toast.className = 'sdz-toast ' + (type || '');
+      document.getElementById('sdzToastMsg').textContent = msg;
+      document.getElementById('sdzToastIcon').textContent = icon || '';
+      toast.classList.add('show');
+      clearTimeout(this._t);
+      this._t = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  };
+
+  /* ── Add to Cart ── */
+  const SdzCart = {
+    add(btn) {
+      const id   = btn.dataset.variantId;
+      const name = btn.dataset.productName || 'Product';
+      if (!id || id === 'nil' || id === '') {
+        Toast.show('No variant available', '⚠️', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10), quantity: 1 })
+      })
+      .then(r => {
+        if (!r.ok) return r.json().then(e => { throw new Error(e.description || 'Error'); });
+        return r.json();
+      })
+      .then(() => {
+        btn.classList.remove('loading');
+        btn.classList.add('added');
+        btn.querySelector('.sdz-btn-icon').outerHTML = '<svg class="sdz-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+        btn.querySelector('.sdz-btn-text').textContent = 'Added!';
+        Toast.show(name + ' added to cart', '🛒');
+        document.dispatchEvent(new CustomEvent('cart:refresh'));
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.classList.remove('added');
+          btn.querySelector('.sdz-btn-text').textContent = 'Add to Cart';
+          btn.querySelector('.sdz-btn-icon').outerHTML = '<svg class="sdz-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        }, 2600);
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        Toast.show(err.message || 'Could not add to cart', '❌', 'error');
+      });
+    }
+  };
+
+  /* ── Wishlist ── */
+  const WISH_KEY = 'sundaze_wishlist_v1';
+  const SdzWish = {
+    _load()  { try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch { return []; } },
+    _save(l) { localStorage.setItem(WISH_KEY, JSON.stringify(l)); },
+    _has(id) { return this._load().some(i => i.id === id); },
+    toggle(btn) {
+      const id    = btn.dataset.productId;
+      const name  = btn.dataset.productName  || 'Product';
+      const price = btn.dataset.productPrice || '';
+      const img   = btn.dataset.productImage || '';
+      if (!id) return;
+      const list = this._load();
+      const idx  = list.findIndex(i => i.id === id);
+      if (idx === -1) {
+        list.push({ id, name, price, img });
+        this._save(list);
+        btn.classList.add('wished');
+        Toast.show(name + ' wishlisted', '💗', 'wish');
+      } else {
+        list.splice(idx, 1);
+        this._save(list);
+        btn.classList.remove('wished');
+        Toast.show('Removed from wishlist', '🤍');
+      }
+      btn.classList.add('wish-pop');
+      setTimeout(() => btn.classList.remove('wish-pop'), 250);
+      const wc = document.getElementById('sfWishBubbleCount');
+      if (wc) wc.textContent = this._load().length;
+    },
+    init() {
+      document.querySelectorAll('.sdz-wish-btn').forEach(btn => {
+        if (this._has(btn.dataset.productId)) btn.classList.add('wished');
+      });
+    }
+  };
+
+  window.SdzCart = SdzCart;
+  window.SdzWish = SdzWish;
+
+  document.addEventListener('click', function (e) {
+    const addBtn = e.target.closest('.sdz-add-btn:not(:disabled):not(.sdz-add-btn--sold)');
+    if (addBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      SdzCart.add(addBtn);
+      return;
+    }
+
+    const wishBtn = e.target.closest('.sdz-wish-btn');
+    if (wishBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      SdzWish.toggle(wishBtn);
+      return;
+    }
+  }, true);
+
+  SdzWish.init();
+
+  /* ── Intersection Observer (card reveal) ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.sdz-card').forEach(c => io.observe(c));
+
+  /* ── Sort redirect ── */
+  const sortEl = document.getElementById('sdzSort');
+  if (sortEl) {
+    sortEl.addEventListener('change', () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('sort_by', sortEl.value);
+      window.location.href = url.toString();
+    });
+  }
+
+  /* ── Client-side filter ── */
+  const pills = document.querySelectorAll('#sdzPills .sdz-pill');
+  const cards = Array.from(document.querySelectorAll('.sdz-card'));
+
+  function showCard(card) {
+    card.style.display = '';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.95) translateY(20px)';
+    requestAnimationFrame(() => {
+      card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'scale(1) translateY(0)';
+    });
+  }
+
+  function hideCard(card) {
+    card.style.display = 'none';
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const f = pill.dataset.filter;
+
+      let visibleCount = 0;
+      cards.forEach(card => {
+        let show = false;
+        if (f === 'all') {
+          show = true;
+        } else if (f === 'in-stock' || f === 'out-of-stock') {
+          show = card.dataset.availability === f;
+        } else {
+          const tags = card.dataset.productTags || '';
+          show = tags.includes(f);
+        }
+
+        if (show) {
+          showCard(card);
+          visibleCount++;
+        } else {
+          hideCard(card);
+        }
+      });
+
+      const emptyJS = document.getElementById('sdzEmptyJS');
+      if (emptyJS) {
+        emptyJS.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    });
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-product-grid.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "default": 16,
+      "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.main-collection-product-grid.settings.columns_desktop.label"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "t:sections.main-collection-product-grid.settings.columns_mobile.label",
+      "options": [
+        { "value": "1", "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__1.label" },
+        { "value": "2", "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__2.label" }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

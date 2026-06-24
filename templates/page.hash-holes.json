@@ -1,0 +1,64 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "hash_holes_page_mGKNde": {
+      "type": "hash-holes-page",
+      "name": "Hash Holes Page",
+      "settings": {
+        "back_url": "/",
+        "anatomy_image": "shopify://shop_images/Hash-Hole-inside-verticle.jpg_1.jpg",
+        "info_title": "Premium Rosin-Infused",
+        "info_desc": "Crafted with 1.5G of whole bud flower and 0.6G of cold cure 90u–120u rosin derived from bubble hash, every Sundaze hand roll is made for smooth flavor, proper airflow, and a premium burn from first spark to final pull.",
+        "badge_1_icon": "shopify://shop_images/Whole.png",
+        "badge_1_title": "No Smalls",
+        "badge_2_icon": "shopify://shop_images/No_Trim.png",
+        "badge_2_title": "No Trim",
+        "badge_3_icon": "shopify://shop_images/Rosin.png",
+        "badge_3_title": "Cold Cure Rosin",
+        "badge_4_title": "Fully Flushed",
+        "badge_4_desc": "Flushed before harvest to support white ash and a cleaner, smoother burn.",
+        "learn_btn_text": "Learn More",
+        "learn_btn_link": "shopify://pages/learn-more",
+        "learn_subtitle": "Explore the Craft of a Sundaze Hash Hole",
+        "collection_image": "shopify://shop_images/Neapolitan.png",
+        "collection_badge": "Neapolitan",
+        "collection_name": "Neapolitan Hash Hole",
+        "collection_link": "shopify://pages/hash-holes-collection",
+        "rosin_image": "shopify://shop_images/Untitled_design_42.png",
+        "gradient_overlay": "shopify://shop_images/white-to-black-gradient.png",
+        "inside_title": "Whats Inside",
+        "inside_sub": "90U-120U Cold Cure Rosin",
+        "inside_desc": "Made from our fresh frozen whole plant cannabis flower",
+        "worm_title": "Our Rosin Worm",
+        "worm_desc": "Perfectly curated directly in the middle — each of our hand rolled hash holes is our rosin worm evenly placed to give a perfect even hit with zero clog and even burn.",
+        "smoke_title": "How to Smoke",
+        "tip1_title": "Start Slow",
+        "tip1_desc": "Due to their potency, take a few gentle puffs and pause to appreciate the complex flavors and effects.",
+        "tip2_title": "Stay Hydrated",
+        "tip2_desc": "Keep water nearby to prevent dry mouth and enhance your overall experience.",
+        "tip3_title": "Relax & Savor",
+        "tip3_desc": "Choose a comfortable spot to fully enjoy your hand roll. Whether alone or with friends, a relaxed setting enhances the experience."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "hash_holes_page_mGKNde"
+  ]
+}

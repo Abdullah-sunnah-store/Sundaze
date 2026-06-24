@@ -1,0 +1,719 @@
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-blush: #e8a0b4;
+    --sun-peach: #d4926e;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-muted: rgba(30,17,24,0.48);
+    --grad-top:  #fff8e8;
+    --grad-bot:  #fde8f0;
+  }
+
+  .coa-wrap {
+    background: linear-gradient(180deg, var(--grad-top) 0%, var(--grad-bot) 100%);
+    color: var(--sun-ink);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .coa-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 54vh;
+    padding: 80px 24px 64px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,230,200,0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 45% at 20% 90%,  rgba(240,190,210,0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 80% 70%,  rgba(255,220,200,0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%);
+    overflow: hidden;
+  }
+  .coa-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .coa-hero-eyebrow {
+    position: relative; z-index: 1;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 20px;
+  }
+  .coa-hero-title {
+    position: relative; z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 7vw, 72px);
+    font-weight: 900;
+    line-height: 1.08;
+    margin: 0 0 20px;
+    color: var(--sun-ink);
+  }
+  .coa-hero-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .coa-hero-desc {
+    position: relative; z-index: 1;
+    max-width: 560px;
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0 0 28px;
+  }
+  .coa-hero-pill {
+    position: relative; z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.28);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--sun-mauve);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .coa-hero-pill span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-blush), var(--sun-rose));
+    display: inline-block;
+  }
+  .coa-scroll-hint {
+    position: absolute;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--sun-muted);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .coa-scroll-line {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, var(--sun-rose), transparent);
+    animation: coa-pulse 2s ease-in-out infinite;
+  }
+  @keyframes coa-pulse {
+    0%, 100% { opacity: 0.25; }
+    50%       { opacity: 1; }
+  }
+
+  /* ─── DIVIDER ─── */
+  .coa-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,96,122,0.20) 30%, rgba(196,96,122,0.32) 50%, rgba(196,96,122,0.20) 70%, transparent);
+  }
+
+  /* ─── BODY ─── */
+  .coa-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 24px 0;
+  }
+  .coa-body:last-of-type { padding-bottom: 80px; }
+  @media (min-width: 768px) {
+    .coa-body { padding: 72px 48px 0; }
+    .coa-body:last-of-type { padding-bottom: 100px; }
+  }
+
+  /* ─── CONTENT CARD ─── */
+  .coa-content-card {
+    background: rgba(255,255,255,0.60);
+    border: 1px solid rgba(196,96,122,0.14);
+    border-radius: 20px;
+    padding: 40px 36px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 32px rgba(196,96,122,0.07);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .coa-content-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sun-blush), var(--sun-rose), var(--sun-blush), transparent);
+  }
+  @media (max-width: 640px) {
+    .coa-content-card { padding: 26px 18px; border-radius: 16px; }
+      .coa-hero-pill{
+        font-size:10px;
+      }
+  }
+
+  /* ─── CATEGORY HEADER ─── */
+  .coa-cat-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .coa-cat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(19px, 2.8vw, 24px);
+    font-weight: 900;
+    color: var(--sun-ink);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .coa-cat-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(196,96,122,0.28), transparent);
+  }
+
+  /* ─── PDF LIST ─── */
+  .coa-pdf-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ─── PDF LINK ─── */
+  .coa-pdf-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px 22px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(196,96,122,0.18);
+    background: rgba(255,255,255,0.62);
+    text-decoration: none;
+    color: var(--sun-ink);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 10px rgba(196,96,122,0.04);
+    transition: border-color 0.22s, background 0.22s, box-shadow 0.22s, transform 0.18s;
+  }
+  .coa-pdf-link:hover {
+    border-color: rgba(196,96,122,0.44);
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 6px 24px rgba(196,96,122,0.12);
+    transform: translateY(-2px);
+    color: var(--sun-ink);
+  }
+  .coa-pdf-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .coa-pdf-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(212,146,110,0.14), rgba(196,96,122,0.14));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.22s;
+  }
+  .coa-pdf-link:hover .coa-pdf-icon {
+    background: linear-gradient(135deg, rgba(212,146,110,0.26), rgba(196,96,122,0.26));
+  }
+  .coa-pdf-icon svg { width: 16px; height: 16px; color: var(--sun-rose); }
+  .coa-pdf-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--sun-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .coa-pdf-arrow {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(196,96,122,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.22s, background 0.22s;
+  }
+  .coa-pdf-link:hover .coa-pdf-arrow {
+    border-color: var(--sun-rose);
+    background: var(--sun-rose);
+  }
+  .coa-pdf-arrow svg {
+    width: 13px; height: 13px;
+    color: var(--sun-rose);
+    transition: color 0.22s;
+  }
+  .coa-pdf-link:hover .coa-pdf-arrow svg { color: #fff; }
+
+  /* ─── MISSION BAND ─── */
+  .coa-mission {
+    position: relative;
+    padding: 100px 24px;
+    text-align: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 50%,  rgba(255,225,235,0.70) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 0%,   rgba(255,248,230,0.60) 0%, transparent 60%),
+      linear-gradient(180deg, #fde8f0 0%, #fff8e8 100%);
+  }
+  .coa-mission::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .coa-mission-inner {
+    position: relative; z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .coa-mission-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+  .coa-mission-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3.5vw, 32px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.42;
+    color: var(--sun-ink);
+    margin: 0;
+  }
+  .coa-mission-quote strong {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--sun-peach), var(--sun-rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .coa-mission-body {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0;
+  }
+  .coa-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .coa-tag {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sun-mauve);
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ─── LEGAL ─── */
+  .coa-legal {
+    background: rgba(196,96,122,0.05);
+    border-top: 1px solid rgba(196,96,122,0.12);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .coa-legal p {
+    max-width: 780px;
+    margin: 0 auto;
+    font-size: 12px;
+    line-height: 1.80;
+    color: var(--sun-muted);
+    font-weight: 300;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  .coa-anim {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .coa-anim.coa-visible { opacity: 1; transform: translateY(0); }
+  .coa-anim[data-delay="1"] { transition-delay: 0.10s; }
+  .coa-anim[data-delay="2"] { transition-delay: 0.20s; }
+  .coa-anim[data-delay="3"] { transition-delay: 0.30s; }
+  .coa-anim[data-delay="4"] { transition-delay: 0.40s; }
+
+  @media (max-width: 700px) {
+    .coa-hero-eyebrow { font-size: 12px; }
+    .coa-mission-label { font-size: 12px; }
+    .coa-pdf-name { font-size: 11.5px; letter-spacing: 0.08em; }
+  }
+{% endstyle %}
+
+<div class="coa-wrap">
+
+  {%- assign blocks_size = section.blocks.size -%}
+
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+
+      {%- when 'hero' -%}
+        <div class="coa-hero" {{ block.shopify_attributes }}>
+          {%- if block.settings.eyebrow != blank -%}
+            <p class="coa-hero-eyebrow coa-anim" data-delay="1">{{ block.settings.eyebrow }}</p>
+          {%- endif -%}
+          {%- if block.settings.page_title != blank -%}
+            {%- assign title_words = block.settings.page_title | split: ' ' -%}
+            {%- assign title_last_idx = title_words.size | minus: 1 -%}
+            {%- assign title_main = title_words | slice: 0, title_last_idx | join: ' ' -%}
+            {%- assign title_accent = title_words | last -%}
+            <h1 class="coa-hero-title coa-anim" data-delay="2">
+              {%- if title_words.size == 1 -%}
+                {{ block.settings.page_title }}
+              {%- else -%}
+                {{ title_main }} <em>{{ title_accent }}</em>
+              {%- endif -%}
+            </h1>
+          {%- endif -%}
+          {%- if block.settings.hero_desc != blank -%}
+            <p class="coa-hero-desc coa-anim" data-delay="3">{{ block.settings.hero_desc }}</p>
+          {%- endif -%}
+          {%- if block.settings.hero_pill != blank -%}
+            <div class="coa-hero-pill coa-anim" data-delay="4">
+              <span></span>{{ block.settings.hero_pill }}
+            </div>
+          {%- endif -%}
+          <div class="coa-scroll-hint" aria-hidden="true">
+            <div class="coa-scroll-line"></div>
+            <span>scroll</span>
+          </div>
+        </div>
+        <div class="coa-divider"></div>
+
+      {%- when 'category' -%}
+        {%- comment -%}
+          Find the index range of pdf_entry blocks that belong to this category.
+          cat_end = index of the next 'category' block, or blocks_size if none.
+        {%- endcomment -%}
+        {%- assign cat_idx = forloop.index0 -%}
+        {%- assign cat_end = 'unset' -%}
+        {%- for fb in section.blocks -%}
+          {%- if fb.type == 'category' and forloop.index0 > cat_idx and cat_end == 'unset' -%}
+            {%- assign cat_end = forloop.index0 -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if cat_end == 'unset' -%}{%- assign cat_end = blocks_size -%}{%- endif -%}
+
+        <div class="coa-body" {{ block.shopify_attributes }}>
+          <div class="coa-content-card coa-anim" data-delay="1">
+            <div class="coa-cat-header">
+              <h2 class="coa-cat-title">{{ block.settings.category_title }}</h2>
+              <div class="coa-cat-line"></div>
+            </div>
+            <div class="coa-pdf-list">
+              {%- assign has_pdfs = false -%}
+              {%- for inner in section.blocks -%}
+                {%- assign inner_idx = forloop.index0 -%}
+                {%- if inner.type == 'pdf_entry' and inner_idx > cat_idx and inner_idx < cat_end -%}
+                  {%- if inner.settings.pdf_name != blank and inner.settings.pdf_url != blank -%}
+                    {%- assign has_pdfs = true -%}
+                    <a class="coa-pdf-link coa-anim" data-delay="2"
+                       href="{{ inner.settings.pdf_url }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       {{ inner.shopify_attributes }}>
+                      <div class="coa-pdf-left">
+                        <div class="coa-pdf-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                          </svg>
+                        </div>
+                        <span class="coa-pdf-name">{{ inner.settings.pdf_name }}</span>
+                      </div>
+                      <div class="coa-pdf-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                          <polyline points="15 3 21 3 21 9"/>
+                          <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                      </div>
+                    </a>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- unless has_pdfs -%}
+                <p style="padding:24px 0;font-size:13px;color:var(--sun-muted);font-weight:300;text-align:center;">
+                  No COAs added yet — add PDF Entry blocks below this category in the theme editor.
+                </p>
+              {%- endunless -%}
+            </div>
+          </div>
+        </div>
+        <div class="coa-divider"></div>
+
+      {%- when 'pdf_entry' -%}
+        {%- comment -%}Rendered by the inner loop inside its parent 'category' block.{%- endcomment -%}
+
+      {%- when 'promise' -%}
+        <div class="coa-mission" {{ block.shopify_attributes }}>
+          <div class="coa-mission-inner">
+            {%- if block.settings.label != blank -%}
+              <p class="coa-mission-label coa-anim">{{ block.settings.label }}</p>
+            {%- endif -%}
+            {%- if block.settings.quote != blank -%}
+              <blockquote class="coa-mission-quote coa-anim" data-delay="1">{{ block.settings.quote }}</blockquote>
+            {%- endif -%}
+            {%- if block.settings.body_text != blank -%}
+              <p class="coa-mission-body coa-anim" data-delay="2">{{ block.settings.body_text }}</p>
+            {%- endif -%}
+            {%- if block.settings.tags != blank -%}
+              <div class="coa-tags coa-anim" data-delay="3">
+                {%- assign tag_list = block.settings.tags | split: ',' -%}
+                {%- for tag in tag_list -%}
+                  <span class="coa-tag">{{ tag | strip }}</span>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+      {%- when 'legal' -%}
+        {%- if block.settings.legal_text != blank -%}
+          <div class="coa-legal" {{ block.shopify_attributes }}>
+            <p>{{ block.settings.legal_text }}</p>
+          </div>
+        {%- endif -%}
+
+    {%- endcase -%}
+  {%- endfor -%}
+
+</div>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('.coa-anim');
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('coa-visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function (el) { obs.observe(el); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "COA Page",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "hero",
+      "name": "Hero",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow Text",
+          "default": "Lab Results"
+        },
+        {
+          "type": "text",
+          "id": "page_title",
+          "label": "Page Title",
+          "default": "Certificates of Analysis"
+        },
+        {
+          "type": "textarea",
+          "id": "hero_desc",
+          "label": "Hero Description",
+          "default": "All Sundaze products are third-party tested to ensure purity, potency, and safety. Find our latest Certificates of Analysis organized by category below."
+        },
+        {
+          "type": "text",
+          "id": "hero_pill",
+          "label": "Hero Pill Text",
+          "default": "Third-Party Tested · Purity · Potency · Safety"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "name": "Category Header",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category_title",
+          "label": "Category Title",
+          "default": "3.5G Flower"
+        }
+      ]
+    },
+    {
+      "type": "pdf_entry",
+      "name": "PDF Entry",
+      "settings": [
+        {
+          "type": "text",
+          "id": "pdf_name",
+          "label": "PDF Name",
+          "info": "Displayed in uppercase. Example: Mystic Candy Swirl.pdf",
+          "default": "Product Name.pdf"
+        },
+        {
+          "type": "url",
+          "id": "pdf_url",
+          "label": "PDF URL"
+        }
+      ]
+    },
+    {
+      "type": "promise",
+      "name": "Our Promise",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Eyebrow Label",
+          "default": "Our Standard"
+        },
+        {
+          "type": "text",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Wrap words in <strong> tags for a gradient highlight.",
+          "default": "\"Every product. Every batch. <strong>Every test.<\/strong>\""
+        },
+        {
+          "type": "textarea",
+          "id": "body_text",
+          "label": "Body Text",
+          "default": "We partner with accredited third-party labs to verify that every Sundaze product meets our strict standards for purity, potency, and safety before it ever reaches you."
+        },
+        {
+          "type": "text",
+          "id": "tags",
+          "label": "Tags (comma-separated)",
+          "default": "Third-Party Tested, No Pesticides, Heavy Metal Free, 21+ Only, Federally Legal"
+        }
+      ]
+    },
+    {
+      "type": "legal",
+      "name": "Legal Disclaimer",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "legal_text",
+          "label": "Disclaimer Text",
+          "default": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "COA Page",
+      "blocks": [
+        {
+          "type": "hero",
+          "settings": {
+            "eyebrow": "Lab Results",
+            "page_title": "Certificates of Analysis",
+            "hero_desc": "All Sundaze products are third-party tested to ensure purity, potency, and safety. Find our latest Certificates of Analysis organized by category below.",
+            "hero_pill": "Third-Party Tested · Purity · Potency · Safety"
+          }
+        },
+        {
+          "type": "category",
+          "settings": { "category_title": "3.5G Flower" }
+        },
+        {
+          "type": "pdf_entry",
+          "settings": { "pdf_name": "Mystic Candy Swirl.pdf" }
+        },
+        {
+          "type": "pdf_entry",
+          "settings": { "pdf_name": "Maple Soaked Pancakes.pdf" }
+        },
+        {
+          "type": "pdf_entry",
+          "settings": { "pdf_name": "Frosty Shorty.pdf" }
+        },
+        {
+          "type": "pdf_entry",
+          "settings": { "pdf_name": "Dubai Drip.pdf" }
+        },
+        {
+          "type": "category",
+          "settings": { "category_title": "Hash Holes" }
+        },
+        {
+          "type": "pdf_entry",
+          "settings": { "pdf_name": "Neapolitan Hash Hole.pdf" }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "label": "Our Standard",
+            "quote": "\"Every product. Every batch. <strong>Every test.<\/strong>\"",
+            "body_text": "We partner with accredited third-party labs to verify that every Sundaze product meets our strict standards for purity, potency, and safety before it ever reaches you.",
+            "tags": "Third-Party Tested, No Pesticides, Heavy Metal Free, 21+ Only, Federally Legal"
+          }
+        },
+        {
+          "type": "legal",
+          "settings": {
+            "legal_text": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

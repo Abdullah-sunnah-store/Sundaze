@@ -1,0 +1,519 @@
+{% comment %}
+  Sundaze — Category Grid Section
+  File: sections/sundaze-categories.liquid
+  Split-card layout: full-bleed image top / white bottom (title, desc, CTA)
+  Header: Logo + Tagline only
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset ── */
+.sdz-cat-section *,
+.sdz-cat-section *::before,
+.sdz-cat-section *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Section wrapper ── */
+.sdz-cat-section {
+  background: {{ section.settings.section_bg | default: '#f0ece6' }};
+  font-family: 'Nunito', sans-serif;
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.sdz-cat-header {
+  text-align: center;
+  padding: 0 20px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.sdz-cat-header.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sdz-cat-logo {
+  display: block;
+  margin: 0 auto 20px;
+  max-height: 100px;
+  width: auto;
+  object-fit: contain;
+}
+
+.sdz-cat-tagline {
+  font-weight: 600;
+  font-size: clamp(14px, 2vw, 17px);
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Grid ── */
+.sdz-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2.5vw, 24px);
+  padding: 0 clamp(16px, 4vw, 48px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .sdz-cat-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 16px;
+  }
+}
+
+/* ── Card wrapper ── */
+.sdz-cat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  /* Animation Setup */
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sdz-cat-card:nth-child(1) { transition-delay: 0.1s; }
+.sdz-cat-card:nth-child(2) { transition-delay: 0.25s; }
+.sdz-cat-card:nth-child(3) { transition-delay: 0.4s; }
+
+.sdz-cat-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sdz-cat-card.is-visible:hover {
+  transition-delay: 0s;
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.18);
+}
+
+/* ── TOP: Image area (Full Width/Height) ── */
+.sdz-cat-card__top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  background: #9b59b6; /* Fallback gradient if no image; overridden inline */
+  overflow: hidden;
+}
+
+/* ── Badge ── */
+.sdz-cat-card__badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-block;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  padding: 6px 14px;
+  border-radius: 999px;
+  z-index: 3; /* Keeps badge above the image */
+  backdrop-filter: blur(4px);
+  transition: background 0.3s ease;
+}
+
+.sdz-cat-card:hover .sdz-cat-card__badge {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+/* ── Card Image (Full Bleed) ── */
+.sdz-cat-card__top-img {
+  position: absolute;
+  inset: 0; /* Fills 100% width and height of the top container */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Scales image to cover the area without distortion */
+  object-position: center;
+  z-index: 2; /* Sits above the gradient background, below the badge */
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sdz-cat-card:hover .sdz-cat-card__top-img {
+  transform: scale(1.05); /* Subtle zoom on hover */
+}
+
+/* ── BOTTOM: White content area ── */
+.sdz-cat-card__bottom {
+  background: #fff;
+  padding: clamp(22px, 3vw, 28px) clamp(20px, 3vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+/* ── Title — uses card accent color ── */
+.sdz-cat-card__title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+  line-height: 1.15;
+  /* color set via inline style per card */
+}
+
+/* ── Description ── */
+.sdz-cat-card__desc {
+  font-size: clamp(13px, 1.4vw, 14.5px);
+  font-weight: 600;
+  color: #555;
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+
+/* ── CTA button ── */
+.sdz-cat-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 13px 26px;
+  border-radius: 999px;
+  color: #111;
+  text-decoration: none;
+  border: 2px solid #111;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 6px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.sdz-cat-card:hover .sdz-cat-card__cta {
+  background: #111 !important;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+.sdz-cat-card__cta svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sdz-cat-card:hover .sdz-cat-card__cta svg {
+  transform: translateX(4px);
+}
+</style>
+
+<section
+  class="sdz-cat-section"
+  id="sdz-categories-{{ section.id }}"
+  aria-label="Shop by category"
+>
+
+  <!-- ── Header (Logo + Tagline only) ── -->
+  {%- if section.settings.show_header -%}
+  <div class="sdz-cat-header" id="sdz-cat-header-{{ section.id }}">
+    {%- if section.settings.logo_image != blank -%}
+      <img 
+        class="sdz-cat-logo" 
+        src="{{ section.settings.logo_image | image_url: width: 200 }}" 
+        alt="{{ section.settings.logo_image.alt | default: 'Sundaze' | escape }}"
+        width="200"
+        height="{{ 200 | divided_by: section.settings.logo_image.aspect_ratio }}"
+      >
+    {%- endif -%}
+    {%- if section.settings.tagline != blank -%}
+      <p class="sdz-cat-tagline">{{ section.settings.tagline }}</p>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+
+  <!-- ── Category Grid ── -->
+  <div class="sdz-cat-grid">
+    {%- for block in section.blocks -%}
+      {%- assign color1 = block.settings.color1 | default: '#9b59b6' -%}
+      {%- assign color2 = block.settings.color2 | default: '#8e44ad' -%}
+      {%- assign title_color = block.settings.title_color | default: '#9b59b6' -%}
+
+      <a
+        class="sdz-cat-card"
+        href="{{ block.settings.link | default: '#' }}"
+        {{ block.shopify_attributes }}
+        aria-label="Shop {{ block.settings.title }}"
+      >
+
+        <!-- TOP: Full-bleed image area -->
+        <div
+          class="sdz-cat-card__top"
+          style="background: linear-gradient(150deg, {{ color1 }} 0%, {{ color2 }} 100%);"
+        >
+
+          {%- if block.settings.badge != blank -%}
+            <span class="sdz-cat-card__badge">{{ block.settings.badge }}</span>
+          {%- endif -%}
+
+          {%- if block.settings.card_image != blank -%}
+            <img 
+              class="sdz-cat-card__top-img" 
+              src="{{ block.settings.card_image | img_url: '600x' }}" 
+              alt="{{ block.settings.title | escape }}"
+              draggable="false"
+              loading="lazy">
+          {%- endif -%}
+
+        </div><!-- /.sdz-cat-card__top -->
+
+        <!-- BOTTOM: White content area -->
+        <div class="sdz-cat-card__bottom">
+          <h3
+            class="sdz-cat-card__title"
+            style="color: {{ title_color }};"
+          >{{ block.settings.title | default: 'Category' }}</h3>
+
+          {%- if block.settings.description != blank -%}
+            <p class="sdz-cat-card__desc">{{ block.settings.description }}</p>
+          {%- endif -%}
+
+          <span class="sdz-cat-card__cta">
+            {{ block.settings.cta_text | default: 'Shop Now' }}
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+        </div><!-- /.sdz-cat-card__bottom -->
+
+      </a>
+    {%- endfor -%}
+  </div>
+
+</section>
+
+<script>
+(function() {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  var header = document.getElementById('sdz-cat-header-{{ section.id }}');
+  if (header) observer.observe(header);
+
+  var section = document.getElementById('sdz-categories-{{ section.id }}');
+  if (section) {
+    var cards = section.querySelectorAll('.sdz-cat-card');
+    cards.forEach(function(card) { observer.observe(card); });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze Categories",
+  "tag": "section",
+  "class": "sundaze-categories",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show header",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Brand Logo"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Three ways to shop, one unforgettable experience."
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section background color",
+      "default": "#f0ece6"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_card",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "Card Image (Fills Top Area)",
+          "info": "This image will scale to fill the entire colored top section of the card."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category title",
+          "default": "Hash Holes"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Short description",
+          "default": "0.66g 90u Hash Rosin + 1.5g exotic flower."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge (optional)",
+          "default": "Best Seller"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection URL"
+        },
+        {
+          "type": "header",
+          "content": "Colors (Fallback if no image)"
+        },
+        {
+          "type": "color",
+          "id": "color1",
+          "label": "Primary gradient color",
+          "default": "#9b59b6"
+        },
+        {
+          "type": "color",
+          "id": "color2",
+          "label": "Secondary gradient color",
+          "default": "#6c1e8a"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title color (bottom section)",
+          "default": "#9b59b6"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Categories",
+      "blocks": [
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Hash Holes",
+            "description": "0.66g 90u Hash Rosin + 1.5g exotic flower. Hand-rolled perfection.",
+            "badge": "BEST SELLER",
+            "cta_text": "SHOP NOW",
+            "color1": "#9b59b6",
+            "color2": "#6c1e8a",
+            "title_color": "#9b59b6"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "3.5g Buckets",
+            "description": "Premium eighths packed with the best flavors. Unreal quality, great value.",
+            "badge": "VALUE PICK",
+            "cta_text": "SHOP NOW",
+            "color1": "#3498db",
+            "color2": "#1a5fa8",
+            "title_color": "#2980b9"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Flavor Discovery",
+            "description": "Dubai Drip, Birthday Cake, Maple Pancakes & more. Find your next fave.",
+            "badge": "NEW DROPS",
+            "cta_text": "EXPLORE",
+            "color1": "#c8a427",
+            "color2": "#5a6e2a",
+            "title_color": "#a07d1a"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3
+}
+{% endschema %}

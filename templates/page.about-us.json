@@ -1,0 +1,49 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_about_us_Rf7ecq": {
+      "type": "sundaze-about-us",
+      "name": "Sundaze About Us",
+      "settings": {
+        "eyebrow": "About Sundaze",
+        "hero_desc": "Created with a simple belief: the cannabis experience should feel better, taste better, and be more exciting for the people who actually enjoy it.",
+        "hero_pill": "Flavor · Innovation · Community",
+        "story_text": "We saw an industry full of products that often felt the same — plain packaging, predictable flavors, and a shopping experience that did not always put the consumer first. So we set out to build something different. Something more colorful. More flavorful. More creative. More connected to the people who support it.",
+        "community_text": "At the heart of Sundaze is the community. We listen to what people want. We pay attention to the flavors they love, the products they reach for, and the experience they wish existed. Our goal is to keep improving, keep creating, and keep building products that feel made for real consumers — not just shelves.",
+        "pillar1_title": "Bold Flavor",
+        "pillar1_text": "Every product is crafted around the pursuit of memorable, complex flavor. We believe great cannabis should be as exciting to taste as it is to enjoy.",
+        "pillar2_title": "Thoughtful Craft",
+        "pillar2_text": "From whole bud flower to cold cure rosin, every detail is intentional. No smalls. No trim. No shortcuts. Just clean, carefully made products.",
+        "pillar3_title": "Community Driven",
+        "pillar3_text": "Sundaze is shaped by the people who support it. We listen, adapt, and build — because the best ideas come from the community, not a boardroom.",
+        "pillar4_title": "Uncompromising Quality",
+        "pillar4_text": "White ash burns. Smooth pulls. Proper airflow. Quality is not a selling point for us — it is the baseline expectation we hold ourselves to.",
+        "pillar5_title": "Made With Purpose",
+        "pillar5_text": "Every flavor, every format, every detail is part of a bigger vision. We are not making products for shelves — we are making experiences for people.",
+        "pillar6_title": "Always Evolving",
+        "pillar6_text": "We are always looking for what is next — new flavors, new ideas, and new ways to make the consumer experience better. Staying still is not in our nature.",
+        "mission_text": "We are here to build a brand people can connect with — one that feels fun, reliable, and rooted in the community that helped shape it. Sundaze is for the flavor seekers, the everyday consumers, the loyal supporters, and the people who believe the little details matter. We are here to grow with our community, push the culture forward, and create products that make every session feel a little more special."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_about_us_Rf7ecq"
+  ]
+}

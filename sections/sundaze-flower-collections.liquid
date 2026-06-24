@@ -1,0 +1,248 @@
+{{ 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap' | stylesheet_tag }}
+
+<style>
+.sf-bucket-card *,
+.sf-bucket-card *::before,
+.sf-bucket-card *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.sf-bucket-card {
+  font-family: 'DM Sans', sans-serif;
+  max-width: 512px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  background: {{ section.settings.section_bg }};
+}
+
+@media (min-width: 640px) { .sf-bucket-card { max-width: 640px; } }
+
+.sf-bucket-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  text-align: center;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  font-size: clamp(28px, 5vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 640px) { .sf-bucket-title { margin-bottom: 40px; } }
+
+.sf-card-outer {
+  position: relative;
+  border-radius: 24px;
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+              transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+              box-shadow 0.35s ease;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+}
+
+.sf-card-outer.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sf-card-outer.is-visible:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 28px 72px rgba(0,0,0,0.22);
+}
+
+.sf-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+.sf-card-image-wrap {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+}
+
+.sf-card-image-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.sf-card-outer.is-visible:hover .sf-card-image-wrap img {
+  transform: scale(1.03);
+}
+
+.sf-card-label {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: clamp(11px, 1.4vw, 14px);
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 10px 32px !important;
+  border-radius: 6px;
+  white-space: nowrap;
+  border: 2.5px solid rgba(255,255,255,0.82);
+  background: transparent;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* ===== Collection name below card ===== */
+.sf-collection-link {
+  display: block;
+  width: 100%;
+  max-width: 512px;
+  text-decoration: none;
+  color: inherit;
+}
+@media (min-width: 640px) { .sf-collection-link { max-width: 640px; } }
+
+.sf-collection-name {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 24px;
+  color: #1a1a1a;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+</style>
+
+{% if section.settings.section_heading != blank %}
+  <div class="sf-bucket-card" style="padding-bottom: 0;">
+    <p class="sf-bucket-title">{{ section.settings.section_heading }}</p>
+  </div>
+{% endif %}
+
+<section
+  class="sf-bucket-card"
+  id="sf-bucket-card-{{ section.id }}"
+  style="{% if section.settings.section_heading != blank %}padding-top: 0;{% endif %}"
+  aria-label="{{ section.settings.collection_name }} Collection Card"
+>
+  {% assign card_link = section.settings.card_link %}
+
+  <{% if card_link != blank %}a href="{{ card_link }}"{% else %}div{% endif %} class="sf-collection-link">
+
+    <div class="sf-card-outer" id="sf-card-{{ section.id }}">
+
+      <div class="sf-card">
+
+        <div class="sf-card-image-wrap">
+
+          {% if section.settings.collection_label != blank %}
+            <div class="sf-card-label">{{ section.settings.collection_label }}</div>
+          {% endif %}
+
+          {% if section.settings.card_image != blank %}
+            {{ section.settings.card_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: section.settings.collection_name }}
+          {% else %}
+            <div style="width:100%;height:260px;background:#e0dcd6;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;font-family:'DM Sans',sans-serif;">Upload your collection image</div>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {% if section.settings.collection_name != blank %}
+      <h3 class="sf-collection-name">{{ section.settings.collection_name }}</h3>
+    {% endif %}
+
+  </{% if card_link != blank %}a{% else %}div{% endif %}>
+
+</section>
+
+<script>
+(function() {
+  var card = document.getElementById('sf-card-{{ section.id }}');
+  if (!card) return;
+  var rect = card.getBoundingClientRect();
+  if (rect.top < window.innerHeight) {
+    card.classList.add('is-visible');
+  } else {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    observer.observe(card);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze Bucket Card",
+  "tag": "section",
+  "class": "sundaze-bucket-card",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Card Content"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading (above card)",
+      "default": "Collections"
+    },
+    {
+      "type": "text",
+      "id": "collection_label",
+      "label": "Badge Label (inside card)",
+      "default": "Bucket Series"
+    },
+    {
+      "type": "text",
+      "id": "collection_name",
+      "label": "Footer Text",
+      "default": "Sundaze 3.5G Flower"
+    },
+    {
+      "type": "url",
+      "id": "card_link",
+      "label": "Card Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Card Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_image",
+      "label": "Collection Image",
+      "info": "Upload your full-width image showing all products side by side."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Bucket Card"
+    }
+  ]
+}
+{% endschema %}

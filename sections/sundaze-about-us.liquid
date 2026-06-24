@@ -1,0 +1,766 @@
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --sun-rose:    #c4607a;
+    --sun-mauve:   #a84f6a;
+    --sun-blush:   #e8a0b4;
+    --sun-peach:   #d4926e;
+    --sun-ink:     #1e1118;
+    --sun-text:    rgba(30,17,24,0.82);
+    --sun-muted:   rgba(30,17,24,0.48);
+    --sun-line:    rgba(196,96,122,0.18);
+    --grad-top:    #fff8e8;
+    --grad-bot:    #fde8f0;
+  }
+
+  .sab-wrap {
+    background: linear-gradient(180deg, var(--grad-top) 0%, var(--grad-bot) 100%);
+    color: var(--sun-ink);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── HERO ── */
+  .sab-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 72vh;
+    padding: 80px 24px 64px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,230,200,0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 45% at 20% 90%,  rgba(240,190,210,0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 80% 70%,  rgba(255,220,200,0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%);
+    overflow: hidden;
+  }
+
+  .sab-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sab-hero-eyebrow {
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 20px;
+  }
+    @media (max-width: 768px) {
+       .sab-hero-eyebrow {
+        font-size:12px;
+       }
+    }
+
+  .sab-hero-desc {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0 0 28px;
+  }
+
+  .sab-hero-pill {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.28);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--sun-mauve);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .sab-hero-pill span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-blush), var(--sun-rose));
+    display: inline-block;
+  }
+
+  .sab-scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--sun-muted);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .sab-scroll-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, var(--sun-rose), transparent);
+    animation: sab-pulse-line 2s ease-in-out infinite;
+  }
+  @keyframes sab-pulse-line {
+    0%, 100% { opacity: 0.25; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── DIVIDER ── */
+  .sab-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,96,122,0.20) 30%, rgba(196,96,122,0.32) 50%, rgba(196,96,122,0.20) 70%, transparent);
+  }
+
+  /* ── STORY ── */
+  .sab-story {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  @media (min-width: 768px) {
+    .sab-story { grid-template-columns: 1fr 1fr; gap: 80px; padding: 100px 48px; }
+  }
+
+  .sab-story-block { display: flex; flex-direction: column; gap: 14px; }
+
+  .sab-block-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+    @media (max-width: 768px) {
+      .sab-block-label{
+        font-size:12px;
+      }
+    }
+
+  .sab-block-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--sun-ink);
+    margin: 0;
+  }
+
+  .sab-block-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 60%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sab-block-text {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0;
+  }
+
+  /* ── STAT STRIP ── */
+  .sab-stats {
+    background: transparent;
+    border-top: 1px solid rgba(196,96,122,0.14);
+    border-bottom: 1px solid rgba(196,96,122,0.14);
+    padding: 48px 24px;
+  }
+
+  .sab-stats-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  @media (min-width: 640px) {
+    .sab-stats-inner { grid-template-columns: repeat(4, 1fr); gap: 0; }
+  }
+
+  .sab-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+    position: relative;
+  }
+
+  .sab-stat + .sab-stat::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10%; height: 80%;
+    width: 1px;
+    background: rgba(196,96,122,0.18);
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .sab-stat + .sab-stat::before { display: block; }
+  }
+
+  .sab-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 6vw, 50px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .sab-stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sun-muted);
+    white-space: nowrap;
+  }
+
+  /* ── PILLARS ── */
+  .sab-pillars {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .sab-pillars-header {
+    text-align: center;
+    margin-bottom: 52px;
+  }
+
+  .sab-pillars-eyebrow {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 12px;
+  }
+    @media (max-width: 768px){
+    .sab-pillars-eyebrow{
+      font-size:12px;
+    }
+    } 
+
+  .sab-pillars-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--sun-ink) 0%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+  }
+
+  .sab-pillars-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  @media (min-width: 640px)  { .sab-pillars-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .sab-pillars-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .sab-pillar {
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(196,96,122,0.16);
+    border-radius: 18px;
+    padding: 30px 26px;
+    transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .sab-pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sun-blush), var(--sun-rose), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .sab-pillar:hover {
+    background: rgba(255,255,255,0.80);
+    border-color: rgba(196,96,122,0.32);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(196,96,122,0.12);
+  }
+  .sab-pillar:hover::before { opacity: 1; }
+
+  .sab-pillar-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, rgba(232,160,180,0.25), rgba(196,96,122,0.18));
+    border: 1px solid rgba(196,96,122,0.20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--sun-rose);
+  }
+  .sab-pillar-icon svg { width: 21px; height: 21px; }
+
+  .sab-pillar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--sun-ink);
+    margin: 0 0 10px;
+  }
+
+  .sab-pillar-text {
+    font-size: 14px;
+    line-height: 1.78;
+    color: var(--sun-muted);
+    font-weight: 300;
+    margin: 0;
+  }
+
+  /* ── MISSION ── */
+  .sab-mission {
+    position: relative;
+    padding: 100px 24px;
+    text-align: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 50%,  rgba(255,225,235,0.70) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 0%,   rgba(255,248,230,0.60) 0%, transparent 60%),
+      linear-gradient(180deg, #fde8f0 0%, #fff8e8 100%);
+  }
+
+  .sab-mission::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .sab-mission-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .sab-mission-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+    @media (max-width: 768px){
+      .sab-mission-label{
+        font-size:12px;
+      }
+    } 
+
+  .sab-mission-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(21px, 4vw, 35px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.42;
+    color: var(--sun-ink);
+    margin: 0;
+  }
+
+  .sab-mission-quote strong {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--sun-peach), var(--sun-rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sab-mission-body {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .sab-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .sab-tag {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sun-mauve);
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ── ANIMATIONS ── */
+  .sab-anim {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .sab-anim.sab-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .sab-anim[data-delay="1"] { transition-delay: 0.10s; }
+  .sab-anim[data-delay="2"] { transition-delay: 0.20s; }
+  .sab-anim[data-delay="3"] { transition-delay: 0.30s; }
+  .sab-anim[data-delay="4"] { transition-delay: 0.40s; }
+  .sab-anim[data-delay="5"] { transition-delay: 0.50s; }
+{% endstyle %}
+
+<div class="sab-wrap">
+
+  <!-- ── HERO (logo is in header — no title here) ── -->
+  <div class="sab-hero">
+    <p class="sab-hero-eyebrow sab-anim" data-delay="1">{{ section.settings.eyebrow }}</p>
+    <p class="sab-hero-desc sab-anim" data-delay="2">{{ section.settings.hero_desc }}</p>
+    <div class="sab-hero-pill sab-anim" data-delay="3">
+      <span></span>{{ section.settings.hero_pill }}
+    </div>
+    <div class="sab-scroll-hint" aria-hidden="true">
+      <div class="sab-scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </div>
+
+  <div class="sab-divider"></div>
+
+  <!-- ── OUR STORY ── -->
+  <div class="sab-story">
+    <div class="sab-story-block sab-anim">
+      <p class="sab-block-label">Our Story</p>
+      <h2 class="sab-block-title">We saw an industry that<br><em>needed something more.</em></h2>
+      <p class="sab-block-text">{{ section.settings.story_text }}</p>
+    </div>
+    <div class="sab-story-block sab-anim" data-delay="2">
+      <p class="sab-block-label">Community First</p>
+      <h2 class="sab-block-title">Built by listeners.<br><em>Grown by you.</em></h2>
+      <p class="sab-block-text">{{ section.settings.community_text }}</p>
+    </div>
+  </div>
+
+  <div class="sab-divider"></div>
+
+  <!-- ── STAT STRIP ── -->
+  <div class="sab-stats">
+    <div class="sab-stats-inner">
+      <div class="sab-stat sab-anim">
+        <span class="sab-stat-num">1.5G</span>
+        <span class="sab-stat-label">Whole Bud Flower</span>
+      </div>
+      <div class="sab-stat sab-anim" data-delay="1">
+        <span class="sab-stat-num">0.5G</span>
+        <span class="sab-stat-label">Cold Cure Rosin</span>
+      </div>
+      <div class="sab-stat sab-anim" data-delay="2">
+        <span class="sab-stat-num">90–120u</span>
+        <span class="sab-stat-label">Bubble Hash Grade</span>
+      </div>
+      <div class="sab-stat sab-anim" data-delay="3">
+        <span class="sab-stat-num">100%</span>
+        <span class="sab-stat-label">Hand Rolled</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PILLARS ── -->
+  <div class="sab-pillars">
+    <div class="sab-pillars-header sab-anim">
+      <p class="sab-pillars-eyebrow">What We Stand For</p>
+      <h2 class="sab-pillars-title">Flavor. Innovation. Community.</h2>
+    </div>
+
+    <div class="sab-pillars-grid">
+
+      <div class="sab-pillar sab-anim" data-delay="1">
+        <div class="sab-pillar-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/>
+          </svg>
+        </div>
+        <h3 class="sab-pillar-title">{{ section.settings.pillar1_title }}</h3>
+        <p class="sab-pillar-text">{{ section.settings.pillar1_text }}</p>
+      </div>
+
+      <div class="sab-pillar sab-anim" data-delay="2">
+        <div class="sab-pillar-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <h3 class="sab-pillar-title">{{ section.settings.pillar2_title }}</h3>
+        <p class="sab-pillar-text">{{ section.settings.pillar2_text }}</p>
+      </div>
+
+      <div class="sab-pillar sab-anim" data-delay="3">
+        <div class="sab-pillar-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3 class="sab-pillar-title">{{ section.settings.pillar3_title }}</h3>
+        <p class="sab-pillar-text">{{ section.settings.pillar3_text }}</p>
+      </div>
+
+      <div class="sab-pillar sab-anim" data-delay="1">
+        <div class="sab-pillar-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <h3 class="sab-pillar-title">{{ section.settings.pillar4_title }}</h3>
+        <p class="sab-pillar-text">{{ section.settings.pillar4_text }}</p>
+      </div>
+
+      <div class="sab-pillar sab-anim" data-delay="2">
+        <div class="sab-pillar-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h3 class="sab-pillar-title">{{ section.settings.pillar5_title }}</h3>
+        <p class="sab-pillar-text">{{ section.settings.pillar5_text }}</p>
+      </div>
+
+      <div class="sab-pillar sab-anim" data-delay="3">
+        <div class="sab-pillar-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <h3 class="sab-pillar-title">{{ section.settings.pillar6_title }}</h3>
+        <p class="sab-pillar-text">{{ section.settings.pillar6_text }}</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="sab-divider"></div>
+
+  <!-- ── MISSION ── -->
+  <div class="sab-mission">
+    <div class="sab-mission-inner">
+      <p class="sab-mission-label sab-anim">Our Mission</p>
+      <blockquote class="sab-mission-quote sab-anim" data-delay="1">
+        "To bring <strong>flavor, creativity, and care</strong> back to the cannabis experience."
+      </blockquote>
+      <p class="sab-mission-body sab-anim" data-delay="2">{{ section.settings.mission_text }}</p>
+      <div class="sab-tags sab-anim" data-delay="3">
+        <span class="sab-tag">Flavor Seekers</span>
+        <span class="sab-tag">Everyday Consumers</span>
+        <span class="sab-tag">Loyal Supporters</span>
+        <span class="sab-tag">Detail Obsessed</span>
+        <span class="sab-tag">Community Grown</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    var els = document.querySelectorAll('.sab-anim');
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('sab-visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { obs.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze About Us",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "About Sundaze"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_desc",
+      "label": "Hero Description",
+      "default": "Created with a simple belief: the cannabis experience should feel better, taste better, and be more exciting for the people who actually enjoy it."
+    },
+    {
+      "type": "text",
+      "id": "hero_pill",
+      "label": "Hero Pill Tag",
+      "default": "Flavor · Innovation · Community"
+    },
+    {
+      "type": "header",
+      "content": "Our Story"
+    },
+    {
+      "type": "textarea",
+      "id": "story_text",
+      "label": "Story Text",
+      "default": "We saw an industry full of products that often felt the same — plain packaging, predictable flavors, and a shopping experience that did not always put the consumer first. So we set out to build something different. Something more colorful. More flavorful. More creative. More connected to the people who support it."
+    },
+    {
+      "type": "textarea",
+      "id": "community_text",
+      "label": "Community Text",
+      "default": "At the heart of Sundaze is the community. We listen to what people want. We pay attention to the flavors they love, the products they reach for, and the experience they wish existed. Our goal is to keep improving, keep creating, and keep building products that feel made for real consumers — not just shelves."
+    },
+    {
+      "type": "header",
+      "content": "Pillars"
+    },
+    {
+      "type": "text",
+      "id": "pillar1_title",
+      "label": "Pillar 1 Title",
+      "default": "Bold Flavor"
+    },
+    {
+      "type": "textarea",
+      "id": "pillar1_text",
+      "label": "Pillar 1 Text",
+      "default": "Every product is crafted around the pursuit of memorable, complex flavor. We believe great cannabis should be as exciting to taste as it is to enjoy."
+    },
+    {
+      "type": "text",
+      "id": "pillar2_title",
+      "label": "Pillar 2 Title",
+      "default": "Thoughtful Craft"
+    },
+    {
+      "type": "textarea",
+      "id": "pillar2_text",
+      "label": "Pillar 2 Text",
+      "default": "From whole bud flower to cold cure rosin, every detail is intentional. No smalls. No trim. No shortcuts. Just clean, carefully made products."
+    },
+    {
+      "type": "text",
+      "id": "pillar3_title",
+      "label": "Pillar 3 Title",
+      "default": "Community Driven"
+    },
+    {
+      "type": "textarea",
+      "id": "pillar3_text",
+      "label": "Pillar 3 Text",
+      "default": "Sundaze is shaped by the people who support it. We listen, adapt, and build — because the best ideas come from the community, not a boardroom."
+    },
+    {
+      "type": "text",
+      "id": "pillar4_title",
+      "label": "Pillar 4 Title",
+      "default": "Uncompromising Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "pillar4_text",
+      "label": "Pillar 4 Text",
+      "default": "White ash burns. Smooth pulls. Proper airflow. Quality is not a selling point for us — it is the baseline expectation we hold ourselves to."
+    },
+    {
+      "type": "text",
+      "id": "pillar5_title",
+      "label": "Pillar 5 Title",
+      "default": "Made With Purpose"
+    },
+    {
+      "type": "textarea",
+      "id": "pillar5_text",
+      "label": "Pillar 5 Text",
+      "default": "Every flavor, every format, every detail is part of a bigger vision. We are not making products for shelves — we are making experiences for people."
+    },
+    {
+      "type": "text",
+      "id": "pillar6_title",
+      "label": "Pillar 6 Title",
+      "default": "Always Evolving"
+    },
+    {
+      "type": "textarea",
+      "id": "pillar6_text",
+      "label": "Pillar 6 Text",
+      "default": "We are always looking for what is next — new flavors, new ideas, and new ways to make the consumer experience better. Staying still is not in our nature."
+    },
+    {
+      "type": "header",
+      "content": "Mission"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_text",
+      "label": "Mission Body Text",
+      "default": "We are here to build a brand people can connect with — one that feels fun, reliable, and rooted in the community that helped shape it. Sundaze is for the flavor seekers, the everyday consumers, the loyal supporters, and the people who believe the little details matter. We are here to grow with our community, push the culture forward, and create products that make every session feel a little more special."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze About Us"
+    }
+  ]
+}
+{% endschema %}

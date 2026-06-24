@@ -1,0 +1,733 @@
+{% doc %}
+  @prompt
+    White background section. Width 100%.
+    Padding top: 48px bottom: 48px
+    Padding left: 20px right: 20px desktop
+    Padding left: 10px right: 10px mobile
+    Max width: 1200px
+    Centered
+    
+    HEADING:
+    - Text: "COLLECTIONS"
+    - Font: sans-serif extrabold
+    - Font weight: 900
+    - Font size: 42px desktop / 28px mobile
+    - Color: #000000
+    - Text transform: uppercase
+    - Letter spacing: 2px
+    - Align: left
+    - Margin bottom: 32px
+    
+    CARD:
+    - Width: 100%
+    - Background: transparent
+    - Border: none
+    - Cursor: pointer
+    - On click: opens link [YOUR-PAGE-LINK-HERE]
+    - Target: new page (same tab)
+    
+    CARD IMAGE BLOCK:
+    - Image placeholder: [NEAPOLITAN-COLLECTION.png]
+    - Width: 100%
+    - Height: auto
+    - Display: block
+    - Object fit: cover
+    - Border radius: 0px
+    - Cursor: pointer
+    - Link: [YOUR-PAGE-LINK-HERE]
+    
+    Image hover effect:
+    - On hover: scale 1.03
+    - Transition: transform 0.4s ease
+    - Overflow: hidden
+    
+    CARD INFO (below image):
+    - Padding top: 16px
+    - Background: #ffffff
+    
+      Product Title:
+      - Text: "NEAPOLITAN HASH HOLE"
+      - Font: sans-serif bold
+      - Font weight: 700
+      - Font size: 16px
+      - Color: #000000
+      - Text transform: uppercase
+      - Letter spacing: 1px
+      - Margin bottom: 4px
+    
+      Product Price:
+      - Text: "$60.00"
+      - Font: sans-serif regular
+      - Font weight: 400
+      - Font size: 16px
+      - Color: #000000
+      - Margin top: 4px
+    
+    ENTIRE CARD is clickable:
+    - Wrap entire card (image + title + price)
+      in anchor tag <a href="[YOUR-PAGE-LINK-HERE]">
+    - Text decoration: none
+    - Color: inherit
+    - Display: block, font size of product title in mobile devices should be 20px and in large devices should be 28px. font size of product price should be 16px in mobile device and 22 px in large device. also add some animation of the card., add some padding left and right to product title and price
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collections-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding-top: {{ block.settings.padding_top_desktop }}px;
+    padding-bottom: {{ block.settings.padding_bottom_desktop }}px;
+    padding-left: {{ block.settings.padding_left_desktop }}px;
+    padding-right: {{ block.settings.padding_right_desktop }}px;
+  }
+
+  .ai-collections-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-collections-heading-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: {{ block.settings.heading_font_weight }};
+    font-size: {{ block.settings.heading_font_size_desktop }}px;
+    color: {{ block.settings.heading_color }};
+    text-transform: {{ block.settings.heading_text_transform }};
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    text-align: {{ block.settings.heading_alignment }};
+    margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+  }
+
+  .ai-collections-card-{{ ai_gen_id }} {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-collections-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-collections-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    cursor: pointer;
+  }
+
+  .ai-collections-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transition: transform {{ block.settings.hover_transition_duration }}s ease;
+  }
+
+  .ai-collections-card-{{ ai_gen_id }}:hover .ai-collections-image-{{ ai_gen_id }} {
+    transform: scale({{ block.settings.hover_scale }});
+  }
+
+  .ai-collections-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-collections-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-collections-card-info-{{ ai_gen_id }} {
+    padding-top: {{ block.settings.card_info_padding_top }}px;
+    padding-left: {{ block.settings.card_info_padding_left }}px;
+    padding-right: {{ block.settings.card_info_padding_right }}px;
+    background: {{ block.settings.card_info_background }};
+  }
+
+  .ai-collections-product-title-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: {{ block.settings.title_font_weight }};
+    font-size: {{ block.settings.title_font_size_desktop }}px;
+    color: {{ block.settings.title_color }};
+    text-transform: {{ block.settings.title_text_transform }};
+    letter-spacing: {{ block.settings.title_letter_spacing }}px;
+    margin: 0 0 {{ block.settings.title_margin_bottom }}px 0;
+  }
+
+  .ai-collections-product-price-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: {{ block.settings.price_font_weight }};
+    font-size: {{ block.settings.price_font_size_desktop }}px;
+    color: {{ block.settings.price_color }};
+    margin-top: {{ block.settings.price_margin_top }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collections-section-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.padding_left_mobile }}px;
+      padding-right: {{ block.settings.padding_right_mobile }}px;
+    }
+
+    .ai-collections-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_font_size_mobile }}px;
+    }
+
+    .ai-collections-product-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_font_size_mobile }}px;
+    }
+
+    .ai-collections-product-price-{{ ai_gen_id }} {
+      font-size: {{ block.settings.price_font_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<collection-card-{{ ai_gen_id }} class="ai-collections-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-collections-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-collections-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <a href="{{ block.settings.card_link }}" class="ai-collections-card-{{ ai_gen_id }}" {% if block.settings.open_new_tab %}target="_blank"{% endif %}>
+      <div class="ai-collections-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.card_image %}
+          <img
+            src="{{ block.settings.card_image | image_url: width: 2000 }}"
+            alt="{{ block.settings.card_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.card_image.width }}"
+            height="{{ block.settings.card_image.height }}"
+            class="ai-collections-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-collections-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-collections-card-info-{{ ai_gen_id }}">
+        {% if block.settings.product_title != blank %}
+          <h3 class="ai-collections-product-title-{{ ai_gen_id }}">{{ block.settings.product_title }}</h3>
+        {% endif %}
+
+        {% if block.settings.product_price != blank %}
+          <div class="ai-collections-product-price-{{ ai_gen_id }}">{{ block.settings.product_price }}</div>
+        {% endif %}
+      </div>
+    </a>
+  </div>
+</collection-card-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CollectionCard{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+
+    customElements.define('collection-card-{{ ai_gen_id }}', CollectionCard{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Padding desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_left_desktop",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_right_desktop",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Padding mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mobile",
+      "label": "Left",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mobile",
+      "label": "Right",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Text",
+      "default": "COLLECTIONS"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "900",
+          "label": "Extra bold"
+        }
+      ],
+      "default": "900"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "heading_text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "url",
+      "id": "card_link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_new_tab",
+      "label": "Open in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Card image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "hover_scale",
+      "label": "Hover scale",
+      "min": 1,
+      "max": 1.5,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "hover_transition_duration",
+      "label": "Transition duration",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.4
+    },
+    {
+      "type": "header",
+      "content": "Card info"
+    },
+    {
+      "type": "range",
+      "id": "card_info_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_info_padding_left",
+      "label": "Padding left",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_info_padding_right",
+      "label": "Padding right",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "card_info_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Product title"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Text",
+      "default": "NEAPOLITAN HASH HOLE"
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "900",
+          "label": "Extra bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "title_text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Product price"
+    },
+    {
+      "type": "text",
+      "id": "product_price",
+      "label": "Text",
+      "default": "$60.00"
+    },
+    {
+      "type": "select",
+      "id": "price_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "900",
+          "label": "Extra bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "price_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "price_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "price_margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection card"
+    }
+  ]
+}
+{% endschema %}

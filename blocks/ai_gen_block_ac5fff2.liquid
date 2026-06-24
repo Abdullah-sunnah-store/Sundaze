@@ -1,0 +1,888 @@
+{% doc %}
+  @prompt
+    Create a Shopify Dawn theme header with these exact specifications:
+    
+    GENERAL:
+    - Background: #000000
+    - Width: 100%
+    - Padding: 16px top and bottom
+    - Sticky: ON
+    - Border bottom: none
+    
+    /* ── DESKTOP (min-width: 990px) ── */
+    
+    LAYOUT:
+    - Flex direction: column
+    - Align items: center
+    - Justify content: center
+    
+    ROW 1 — LOGO:
+    - Image: [SUNDAZE-LOGO.png]
+    - Width: 180px
+    - Align: center
+    - Margin bottom: 12px
+    
+    ROW 2 — NAV + ICONS in ONE SINGLE HORIZONTAL LINE:
+    - Display: flex
+    - Flex direction: row
+    - Align items: center
+    - Justify content: center
+    - All nav links and all icons must be
+      in the exact same horizontal row
+    
+    NAV LINKS:
+    - Inline flex row
+    - Gap between links: 32px
+    - Items:
+      1. Home
+      2. Products
+      3. About Us
+      4. Contact Us
+      5. Verification
+      6. FAQ
+    - Font: sans-serif
+    - Font weight: 500
+    - Font size: 15px
+    - Color: #ffffff
+    - Text decoration: none
+    - Letter spacing: 0.5px
+    - Hover color: #f4a0b8
+    - Hover transition: color 0.2s ease
+    
+    ICONS (same row as nav links):
+    - Inline flex row
+    - Margin left: 16px from last nav link
+    - Gap: 4px between icons
+    - Icons: Search + Account + Cart
+    - Size: 22px x 22px each
+    - Color: #ffffff
+    - Hover color: #f4a0b8
+    - Hover transition: color 0.2s ease
+    
+    CART BUBBLE:
+    - Background: #f4a0b8
+    - Color: #000000
+    - Border radius: 50%
+    
+    /* ── MOBILE (max-width: 989px) ── */
+    
+    LAYOUT:
+    - 3 column grid in ONE horizontal row
+    - Grid template: 1fr auto 1fr
+    - Grid areas: 'menu logo icons'
+    
+    LEFT — Hamburger icon:
+    - Grid area: menu
+    - Justify self: start
+    - Icon: 3 lines hamburger
+    - Size: 24px x 24px
+    - Color: #ffffff
+    - On click: opens drawer menu
+    
+    CENTER — Logo:
+    - Grid area: logo
+    - Justify self: center
+    - Width: 130px
+    
+    RIGHT — Icons:
+    - Grid area: icons
+    - Justify self: end
+    - Display: flex row
+    - Gap: 4px
+    - Icons: Search + Account + Cart
+    - Size: 22px x 22px
+    - Color: #ffffff
+    
+    MOBILE DRAWER MENU:
+    - Slides from left
+    - Background: #000000
+    - Width: 280px
+    - Padding: 24px
+    - Menu items vertical stack:
+      1. Home
+      2. Products
+      3. About Us
+      4. Contact Us
+      5. Verification
+      6. FAQ
+    - Font size: 18px
+    - Color: #ffffff
+    - Gap between items: 24px
+    - Hover color: #f4a0b8
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.background_color }};
+    width: 100%;
+    padding: {{ block.settings.padding_vertical }}px 0;
+    position: {{ block.settings.sticky_position }};
+    top: 0;
+    z-index: 1000;
+  }
+
+  .ai-header-container-{{ ai_gen_id }} {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .ai-header-desktop-{{ ai_gen_id }} {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-header-mobile-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-header-logo-row-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.logo_margin_bottom }}px;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_width_desktop }}px;
+      height: auto;
+    }
+
+    .ai-header-nav-row-{{ ai_gen_id }} {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-header-nav-{{ ai_gen_id }} {
+      display: inline-flex;
+      flex-direction: row;
+      gap: {{ block.settings.nav_gap }}px;
+      align-items: center;
+    }
+
+    .ai-header-nav-link-{{ ai_gen_id }} {
+      font-family: sans-serif;
+      font-weight: {{ block.settings.nav_font_weight }};
+      font-size: {{ block.settings.nav_font_size }}px;
+      color: {{ block.settings.nav_color }};
+      text-decoration: none;
+      letter-spacing: {{ block.settings.nav_letter_spacing }}px;
+      transition: color {{ block.settings.hover_transition_speed }}s ease;
+    }
+
+    .ai-header-nav-link-{{ ai_gen_id }}:hover {
+      color: {{ block.settings.nav_hover_color }};
+    }
+
+    .ai-header-icons-{{ ai_gen_id }} {
+      display: inline-flex;
+      flex-direction: row;
+      gap: {{ block.settings.icons_gap }}px;
+      margin-left: {{ block.settings.icons_margin_left }}px;
+      align-items: center;
+    }
+
+    .ai-header-icon-{{ ai_gen_id }} {
+      color: {{ block.settings.icon_color }};
+      transition: color {{ block.settings.hover_transition_speed }}s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .ai-header-icon-{{ ai_gen_id }}:hover {
+      color: {{ block.settings.icon_hover_color }};
+    }
+
+    .ai-header-icon-{{ ai_gen_id }} svg {
+      width: {{ block.settings.icon_size }}px;
+      height: {{ block.settings.icon_size }}px;
+    }
+
+    .ai-header-cart-bubble-{{ ai_gen_id }} {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background-color: {{ block.settings.cart_bubble_bg }};
+      color: {{ block.settings.cart_bubble_color }};
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-header-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-header-mobile-{{ ai_gen_id }} {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-areas: 'menu logo icons';
+      align-items: center;
+    }
+
+    .ai-header-hamburger-{{ ai_gen_id }} {
+      grid-area: menu;
+      justify-self: start;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: {{ block.settings.icon_color }};
+    }
+
+    .ai-header-hamburger-{{ ai_gen_id }} svg {
+      width: {{ block.settings.hamburger_size }}px;
+      height: {{ block.settings.hamburger_size }}px;
+    }
+
+    .ai-header-logo-mobile-{{ ai_gen_id }} {
+      grid-area: logo;
+      justify-self: center;
+    }
+
+    .ai-header-logo-mobile-{{ ai_gen_id }} img {
+      width: {{ block.settings.logo_width_mobile }}px;
+      height: auto;
+    }
+
+    .ai-header-icons-mobile-{{ ai_gen_id }} {
+      grid-area: icons;
+      justify-self: end;
+      display: flex;
+      flex-direction: row;
+      gap: {{ block.settings.icons_gap }}px;
+      align-items: center;
+    }
+
+    .ai-header-icon-{{ ai_gen_id }} {
+      color: {{ block.settings.icon_color }};
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .ai-header-icon-{{ ai_gen_id }} svg {
+      width: {{ block.settings.icon_size }}px;
+      height: {{ block.settings.icon_size }}px;
+    }
+
+    .ai-header-cart-bubble-{{ ai_gen_id }} {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background-color: {{ block.settings.cart_bubble_bg }};
+      color: {{ block.settings.cart_bubble_color }};
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .ai-header-drawer-{{ ai_gen_id }} {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: {{ block.settings.drawer_width }}px;
+      height: 100vh;
+      background-color: {{ block.settings.drawer_bg }};
+      padding: {{ block.settings.drawer_padding }}px;
+      transition: left 0.3s ease;
+      z-index: 2000;
+      overflow-y: auto;
+    }
+
+    .ai-header-drawer-{{ ai_gen_id }}.active {
+      left: 0;
+    }
+
+    .ai-header-drawer-overlay-{{ ai_gen_id }} {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1999;
+    }
+
+    .ai-header-drawer-overlay-{{ ai_gen_id }}.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .ai-header-drawer-close-{{ ai_gen_id }} {
+      background: none;
+      border: none;
+      color: {{ block.settings.drawer_text_color }};
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .ai-header-drawer-close-{{ ai_gen_id }} svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .ai-header-drawer-nav-{{ ai_gen_id }} {
+      display: flex;
+      flex-direction: column;
+      gap: {{ block.settings.drawer_nav_gap }}px;
+    }
+
+    .ai-header-drawer-link-{{ ai_gen_id }} {
+      font-size: {{ block.settings.drawer_font_size }}px;
+      color: {{ block.settings.drawer_text_color }};
+      text-decoration: none;
+      transition: color {{ block.settings.hover_transition_speed }}s ease;
+    }
+
+    .ai-header-drawer-link-{{ ai_gen_id }}:hover {
+      color: {{ block.settings.drawer_hover_color }};
+    }
+  }
+{% endstyle %}
+
+<header-{{ ai_gen_id }} class="ai-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-header-container-{{ ai_gen_id }}">
+    <div class="ai-header-desktop-{{ ai_gen_id }}">
+      <div class="ai-header-logo-row-{{ ai_gen_id }}">
+        <a href="/">
+          {% if block.settings.logo %}
+            <img
+              src="{{ block.settings.logo | image_url: width: 400 }}"
+              alt="{{ shop.name }}"
+              class="ai-header-logo-{{ ai_gen_id }}"
+              width="{{ block.settings.logo_width_desktop }}"
+              height="auto"
+              loading="eager"
+            >
+          {% else %}
+            <span style="color: {{ block.settings.nav_color }}; font-size: 24px; font-weight: 600;">{{ shop.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="ai-header-nav-row-{{ ai_gen_id }}">
+        <nav class="ai-header-nav-{{ ai_gen_id }}">
+          <a href="/" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.nav_link_1_text }}</a>
+          <a href="{{ block.settings.nav_link_2_url }}" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.nav_link_2_text }}</a>
+          <a href="{{ block.settings.nav_link_3_url }}" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.nav_link_3_text }}</a>
+          <a href="{{ block.settings.nav_link_4_url }}" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.nav_link_4_text }}</a>
+          <a href="{{ block.settings.nav_link_5_url }}" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.nav_link_5_text }}</a>
+          <a href="{{ block.settings.nav_link_6_url }}" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.nav_link_6_text }}</a>
+        </nav>
+
+        <div class="ai-header-icons-{{ ai_gen_id }}">
+          <a href="/search" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </a>
+          <a href="/account" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Account">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </a>
+          <a href="/cart" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Cart">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            {% if cart.item_count > 0 %}
+              <span class="ai-header-cart-bubble-{{ ai_gen_id }}">{{ cart.item_count }}</span>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-header-mobile-{{ ai_gen_id }}">
+      <button class="ai-header-hamburger-{{ ai_gen_id }}" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <div class="ai-header-logo-mobile-{{ ai_gen_id }}">
+        <a href="/">
+          {% if block.settings.logo %}
+            <img
+              src="{{ block.settings.logo | image_url: width: 300 }}"
+              alt="{{ shop.name }}"
+              width="{{ block.settings.logo_width_mobile }}"
+              height="auto"
+              loading="eager"
+            >
+          {% else %}
+            <span style="color: {{ block.settings.nav_color }}; font-size: 20px; font-weight: 600;">{{ shop.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="ai-header-icons-mobile-{{ ai_gen_id }}">
+        <a href="/search" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </a>
+        <a href="/account" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Account">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </a>
+        <a href="/cart" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          {% if cart.item_count > 0 %}
+            <span class="ai-header-cart-bubble-{{ ai_gen_id }}">{{ cart.item_count }}</span>
+          {% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-header-drawer-overlay-{{ ai_gen_id }}"></div>
+  <div class="ai-header-drawer-{{ ai_gen_id }}">
+    <button class="ai-header-drawer-close-{{ ai_gen_id }}" aria-label="Close menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <nav class="ai-header-drawer-nav-{{ ai_gen_id }}">
+      <a href="/" class="ai-header-drawer-link-{{ ai_gen_id }}">{{ block.settings.nav_link_1_text }}</a>
+      <a href="{{ block.settings.nav_link_2_url }}" class="ai-header-drawer-link-{{ ai_gen_id }}">{{ block.settings.nav_link_2_text }}</a>
+      <a href="{{ block.settings.nav_link_3_url }}" class="ai-header-drawer-link-{{ ai_gen_id }}">{{ block.settings.nav_link_3_text }}</a>
+      <a href="{{ block.settings.nav_link_4_url }}" class="ai-header-drawer-link-{{ ai_gen_id }}">{{ block.settings.nav_link_4_text }}</a>
+      <a href="{{ block.settings.nav_link_5_url }}" class="ai-header-drawer-link-{{ ai_gen_id }}">{{ block.settings.nav_link_5_text }}</a>
+      <a href="{{ block.settings.nav_link_6_url }}" class="ai-header-drawer-link-{{ ai_gen_id }}">{{ block.settings.nav_link_6_text }}</a>
+    </nav>
+  </div>
+</header-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class Header{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.hamburger = this.querySelector('.ai-header-hamburger-{{ ai_gen_id }}');
+        this.drawer = this.querySelector('.ai-header-drawer-{{ ai_gen_id }}');
+        this.overlay = this.querySelector('.ai-header-drawer-overlay-{{ ai_gen_id }}');
+        this.closeButton = this.querySelector('.ai-header-drawer-close-{{ ai_gen_id }}');
+
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        if (this.hamburger) {
+          this.hamburger.addEventListener('click', () => this.openDrawer());
+        }
+
+        if (this.closeButton) {
+          this.closeButton.addEventListener('click', () => this.closeDrawer());
+        }
+
+        if (this.overlay) {
+          this.overlay.addEventListener('click', () => this.closeDrawer());
+        }
+      }
+
+      openDrawer() {
+        if (this.drawer && this.overlay) {
+          this.drawer.classList.add('active');
+          this.overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      closeDrawer() {
+        if (this.drawer && this.overlay) {
+          this.drawer.classList.remove('active');
+          this.overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }
+    }
+
+    customElements.define('header-{{ ai_gen_id }}', Header{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "sticky_position",
+      "label": "Sticky header",
+      "options": [
+        {
+          "value": "sticky",
+          "label": "On"
+        },
+        {
+          "value": "relative",
+          "label": "Off"
+        }
+      ],
+      "default": "sticky"
+    },
+    {
+      "type": "header",
+      "content": "Desktop logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "logo_margin_bottom",
+      "label": "Logo margin bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Desktop navigation"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_1_text",
+      "label": "Link 1 text",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_2_text",
+      "label": "Link 2 text",
+      "default": "Products"
+    },
+    {
+      "type": "url",
+      "id": "nav_link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_3_text",
+      "label": "Link 3 text",
+      "default": "About Us"
+    },
+    {
+      "type": "url",
+      "id": "nav_link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_4_text",
+      "label": "Link 4 text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "nav_link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_5_text",
+      "label": "Link 5 text",
+      "default": "Verification"
+    },
+    {
+      "type": "url",
+      "id": "nav_link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_6_text",
+      "label": "Link 6 text",
+      "default": "FAQ"
+    },
+    {
+      "type": "url",
+      "id": "nav_link_6_url",
+      "label": "Link 6 URL"
+    },
+    {
+      "type": "range",
+      "id": "nav_gap",
+      "label": "Gap between links",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "nav_font_weight",
+      "label": "Font weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "nav_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_color",
+      "label": "Hover color",
+      "default": "#f4a0b8"
+    },
+    {
+      "type": "range",
+      "id": "nav_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Desktop icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "icons_gap",
+      "label": "Gap between icons",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "icons_margin_left",
+      "label": "Margin left from nav",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Icon hover color",
+      "default": "#f4a0b8"
+    },
+    {
+      "type": "color",
+      "id": "cart_bubble_bg",
+      "label": "Cart bubble background",
+      "default": "#f4a0b8"
+    },
+    {
+      "type": "color",
+      "id": "cart_bubble_color",
+      "label": "Cart bubble text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "hover_transition_speed",
+      "label": "Hover transition speed",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "hamburger_size",
+      "label": "Hamburger icon size",
+      "min": 20,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Mobile drawer"
+    },
+    {
+      "type": "range",
+      "id": "drawer_width",
+      "label": "Drawer width",
+      "min": 200,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "color",
+      "id": "drawer_bg",
+      "label": "Drawer background",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "drawer_padding",
+      "label": "Drawer padding",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "drawer_font_size",
+      "label": "Font size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "drawer_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "drawer_hover_color",
+      "label": "Hover color",
+      "default": "#f4a0b8"
+    },
+    {
+      "type": "range",
+      "id": "drawer_nav_gap",
+      "label": "Gap between items",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom header"
+    }
+  ]
+}
+{% endschema %}

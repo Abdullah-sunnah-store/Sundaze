@@ -1,0 +1,539 @@
+{% comment %}
+  Lineup Cards Section
+  Image centered by default → slides up on hover
+  Background color changes smoothly on hover
+  Text panel slides up from bottom on hover
+{% endcomment %}
+
+<section class="lc-section" id="lc-{{ section.id }}">
+  <div class="lc-inner">
+
+    <h2 class="lc-heading">
+      <span class="lc-heading-plain">{{ section.settings.heading_plain | default: 'Explore' }} </span><span class="lc-heading-gradient">{{ section.settings.heading_gradient | default: 'Collections' }}</span>
+    </h2>
+
+    <div class="lc-grid">
+      {% for block in section.blocks %}
+        <a
+          class="lc-card"
+          href="{{ block.settings.card_link }}"
+          style="
+            --bg:       {{ block.settings.card_bg_color }};
+            --bg-hover: {{ block.settings.card_hover_bg_color }};
+          "
+          {{ block.shopify_attributes }}
+        >
+          {% comment %} ── Starfield dots ── {% endcomment %}
+          <div class="lc-stars" aria-hidden="true"></div>
+
+          {% comment %} ── Product image — centered, moves up on hover ── {% endcomment %}
+          <div class="lc-img-wrap">
+            {% if block.settings.card_image != blank %}
+              <img
+                class="lc-img"
+                src="{{ block.settings.card_image | image_url: width: 800 }}"
+                alt="{{ block.settings.card_image.alt | default: block.settings.card_title }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="lc-img-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </div>
+            {% endif %}
+          </div>
+
+          {% comment %} ── Default title label at bottom ── {% endcomment %}
+          <div class="lc-label">
+            <span>{{ block.settings.card_title }}</span>
+          </div>
+
+          {% comment %} ── Hover reveal panel slides up from bottom ── {% endcomment %}
+          <div class="lc-reveal">
+            <h3 class="lc-reveal-title">{{ block.settings.card_title }}</h3>
+            {% if block.settings.card_description != blank %}
+              <p class="lc-reveal-desc">{{ block.settings.card_description }}</p>
+            {% endif %}
+            <div class="lc-reveal-btn">
+              <span>{{ block.settings.button_label | default: 'View All' }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </div>
+
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500&display=swap');
+
+  /* ── Reset ── */
+  #lc-{{ section.id }},
+  #lc-{{ section.id }} * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Section wrapper ── */
+  #lc-{{ section.id }} {
+    width: 100%;
+    background: linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%);
+    padding: clamp(40px, 6vw, 80px) clamp(16px, 4vw, 60px);
+    font-family: {{ section.settings.font_family }}, sans-serif;
+  }
+
+  #lc-{{ section.id }} .lc-inner {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  /* ══════════════════════════════════════
+     HEADING — matches reference image 1
+     .lc-heading-plain   = black serif "Explore"
+     .lc-heading-gradient = italic pink/coral gradient "Collections"
+  ══════════════════════════════════════ */
+  #lc-{{ section.id }} .lc-heading {
+    font-size: clamp(2.2rem, 5vw, 4rem) !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    margin-bottom: clamp(24px, 4vw, 48px) !important;
+    line-height: 1.1 !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em !important;
+    font-style: normal !important;
+    /* Reset any theme gradient interference */
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    color: #111111 !important;
+  }
+
+  /* Plain word: "Explore" */
+  #lc-{{ section.id }} .lc-heading-plain {
+    font-style: normal !important;
+    font-weight: 900 !important;
+    color: #111111 !important;
+    -webkit-text-fill-color: #111111 !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    display: inline !important;
+  }
+
+  /* Gradient italic word: "Collections" */
+  #lc-{{ section.id }} .lc-heading-gradient {
+    font-style: italic !important;
+    font-weight: 900 !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    display: inline !important;
+  }
+
+  /* ── Grid ── */
+  #lc-{{ section.id }} .lc-grid {
+    display: grid !important;
+    grid-template-columns: repeat({{ section.settings.columns }}, 1fr) !important;
+    gap: {{ section.settings.card_gap }}px !important;
+  }
+
+  @media (max-width: 900px) {
+    #lc-{{ section.id }} .lc-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 560px) {
+    #lc-{{ section.id }} .lc-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* ════════════════════════════════════
+     CARD
+  ════════════════════════════════════ */
+  #lc-{{ section.id }} .lc-card {
+    position: relative !important;
+    display: block !important;
+    border-radius: {{ section.settings.card_radius }}px !important;
+    overflow: hidden !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    aspect-ratio: {{ section.settings.card_ratio }} !important;
+    background-color: var(--bg) !important;
+  }
+
+  #lc-{{ section.id }} .lc-card::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background-color: var(--bg-hover) !important;
+    opacity: 0 !important;
+    transition: opacity 0.45s ease !important;
+    z-index: 0 !important;
+    border-radius: inherit !important;
+  }
+
+  #lc-{{ section.id }} .lc-card:hover::before {
+    opacity: 1 !important;
+  }
+
+  /* ── Starfield dots ── */
+  #lc-{{ section.id }} .lc-stars {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px);
+    background-size: 70px 70px, 35px 35px;
+    background-position: 0 0, 17px 17px;
+    opacity: 0.2 !important;
+    transition: opacity 0.45s ease !important;
+  }
+
+  #lc-{{ section.id }} .lc-card:hover .lc-stars {
+    opacity: 0.07 !important;
+  }
+
+  /* ── IMAGE ── */
+  #lc-{{ section.id }} .lc-img-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 2 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12% !important;
+    transition: transform 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) !important;
+  }
+
+  #lc-{{ section.id }} .lc-card:hover .lc-img-wrap {
+    transform: translateY(-22%) scale(0.85) !important;
+  }
+
+  #lc-{{ section.id }} .lc-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    display: block !important;
+    filter: drop-shadow(0 16px 40px rgba(0,0,0,0.55)) !important;
+    transition: filter 0.55s ease !important;
+  }
+
+  #lc-{{ section.id }} .lc-card:hover .lc-img {
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3)) !important;
+  }
+
+  #lc-{{ section.id }} .lc-img-placeholder {
+    width: 50% !important;
+    aspect-ratio: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: rgba(255,255,255,0.2) !important;
+  }
+  #lc-{{ section.id }} .lc-img-placeholder svg {
+    width: 80% !important;
+    height: 80% !important;
+  }
+
+  /* ── DEFAULT LABEL ── */
+  #lc-{{ section.id }} .lc-label {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 3 !important;
+    padding: 48px 20px 20px !important;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%) !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 0.3s ease 0s, transform 0.3s ease 0s !important;
+    pointer-events: none !important;
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    text-align: center !important;
+  }
+
+  #lc-{{ section.id }} .lc-card:hover .lc-label {
+    opacity: 0 !important;
+    transform: translateY(12px) !important;
+  }
+
+  #lc-{{ section.id }} .lc-label span {
+    font-size: clamp(15px, 2vw, 22px) !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: #fff !important;
+    line-height: 1.1 !important;
+    display: block !important;
+  }
+
+  /* ── HOVER REVEAL PANEL ── */
+  #lc-{{ section.id }} .lc-reveal {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 4 !important;
+    padding: 20px 22px 26px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 10px !important;
+    opacity: 0 !important;
+    transform: translateY(100%) !important;
+    transition: opacity 0.4s cubic-bezier(0.34, 1.2, 0.64, 1) 0.05s,
+                transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1) 0.05s !important;
+    pointer-events: none !important;
+    background: linear-gradient(to top, rgba(255,255,255,0.92) 60%, transparent 100%);
+  }
+
+  #lc-{{ section.id }} .lc-card:hover .lc-reveal {
+    opacity: 1 !important;
+    transform: translateY(0%) !important;
+    pointer-events: auto !important;
+  }
+
+  #lc-{{ section.id }} .lc-reveal-title {
+    font-size: clamp(17px, 2vw, 24px) !important;
+    font-weight: 900 !important;
+    color: {{ section.settings.reveal_title_color }} !important;
+    line-height: 1.1 !important;
+    font-family: 'Playfair Display', serif !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+  }
+
+  #lc-{{ section.id }} .lc-reveal-desc {
+    font-size: clamp(12px, 1vw, 14px) !important;
+    font-weight: 400 !important;
+    color: {{ section.settings.reveal_desc_color }} !important;
+    line-height: 1.6 !important;
+  }
+
+  #lc-{{ section.id }} .lc-reveal-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: clamp(12px, 1vw, 13px) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    color: {{ section.settings.reveal_btn_color }} !important;
+    border-bottom: 2px solid {{ section.settings.reveal_btn_color }} !important;
+    padding-bottom: 3px !important;
+    width: fit-content !important;
+    transition: gap 0.25s ease !important;
+    margin-top: 4px !important;
+    align-self: center !important;
+  }
+
+  #lc-{{ section.id }} .lc-card:hover .lc-reveal-btn {
+    gap: 16px !important;
+  }
+
+  #lc-{{ section.id }} .lc-reveal-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+    flex-shrink: 0 !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Lineup Cards",
+  "tag": "section",
+  "class": "lineup-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_plain",
+      "label": "Heading — plain word (black)",
+      "default": "Explore"
+    },
+    {
+      "type": "text",
+      "id": "heading_gradient",
+      "label": "Heading — gradient italic word (pink)",
+      "default": "Collections"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section background color",
+      "default": "#e8eaf0"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width (px)",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards (px)",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card border radius (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "card_ratio",
+      "label": "Card aspect ratio (e.g. 3/4, 1/1, 4/5)",
+      "default": "3/4"
+    },
+    {
+      "type": "text",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "inherit"
+    },
+    {
+      "type": "header",
+      "content": "Reveal (hover) text colors"
+    },
+    {
+      "type": "color",
+      "id": "reveal_title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "reveal_desc_color",
+      "label": "Description color",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "color",
+      "id": "reveal_btn_color",
+      "label": "Button / arrow color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "Card image"
+        },
+        {
+          "type": "color",
+          "id": "card_bg_color",
+          "label": "Card background color",
+          "default": "#0a0a14"
+        },
+        {
+          "type": "color",
+          "id": "card_hover_bg_color",
+          "label": "Card hover background color",
+          "default": "#cc2233"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Card title",
+          "default": "Product Name"
+        },
+        {
+          "type": "textarea",
+          "id": "card_description",
+          "label": "Short description (shown on hover)"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "View All"
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "Card link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lineup Cards",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "card_title": "Juiced* 5-Packs",
+            "card_description": "The Juiced 5-Pack joints combine premium flower, solventless hash, and liquid diamonds—rolled in kief for an extra-potent, rich, and flavorful smoke.",
+            "button_label": "View All",
+            "card_bg_color": "#0a0a14",
+            "card_hover_bg_color": "#cc2233"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "card_title": "Blunts",
+            "card_description": "Premium 2G blunts crafted with top-shelf flower and wrapped for a slow, smooth burn every time.",
+            "button_label": "View All",
+            "card_bg_color": "#0a0a14",
+            "card_hover_bg_color": "#1a3a6b"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "card_title": "Hash Hole",
+            "card_description": "A rosin-infused masterpiece with a hash core that burns perfectly from start to finish.",
+            "button_label": "View All",
+            "card_bg_color": "#0a0a14",
+            "card_hover_bg_color": "#0d5c2e"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10
+}
+{% endschema %}

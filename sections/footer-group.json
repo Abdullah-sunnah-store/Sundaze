@@ -1,0 +1,87 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "1778358244765bd462": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_a210b8f_MEkFf8": {
+          "type": "ai_gen_block_a210b8f",
+          "settings": {
+            "brand_description": "Our Products Are Not Intended For Sale Or Use By Persons Under The Age Of 21. All Products Contain Less Than 0.3% THC Per The Controlled Substances Act. This Product Does Not Claim To Diagnose, Treat, Cure, Or Prevent Any Disease And Has Not Been Evaluated Or Approved By The United States Food and Drug Administration (FDA).",
+            "instagram_label": "Instagram",
+            "instagram_url": "",
+            "youtube_label": "",
+            "youtube_url": "",
+            "tiktok_label": "TikTok",
+            "tiktok_url": "",
+            "x_label": "X.com",
+            "x_url": "",
+            "facebook_label": "",
+            "facebook_url": "",
+            "category_heading": "Category",
+            "cat_link_1_label": "3.5G Flower",
+            "cat_link_1_url": "shopify://pages/3-5g-thca-flower",
+            "cat_link_2_label": "Hash Holes",
+            "cat_link_2_url": "shopify://pages/hash-holes-collection",
+            "cat_link_3_label": "Flavors",
+            "cat_link_3_url": "shopify://pages/flavors",
+            "cat_link_4_label": "",
+            "cat_link_4_url": "",
+            "cat_link_5_label": "",
+            "cat_link_5_url": "",
+            "quicklinks_heading": "Quick Links",
+            "ql_link_1_label": "About Us",
+            "ql_link_1_url": "shopify://pages/about-us",
+            "ql_link_2_label": "Contact Us",
+            "ql_link_2_url": "shopify://pages/contact-us",
+            "ql_link_3_label": "FAQ",
+            "ql_link_3_url": "shopify://pages/faq",
+            "ql_link_4_label": "",
+            "ql_link_4_url": "",
+            "ql_link_5_label": "",
+            "ql_link_5_url": "",
+            "policy": "policy",
+            "copyright_text": "Copyright © 2026 Sundaze. All rights reserved"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a210b8f_MEkFf8"
+      ],
+      "settings": {}
+    },
+    "footer": {
+      "type": "footer",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "newsletter_enable": true,
+        "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "1778358244765bd462",
+    "footer"
+  ]
+}

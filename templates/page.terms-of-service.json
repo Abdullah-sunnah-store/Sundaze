@@ -1,0 +1,69 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_policy_Terms": {
+      "type": "sundaze-policy",
+      "blocks": {
+        "hero_block": {
+          "type": "hero",
+          "settings": {
+            "page_title": "TERMS & CONDITIONS",
+            "eyebrow": "Legal",
+            "hero_desc": "These are the rules we all agree to play by. Read them once, understand them forever — no legal jargon gymnastics.",
+            "hero_pill": "Terms · Usage · Agreement"
+          }
+        },
+        "content_block": {
+          "type": "content",
+          "settings": {
+            "effective_date": "June 1, 2026",
+            "policy_content": "<p><strong>Website:</strong> sundaze.com<br/><strong>Business Name:</strong> Sundaze<br/><strong>Brand Name:</strong> Sundaze<br/><strong>Contact:</strong> support@sundaze.com</p><p>Welcome to Sundaze. These Terms & Conditions govern your access to and use of our website, products, checkout, content, and services. By visiting our website or purchasing from Sundaze, you agree to these Terms.</p><h2>1. Age Requirement</h2><p>You must be 21 years of age or older to access this website, purchase products, or use any Sundaze services.</p><p>By using this website, you confirm that:</p><ul><li>You are at least 21 years old.</li><li>You are legally allowed to purchase hemp-derived products in your jurisdiction.</li><li>You will not provide Sundaze products to anyone under 21.</li><li>All information you provide is accurate and truthful.</li></ul><p>We reserve the right to request age verification, refuse service, cancel orders, or restrict access at any time.</p><h2>2. Hemp-Derived Product Disclaimer</h2><p>Sundaze products are intended for adults 21+ only. Products sold by Sundaze may contain hemp-derived cannabinoids, including THCA, and are offered only where permitted by applicable law.</p><p>All products are intended to comply with applicable hemp laws, including the federal hemp framework for cannabis containing no more than 0.3% Delta-9 THC on a dry-weight basis.</p><p>Federal hemp rules and state hemp rules may differ, and laws can change. You are responsible for understanding and following the laws in your state, county, city, and local jurisdiction before purchasing or possessing any product from Sundaze.</p><h2>3. No Medical Claims</h2><p>Sundaze products are not intended to diagnose, treat, cure, or prevent any disease or medical condition.</p><p>Information on this website is provided for general informational and product-description purposes only. Nothing on this website should be interpreted as medical advice, health advice, or a substitute for advice from a licensed healthcare professional.</p><p>Do not use Sundaze products if you are pregnant, nursing, have a medical condition, take prescription medication, or are subject to drug testing without first consulting a qualified professional.</p><p>FTC guidance requires health-related advertising claims to be truthful, not misleading, and supported by reliable evidence. Accordingly, Sundaze does not make disease-treatment or medical-benefit claims.</p><h2>4. Product Effects and Drug Testing</h2><p>Hemp-derived cannabinoid products may cause intoxication, impairment, drowsiness, or other effects. Effects vary by person.</p><p>Do not drive, operate machinery, or perform any activity requiring alertness after using any Sundaze product.</p><p>Use of hemp-derived cannabinoid products may result in a failed drug test. Sundaze is not responsible for drug testing outcomes, employment consequences, legal consequences, or any other consequences resulting from product use or possession.</p><h2>5. Certificates of Analysis</h2><p>Sundaze may provide third-party lab reports or Certificates of Analysis (COAs) for certain products.</p><p>COAs are provided for transparency and informational purposes. Because natural hemp products can vary, exact cannabinoid levels may differ slightly by batch, product, or testing method.</p><p>Customers should review available COAs before purchasing.</p><h2>6. State and Local Restrictions</h2><p>Sundaze does not sell or ship products to jurisdictions where the product is prohibited, restricted, or otherwise not allowed.</p><p>We reserve the right to cancel or refuse any order if we believe the order may violate federal, state, local, carrier, payment-processor, or banking requirements.</p><p>Sundaze may update its restricted shipping list at any time without notice.</p><h2>7. Orders and Payment</h2><p>By placing an order, you agree that:</p><ul><li>You are 21 years of age or older.</li><li>Your billing and shipping information is accurate.</li><li>You are legally allowed to purchase the product.</li><li>The payment method used belongs to you or is authorized for your use.</li><li>You understand all sales are final, subject to our Refund Policy.</li></ul><p>We reserve the right to cancel, refuse, or limit any order for any reason, including suspected fraud, incorrect pricing, inventory issues, compliance concerns, payment issues, or restricted shipping destinations.</p><h2>8. Shipping and Delivery</h2><p>Shipping times are estimates only and are not guaranteed. Once an order is transferred to the shipping carrier, delivery timing is controlled by the carrier.</p><p>Sundaze is not responsible for delays caused by carriers, weather, incorrect addresses, failed delivery attempts, age-verification issues, restricted locations, or events outside our control.</p><p>Risk of loss may transfer to the customer once the order is provided to the carrier, unless otherwise required by law.</p><h2>9. No Resale</h2><p>Products purchased from Sundaze are for personal adult use only.</p><p>You may not resell, redistribute, relabel, repackage, or commercially exploit any Sundaze product without written permission.</p><h2>10. Website Content and Intellectual Property</h2><p>All Sundaze logos, product names, images, graphics, packaging, text, designs, website content, and brand assets are owned by or licensed to Sundaze.</p><p>You may not copy, reproduce, distribute, modify, or use Sundaze intellectual property without written permission.</p><h2>11. Prohibited Uses</h2><p>You may not use this website or our products:</p><ul><li>For any unlawful purpose.</li><li>To purchase products for anyone under 21.</li><li>To violate any federal, state, local, or international law.</li><li>To commit fraud or submit false information.</li><li>To interfere with website security.</li><li>To resell products without authorization.</li><li>To make medical claims about Sundaze products.</li></ul><h2>12. Disclaimer of Warranties</h2><p>Sundaze products and website services are provided \"as is\" and \"as available.\"</p><p>To the fullest extent permitted by law, Sundaze makes no warranties, express or implied, regarding product effects, availability, website operation, fitness for a particular purpose, or uninterrupted access.</p><h2>13. Limitation of Liability</h2><p>To the fullest extent permitted by law, Sundaze shall not be liable for indirect, incidental, special, punitive, or consequential damages arising from your use of our website, purchase of products, possession of products, product effects, shipping delays, legal restrictions, drug testing outcomes, or inability to use our services.</p><h2>14. Indemnification</h2><p>You agree to indemnify and hold harmless Sundaze, its owners, employees, contractors, affiliates, and service providers from any claims, damages, losses, liabilities, costs, or expenses arising from:</p><ul><li>Your violation of these Terms.</li><li>Misuse of products.</li><li>Violation of law.</li><li>Inaccurate information provided during checkout.</li></ul><h2>15. Changes to These Terms</h2><p>We may update these Terms at any time.</p><p>Updates will be posted on this page with a revised \"Last Updated\" date. Continued use of the website after changes means you accept the updated Terms.</p><h2>16. Contact</h2><p>For questions about these Terms, contact:</p><p><strong>Sundaze Support</strong><br/><strong>Email:</strong> support@sundaze.com<br/><strong>Business Name:</strong> Sundaze<br/><strong>Address:</strong> 123 W 13th St, New York, NY 10011, USA</p>"
+          }
+        },
+        "promise_block": {
+          "type": "promise",
+          "settings": {
+            "label": "Our Promise",
+            "quote": "\"These terms exist to protect <strong>you and us both.</strong>\"",
+            "body_text": "Questions about our terms? We're here to clarify. Drop us a message at support@sundaze.com and we'll get back to you within 24 hours.",
+            "tags": "Farm Bill Compliant, 21+ Only, Hand Rolled, Community Driven, No Shortcuts"
+          }
+        },
+        "legal_block": {
+          "type": "legal",
+          "disabled": true,
+          "settings": {
+            "legal_text": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. This product does not claim to diagnose, treat, cure, or prevent any disease and has not been evaluated by the United States Food and Drug Administration (FDA)."
+          }
+        }
+      },
+      "block_order": [
+        "hero_block",
+        "content_block",
+        "promise_block",
+        "legal_block"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_policy_Terms"
+  ]
+}

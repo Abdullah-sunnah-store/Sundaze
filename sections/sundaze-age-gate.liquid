@@ -1,0 +1,184 @@
+<style>
+.age-gate {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #fff5de, #ffe5dd);
+  overflow: hidden;
+  z-index: 99999;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.age-gate.hidden { display: none !important; }
+
+.age-gate.fade-out {
+  opacity: 0;
+  transform: translateY(-60px);
+  pointer-events: none;
+}
+
+.tubes-container {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 1; overflow: hidden;
+}
+
+.falling-tube {
+  position: absolute; top: -480px; left: var(--col, 6%);
+  width: 220px; height: 360px;
+  object-fit: contain; object-position: center;
+  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.08));
+  animation: tubeFall var(--fd, 11s) linear var(--fdd, 0s) infinite, tubeWobble var(--wd, 3s) ease-in-out var(--wdd, 0s) infinite;
+  transform-origin: center center; will-change: top, transform, opacity;
+  pointer-events: none;
+}
+
+@keyframes tubeFall {
+  0% { top: -480px; opacity: 0; } 5% { opacity: 1; } 92% { opacity: 1; } 100% { top: 110vh; opacity: 0; }
+}
+@keyframes tubeWobble {
+  0% { transform: rotate(-9deg); } 25% { transform: rotate(9deg); } 50% { transform: rotate(-9deg); } 75% { transform: rotate(9deg); } 100% { transform: rotate(-9deg); }
+}
+
+.age-gate__content {
+  position: relative; z-index: 10; display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: 0;
+  padding: 0 20px; max-width: 800px; margin-top: -40px;
+}
+
+.age-gate__logo { width: 440px; max-width: 80vw; display: block; filter: drop-shadow(0px 3px 10px rgba(0,0,0,0.12)); margin-bottom: 0px; pointer-events: none; }
+.age-gate__tagline { font-family: Georgia, serif; font-style: normal; font-weight: 400; font-size: 17px; color: #5a3a2a; letter-spacing: 0.3px; margin-top: -80px; padding: 0; margin-bottom: 16px; pointer-events: none; }
+.age-gate__row { display: flex; flex-direction: row; align-items: center; gap: 10px; width: auto; justify-content: center; position: relative; z-index: 20; }
+
+.age-gate__select {
+  width: 200px; padding: 12px 18px; border-radius: 50px;
+  border: 1px solid #e8d5be; background: #ffffff; font-size: 14px;
+  color: #5a3a2a; outline: none; cursor: pointer; appearance: none;
+  font-family: Georgia, serif; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+.age-gate__select.state-selected { outline: none; box-shadow: 0 0 0 2px #5a3a2a; }
+
+.age-gate__btn {
+  padding: 12px 24px; background: #3d2314; color: #ffffff; border: none;
+  border-radius: 50px; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; transition: opacity 0.2s ease; font-family: Georgia, serif;
+  white-space: nowrap; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.age-gate__btn:hover { opacity: 0.85; }
+.age-gate__btn::after { content: '›'; font-size: 18px; line-height: 1; }
+.age-gate__error { color: #cc0000; font-size: 13px; font-family: Georgia, serif; margin: 0; padding: 0; margin-top: 6px; display: none; }
+.age-gate__error.show { display: block; }
+
+@media (max-width: 768px) {
+  .falling-tube { width: 120px; height: 300px; }
+  .age-gate__logo { width: 280px; margin-bottom: 34px; }
+  .age-gate__tagline { font-size: 14px; margin-bottom: 12px; }
+  .age-gate__row { flex-direction: column; gap: 8px; }
+  .age-gate__select, .age-gate__btn { width: 220px; justify-content: center; }
+}
+</style>
+
+<div class="age-gate" id="sundazeAgeGate">
+  <div class="tubes-container">
+    {% if section.settings.tube_1 != blank %}<img class="falling-tube" src="{{ section.settings.tube_1 | img_url: '400x' }}" style="--col:6%;--fd:11s;--fdd:0s;--wd:3s;--wdd:0s" alt="">{% endif %}
+    {% if section.settings.tube_3 != blank %}<img class="falling-tube" src="{{ section.settings.tube_3 | img_url: '400x' }}" style="--col:8%;--fd:11s;--fdd:3.7s;--wd:3.2s;--wdd:0.5s" alt="">{% endif %}
+    {% if section.settings.tube_2 != blank %}<img class="falling-tube" src="{{ section.settings.tube_2 | img_url: '400x' }}" style="--col:5%;--fd:11s;--fdd:7.3s;--wd:2.8s;--wdd:1s" alt="">{% endif %}
+    {% if section.settings.tube_2 != blank %}<img class="falling-tube" src="{{ section.settings.tube_2 | img_url: '400x' }}" style="--col:30%;--fd:11.8s;--fdd:0.8s;--wd:2.8s;--wdd:0.2s" alt="">{% endif %}
+    {% if section.settings.tube_4 != blank %}<img class="falling-tube" src="{{ section.settings.tube_4 | img_url: '400x' }}" style="--col:28%;--fd:11.8s;--fdd:4.7s;--wd:3.1s;--wdd:0.7s" alt="">{% endif %}
+    {% if section.settings.tube_1 != blank %}<img class="falling-tube" src="{{ section.settings.tube_1 | img_url: '400x' }}" style="--col:31%;--fd:11.8s;--fdd:8.6s;--wd:3s;--wdd:1.2s" alt="">{% endif %}
+    {% if section.settings.tube_3 != blank %}<img class="falling-tube" src="{{ section.settings.tube_3 | img_url: '400x' }}" style="--col:57%;--fd:12.2s;--fdd:1.7s;--wd:3s;--wdd:0.4s" alt="">{% endif %}
+    {% if section.settings.tube_1 != blank %}<img class="falling-tube" src="{{ section.settings.tube_1 | img_url: '400x' }}" style="--col:59%;--fd:12.2s;--fdd:5.8s;--wd:2.7s;--wdd:0.9s" alt="">{% endif %}
+    {% if section.settings.tube_4 != blank %}<img class="falling-tube" src="{{ section.settings.tube_4 | img_url: '400x' }}" style="--col:56%;--fd:12.2s;--fdd:9.8s;--wd:3.2s;--wdd:0.3s" alt="">{% endif %}
+    {% if section.settings.tube_4 != blank %}<img class="falling-tube" src="{{ section.settings.tube_4 | img_url: '400x' }}" style="--col:82%;--fd:11.5s;--fdd:2.3s;--wd:2.7s;--wdd:0.6s" alt="">{% endif %}
+    {% if section.settings.tube_2 != blank %}<img class="falling-tube" src="{{ section.settings.tube_2 | img_url: '400x' }}" style="--col:80%;--fd:11.5s;--fdd:6.1s;--wd:3.1s;--wdd:0.1s" alt="">{% endif %}
+    {% if section.settings.tube_3 != blank %}<img class="falling-tube" src="{{ section.settings.tube_3 | img_url: '400x' }}" style="--col:83%;--fd:11.5s;--fdd:10s;--wd:2.9s;--wdd:0.8s" alt="">{% endif %}
+  </div>
+
+  <div class="age-gate__content">
+    {% if section.settings.logo != blank %}<img class="age-gate__logo" src="{{ section.settings.logo | img_url: '1000x' }}" alt="Sundaze">{% endif %}
+    <p class="age-gate__tagline">{{ section.settings.tagline }}</p>
+    <div class="age-gate__row">
+      <select class="age-gate__select" id="stateSelect">
+        <option value="" disabled selected>Select Your State</option>
+        <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option>
+        <option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option>
+        <option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option>
+        <option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option>
+        <option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option>
+        <option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option>
+        <option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option>
+        <option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option>
+        <option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option>
+        <option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
+        <option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option>
+        <option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option>
+        <option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option>
+        <option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option>
+        <option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option>
+        <option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option>
+        <option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
+      </select>
+      <button class="age-gate__btn" id="enterSiteBtn">{{ section.settings.button_text }}</button>
+    </div>
+    <p class="age-gate__error" id="ageGateError">Please select your state to continue.</p>
+  </div>
+</div>
+
+<script>
+  if (sessionStorage.getItem('sundaze_verified')) {
+    document.getElementById('sundazeAgeGate').classList.add('hidden');
+  }
+
+  const stateSelect = document.getElementById('stateSelect');
+  const enterBtn = document.getElementById('enterSiteBtn');
+  const ageGate = document.getElementById('sundazeAgeGate');
+
+  stateSelect.addEventListener('change', function() {
+    this.value !== "" ? this.classList.add('state-selected') : this.classList.remove('state-selected');
+  });
+
+  enterBtn.addEventListener('click', function() {
+    const state = stateSelect.value;
+    const error = document.getElementById('ageGateError');
+
+    if (!state) {
+      error.classList.add('show');
+    } else {
+      error.classList.remove('show');
+      sessionStorage.setItem('sundaze_verified', 'true');
+      sessionStorage.setItem('sundaze_state', state);
+      
+      /* Add smooth fade out class */
+      ageGate.classList.add('fade-out');
+      
+      /* Wait for animation, then redirect to the new page */
+      setTimeout(() => {
+        window.location.href = '{{ section.settings.redirect_url }}';
+      }, 600); 
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Age Gate",
+  "tag": "div",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Sundaze Logo" },
+    { "type": "text", "id": "tagline", "label": "Tagline Text", "default": "Dont You Just Love Sundaze?" },
+    { "type": "text", "id": "button_text", "label": "Button Text", "default": "21+ to Explore" },
+    { "type": "url", "id": "redirect_url", "label": "Redirect URL after verification" },
+    { "type": "image_picker", "id": "tube_1", "label": "Falling Product Image 1" },
+    { "type": "image_picker", "id": "tube_2", "label": "Falling Product Image 2" },
+    { "type": "image_picker", "id": "tube_3", "label": "Falling Product Image 3" },
+    { "type": "image_picker", "id": "tube_4", "label": "Falling Product Image 4" }
+  ],
+  "presets": [{ "name": "Age Gate" }]
+}
+{% endschema %}

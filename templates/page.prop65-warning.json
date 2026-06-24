@@ -1,0 +1,57 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": { "padding_top": 28, "padding_bottom": 28 }
+    },
+    "sundaze_policy_Prop65": {
+      "type": "sundaze-policy",
+      "blocks": {
+        "hero_block": {
+          "type": "hero",
+          "settings": {
+            "page_title": "California Prop 65 Warning",
+            "eyebrow": "Legal",
+            "hero_desc": "Important safety information required under California's Proposition 65 for residents and consumers in the State of California.",
+            "hero_pill": "California · Prop 65 · Safety"
+          }
+        },
+        "content_block": {
+          "type": "content",
+          "settings": {
+            "effective_date": "June 1, 2026",
+            "policy_content": "<h2>Proposition 65 Warning<\/h2><p><strong>WARNING:<\/strong> Smoking cannabis or hemp products can expose you to cannabis smoke, which is known to the State of California to cause cancer and developmental harm. Products containing Delta-9 THC may also expose you to chemicals known to the State of California to cause reproductive harm.<\/p><p>For more information, visit <a href=\"https:\/\/www.p65warnings.ca.gov\" target=\"_blank\" rel=\"noopener noreferrer\">California's Proposition 65 Warning Website<\/a>.<\/p><h2>What Is Proposition 65?<\/h2><p>California's Proposition 65, officially known as the Safe Drinking Water and Toxic Enforcement Act of 1986, requires businesses to provide warnings to Californians about significant exposures to chemicals that cause cancer, birth defects, or other reproductive harm.<\/p><p>The California Office of Environmental Health Hazard Assessment (OEHHA) maintains a list of chemicals subject to these warnings. Cannabis smoke and certain cannabis-derived compounds are included on this list.<\/p><h2>Which Products Are Affected?<\/h2><p>This warning applies to all Sundaze smoked and combustible products, including but not limited to:<\/p><ul><li>Hash hole pre-rolls<\/li><li>Flower (3.5G jars and other formats)<\/li><li>Any product intended for smoking or combustion<\/li><\/ul><h2>How to Reduce Exposure<\/h2><p>You can reduce your exposure to chemicals from cannabis smoke by:<\/p><ul><li>Avoiding or limiting use of smoked cannabis products<\/li><li>Ensuring adequate ventilation when using combustible products<\/li><li>Consulting a healthcare professional about alternative consumption methods<\/li><\/ul><h2>Who Should Exercise Extra Caution?<\/h2><p>California residents who are pregnant, planning to become pregnant, or are nursing should exercise particular caution given the reproductive harm warnings associated with certain cannabis-derived compounds. We strongly recommend consulting a qualified healthcare professional before use.<\/p><h2>Legal Compliance<\/h2><p>This warning is provided in compliance with California Health & Safety Code Section 25249.6. Sundaze is committed to full transparency and legal compliance in all markets where our products are sold.<\/p><h2>Questions?<\/h2><p>If you have questions about Proposition 65 compliance or our products, please contact us at <a href=\"mailto:support@sundaze.com\">support@sundaze.com<\/a>.<\/p>"
+          }
+        },
+        "promise_block": {
+          "type": "promise",
+          "settings": {
+            "label": "Our Commitment",
+            "quote": "\"Compliance isn't a checkbox — it's how we show we <strong>respect our community.<\/strong>\"",
+            "body_text": "We take state and federal compliance seriously. If you have questions about Prop 65, our products, or your safety, we're here to help. Reach out at support@sundaze.com and we'll respond within 24 hours.",
+            "tags": "Prop 65 Compliant, California, Transparent, 21+ Only, Community First"
+          }
+        },
+        "legal_block": {
+          "type": "legal",
+          "settings": {
+            "legal_text": "WARNING: Smoking cannabis or hemp products can expose you to cannabis smoke, known to the State of California to cause cancer and developmental harm. Products containing Delta-9 THC may expose you to chemicals known to the State of California to cause reproductive harm. For more information: www.p65warnings.ca.gov. Products are intended for adults 21+ only. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act."
+          }
+        }
+      },
+      "block_order": ["hero_block", "content_block", "promise_block", "legal_block"],
+      "settings": {}
+    }
+  },
+  "order": ["main", "sundaze_policy_Prop65"]
+}

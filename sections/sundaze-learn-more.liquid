@@ -1,0 +1,669 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+.sundaze-page {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #f9f7f4 0%, #f5f2ee 60%, #fef0f5 100%);
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+  color: #1a1a1a;
+}
+
+.sundaze-glow {
+  pointer-events: none;
+  position: fixed;
+  left: -100px;
+  bottom: -100px;
+  height: 600px;
+  width: 600px;
+  opacity: 0.3;
+  background: radial-gradient(circle at 20% 80%, #fff9c4 0%, #e0f7fa 50%, transparent 80%);
+  z-index: 0;
+}
+
+.sundaze-container {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .sundaze-container { padding: 80px 24px; }
+}
+
+/* ── BACK BUTTON ── */
+.sundaze-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  background: linear-gradient(to right, #c5824c, #e8a0bf);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 48px;
+}
+
+.sundaze-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.sundaze-back-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── HERO ── */
+.sundaze-hero {
+  text-align: center;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.sundaze-hero.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sundaze-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(107,66,38,0.6);
+  margin-bottom: 16px;
+  padding: 6px 16px;
+  border: 1px solid #e8e0d8;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.6);
+}
+
+.sundaze-h1 {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0 auto 24px;
+  max-width: 600px;
+}
+
+@media (min-width: 640px) { .sundaze-h1 { font-size: 56px; } }
+
+.sundaze-h1 span {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #8B6914, #e8a0bf);
+}
+
+.sundaze-hero-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(107,66,38,0.8);
+  max-width: 540px;
+  margin: 0 auto 32px;
+}
+
+.sundaze-no-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .sundaze-no-list { flex-direction: row; justify-content: center; gap: 24px; }
+}
+
+.sundaze-no-item {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sundaze-no-item svg {
+  width: 16px;
+  height: 16px;
+  color: #d4a574;
+}
+
+/* ── SECTION DEFAULTS ── */
+.sundaze-section {
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.sundaze-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sundaze-h2 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+
+@media (min-width: 640px) { .sundaze-h2 { font-size: 36px; } }
+
+.sundaze-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(107,66,38,0.6);
+  margin: 0 0 40px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── GRID & CARDS ── */
+.sundaze-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .sundaze-grid-2 { grid-template-columns: 1fr 1fr; }
+}
+
+.sundaze-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+  border: 1px solid rgba(232,224,216,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sundaze-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+
+.sundaze-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f9f7f4;
+  margin-bottom: 20px;
+}
+
+.sundaze-card-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #8B6914;
+}
+
+.sundaze-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.sundaze-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(107,66,38,0.7);
+  margin: 0;
+}
+
+/* ── LIST ITEMS (Why they hit different) ── */
+.sundaze-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sundaze-list-item {
+  display: flex;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  border: 1px solid rgba(232,224,216,0.5);
+}
+
+.sundaze-list-num {
+  font-size: 24px;
+  font-weight: 900;
+  color: #e8ddd4;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 32px;
+}
+
+.sundaze-list-text h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.sundaze-list-text p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(107,66,38,0.7);
+  margin: 0;
+}
+
+/* ── PROCESS STEPS ── */
+.sundaze-steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-left: 24px;
+}
+
+/* Vertical Line */
+.sundaze-steps::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: #e8e0d8;
+}
+
+.sundaze-step {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.sundaze-step-dot {
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #d4a574;
+  z-index: 2;
+}
+
+.sundaze-step-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.sundaze-step-content p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(107,66,38,0.7);
+  margin: 0;
+}
+
+/* ── ASH STANDARD CONCLUSION ── */
+.sundaze-conclusion {
+  background: linear-gradient(135deg, #ffffff 0%, #f9f7f4 100%);
+  border-radius: 32px;
+  padding: 40px 24px;
+  text-align: center;
+  border: 1px solid #e8e0d8;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.06);
+  margin-bottom: 40px;
+}
+
+@media (min-width: 640px) {
+  .sundaze-conclusion { padding: 64px 48px; }
+}
+
+.sundaze-conclusion h2 {
+  font-size: 28px;
+  font-weight: 900;
+  margin: 0 0 16px;
+}
+
+.sundaze-conclusion p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(107,66,38,0.8);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.sundaze-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.sundaze-chip {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 50px;
+  background: #1a1a1a;
+  color: #ffffff;
+}
+</style>
+
+<div class="sundaze-glow" aria-hidden="true"></div>
+
+<div class="sundaze-page">
+  <div class="sundaze-container">
+    
+    <!-- ── BACK BUTTON ── -->
+    <a href="{{ section.settings.back_button_url | default: '/pages/hash-holes' }}" class="sundaze-back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Back to Hash Holes
+    </a>
+
+    <!-- ══════════════════════════════
+         HERO
+    ══════════════════════════════ -->
+    <div class="sundaze-hero" id="sundazeHero">
+      <span class="sundaze-eyebrow">Sundaze Rosin Hand Rolls</span>
+      <h1 class="sundaze-h1">
+        Whole Bud.<br>
+        Cold Cure Rosin.<br>
+        <span>Rolled by Hand.</span>
+      </h1>
+      <p class="sundaze-hero-desc">
+        A Sundaze rosin hand roll is crafted for people who care about flavor, smoothness, and the details behind a premium smoke. Each one is made with 1.5G of whole bud flower and 0.6G of cold cure 90u–120u rosin derived from bubble hash.
+      </p>
+      <div class="sundaze-no-list">
+        <div class="sundaze-no-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          We do not use smalls
+        </div>
+        <div class="sundaze-no-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          We do not use trim
+        </div>
+        <div class="sundaze-no-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          We do not rush the process
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         THE SUNDAZE DIFFERENCE
+    ══════════════════════════════ -->
+    <div class="sundaze-section" id="sundazeDifference">
+      <h2 class="sundaze-h2">The Sundaze Difference</h2>
+      <p class="sundaze-subtitle">What Makes Our Rosin Rolls Special</p>
+      
+      <div class="sundaze-grid-2">
+        <div class="sundaze-card">
+          <div class="sundaze-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Whole Bud Flower Only</h3>
+          <p>We start with real whole buds selected for flavor, aroma, structure, and smoothness. Using whole bud instead of shake, trim, or smalls gives each roll a fuller taste, better texture, and a more consistent burn.</p>
+        </div>
+
+        <div class="sundaze-card">
+          <div class="sundaze-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </div>
+          <h3>Cold Cure Rosin Core</h3>
+          <p>At the center is cold cure 90u–120u rosin derived from bubble hash. This rosin core melts slowly as the roll burns, adding rich flavor, smooth potency, and a deeper terpene experience throughout the session.</p>
+        </div>
+
+        <div class="sundaze-card">
+          <div class="sundaze-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>The Art of Hand Rolling</h3>
+          <p>Each Sundaze roll is finished by hand with attention to balance, airflow, shape, and rosin placement. The flower has to be packed evenly, the rosin has to sit just right, and the roll has to pull smoothly.</p>
+        </div>
+
+        <div class="sundaze-card">
+          <div class="sundaze-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Rolled for Your Satisfaction</h3>
+          <p>Every detail is designed around the final experience — smooth draw, steady burn, rich flavor, and a clean finish. Sundaze hand rolls are made to feel intentional, not mass-produced.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         INSIDE THE ROLL
+    ══════════════════════════════ -->
+    <div class="sundaze-section" id="sundazeInside">
+      <h2 class="sundaze-h2">Inside the Roll</h2>
+      <p class="sundaze-subtitle">A Closer Look at the Sundaze Build</p>
+      
+      <div class="sundaze-grid-2" style="grid-template-columns: 1fr;">
+        <div class="sundaze-card" style="background: linear-gradient(135deg, #ffffff 0%, #fdf6e3 100%);">
+          <p style="margin-bottom: 24px; font-weight: 500;">A Sundaze rosin hand roll brings together two premium parts: flavorful whole bud flower and a cold cure rosin center. As the roll burns, the rosin slowly melts through the middle, creating a richer, more flavorful smoke.</p>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+            <div style="display: flex; gap: 16px; align-items: flex-start;">
+              <div style="font-size: 24px; font-weight: 900; color: #d4a574; line-height: 1;">01</div>
+              <div>
+                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px;">Flower as the Foundation</h3>
+                <p style="font-size: 14px; line-height: 1.6; color: rgba(107,66,38,0.7); margin: 0;">The flower gives the roll its body, aroma, and smooth smoking base. Because we use whole buds, the experience feels fuller and cleaner than a standard pre-roll.</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; align-items: flex-start;">
+              <div style="font-size: 24px; font-weight: 900; color: #d4a574; line-height: 1;">02</div>
+              <div>
+                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px;">Rosin Through the Center</h3>
+                <p style="font-size: 14px; line-height: 1.6; color: rgba(107,66,38,0.7); margin: 0;">Derived from bubble hash and cold cured for texture and terpene preservation, the rosin center is what gives the roll that premium infused experience.</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; align-items: flex-start;">
+              <div style="font-size: 24px; font-weight: 900; color: #d4a574; line-height: 1;">03</div>
+              <div>
+                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 4px;">Built to Burn Slow</h3>
+                <p style="font-size: 14px; line-height: 1.6; color: rgba(107,66,38,0.7); margin: 0;">A properly made rosin roll should not feel rushed. It should burn evenly, pull smoothly, and allow the rosin to melt into the flower as the session develops.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         WHY THEY HIT DIFFERENT
+    ══════════════════════════════ -->
+    <div class="sundaze-section" id="sundazeWhy">
+      <h2 class="sundaze-h2">Why Sundaze Hash Holes hit different</h2>
+      <p class="sundaze-subtitle">Flavor, Craft, and Burn Quality in Every Roll</p>
+      
+      <div class="sundaze-list">
+        <div class="sundaze-list-item">
+          <div class="sundaze-list-num">01</div>
+          <div class="sundaze-list-text">
+            <h3>Richer Flavor</h3>
+            <p>Whole bud flower and cold cure rosin create a layered flavor profile. The flower brings the strain character, while the rosin adds a smooth, concentrated finish.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-list-item">
+          <div class="sundaze-list-num">02</div>
+          <div class="sundaze-list-text">
+            <h3>Smooth Potency</h3>
+            <p>The rosin center gives the roll more strength than a regular pre-roll, while the whole bud flower helps keep the experience balanced and enjoyable.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-list-item">
+          <div class="sundaze-list-num">03</div>
+          <div class="sundaze-list-text">
+            <h3>Clean Burn Focus</h3>
+            <p>Sundaze focuses on the full process behind a smoother burn — from properly prepared flower to careful curing and hand rolling. Our goal is a clean, even smoke with a light ash finish.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-list-item">
+          <div class="sundaze-list-num">04</div>
+          <div class="sundaze-list-text">
+            <h3>White Ash Approach</h3>
+            <p>White ash starts before the roll is ever made. We aim for that clean burn by working with flower that is properly grown, fully flushed before harvest, carefully dried, and cured with patience.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-list-item">
+          <div class="sundaze-list-num">05</div>
+          <div class="sundaze-list-text">
+            <h3>No Fillers, No Shortcuts</h3>
+            <p>No trim. No shake. No leftover scraps. Just whole bud flower, premium rosin, and a roll made with intention.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         THE ROLLING PROCESS
+    ══════════════════════════════ -->
+    <div class="sundaze-section" id="sundazeProcess">
+      <h2 class="sundaze-h2">The Sundaze Rolling Process</h2>
+      <p class="sundaze-subtitle">How Each Rosin Hand Roll Comes Together</p>
+      
+      <div class="sundaze-steps">
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>1. Flower Selection</h3>
+            <p>We begin with whole buds chosen for smell, structure, smoothness, and overall quality. Only flower that fits the Sundaze standard makes it into our rolls.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>2. Clean Cultivation and Flush</h3>
+            <p>Before harvest, the plant is fully flushed to help remove excess buildup and support a smoother final burn. This is one of the steps that helps contribute to the clean ash and smooth finish we aim for.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>3. Drying and Curing</h3>
+            <p>The flower is dried and cured with care to protect flavor, preserve aroma, and improve smoke quality. A proper cure makes a major difference in how the final roll tastes and burns.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>4. Flower Preparation</h3>
+            <p>The flower is broken down evenly so it keeps the right texture. This helps with airflow, consistency, and an even burn from start to finish.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>5. Rosin Placement</h3>
+            <p>A smooth line of cold cure 90u–120u rosin is placed through the center of the flower. This creates the signature rosin core that melts as the roll burns.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>6. Hand Rolling</h3>
+            <p>Each roll is shaped and finished by hand. The goal is balance — not too tight, not too loose, with clean airflow and proper structure.</p>
+          </div>
+        </div>
+
+        <div class="sundaze-step">
+          <div class="sundaze-step-dot"></div>
+          <div class="sundaze-step-content">
+            <h3>7. Final Quality Check</h3>
+            <p>Every roll is checked for shape, airflow, pack, and finish before it reaches the customer. Small details matter when the goal is a premium experience.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         WHITE ASH STANDARD
+    ══════════════════════════════ -->
+    <div class="sundaze-section" id="sundazeAsh">
+      <div class="sundaze-conclusion">
+        <h2>The White Ash Standard</h2>
+        <p class="sundaze-subtitle" style="text-align: center; margin-top: 0;">Clean Flower Creates a Cleaner Smoke</p>
+        <p>A smooth burn does not happen by accident. It comes from the way the flower is grown, flushed, dried, cured, prepared, and rolled. The result is a hand roll made to burn smooth, taste rich, and leave behind the kind of clean finish Sundaze is known for.</p>
+        
+        <div class="sundaze-chips">
+          <span class="sundaze-chip">Fully Flushed Plants</span>
+          <span class="sundaze-chip">Proper Drying & Curing</span>
+          <span class="sundaze-chip">Whole Bud Flower</span>
+          <span class="sundaze-chip">Balanced Hand Rolling</span>
+          <span class="sundaze-chip">Quality Rosin Placement</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  const animateEls = document.querySelectorAll('.sundaze-hero, .sundaze-section');
+  animateEls.forEach(el => observer.observe(el));
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze Learn More",
+  "tag": "section",
+  "class": "sundaze-learn-more",
+  "settings": [
+    {
+      "type": "url",
+      "id": "back_button_url",
+      "label": "Back Button Link"
+    },
+    {
+      "type": "paragraph",
+      "content": "Educational page layout for Sundaze Hash Holes. Content is hardcoded for design consistency."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Learn More"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,978 @@
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --sun-rose:   #c4607a;
+    --sun-mauve:  #a84f6a;
+    --sun-blush:  #e8a0b4;
+    --sun-peach:  #d4926e;
+    --sun-ink:    #1e1118;
+    --sun-text:   rgba(30,17,24,0.82);
+    --sun-muted:  rgba(30,17,24,0.48);
+    --sun-line:   rgba(196,96,122,0.18);
+    --grad-top:   #fff8e8;
+    --grad-bot:   #fde8f0;
+  }
+
+  .sct-wrap {
+    background: linear-gradient(180deg, var(--grad-top) 0%, var(--grad-bot) 100%);
+    color: var(--sun-ink);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── HERO ── */
+  .sct-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 56vh;
+    padding: 80px 24px 64px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,230,200,0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 45% at 20% 90%,  rgba(240,190,210,0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 80% 70%,  rgba(255,220,200,0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%);
+    overflow: hidden;
+  }
+
+  .sct-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sct-hero-eyebrow {
+    position: relative; z-index: 1;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) {
+   .sct-hero-eyebrow {
+    font-size:12px;
+   }
+     .sct-info-label{
+      font-size:12px;
+     }
+      .sct-form-label {
+        font-size:12px;
+      }
+        .sct-mission-label{
+          font-size:12px;
+        }
+ 
+  }
+
+  .sct-hero-title {
+    position: relative; z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 20px;
+    color: var(--sun-ink);
+  }
+
+  .sct-hero-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sct-hero-desc {
+    position: relative; z-index: 1;
+    max-width: 480px;
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0 0 28px;
+  }
+
+  .sct-hero-pill {
+    position: relative; z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.28);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--sun-mauve);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .sct-hero-pill span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-blush), var(--sun-rose));
+    display: inline-block;
+  }
+
+  .sct-scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--sun-muted);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .sct-scroll-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, var(--sun-rose), transparent);
+    animation: sct-pulse 2s ease-in-out infinite;
+  }
+  @keyframes sct-pulse {
+    0%, 100% { opacity: 0.25; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── DIVIDER ── */
+  .sct-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,96,122,0.20) 30%, rgba(196,96,122,0.32) 50%, rgba(196,96,122,0.20) 70%, transparent);
+  }
+
+  /* ── MAIN CONTENT GRID ── */
+  .sct-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  @media (min-width: 768px) {
+    .sct-main {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      padding: 100px 48px;
+      align-items: start;
+    }
+  }
+
+  /* ── CONTACT INFO PANEL ── */
+  .sct-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sct-info-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 4px;
+  }
+
+  .sct-info-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--sun-ink);
+    margin: 0 0 8px;
+  }
+
+  .sct-info-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 60%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sct-info-intro {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0 0 32px;
+  }
+
+  .sct-contact-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sct-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 22px;
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(196,96,122,0.16);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sct-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sun-blush), var(--sun-rose), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .sct-card:hover {
+    background: rgba(255,255,255,0.82);
+    border-color: rgba(196,96,122,0.30);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 36px rgba(196,96,122,0.12);
+  }
+  .sct-card:hover::before { opacity: 1; }
+
+  .sct-card-icon {
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, rgba(232,160,180,0.25), rgba(196,96,122,0.18));
+    border: 1px solid rgba(196,96,122,0.20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sun-rose);
+  }
+  .sct-card-icon svg { width: 20px; height: 20px; }
+
+  .sct-card-body { display: flex; flex-direction: column; gap: 3px; }
+
+  .sct-card-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+
+  .sct-card-value {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--sun-ink);
+  }
+
+  .sct-card-sub {
+    font-size: 12px;
+    color: var(--sun-muted);
+    font-weight: 300;
+  }
+
+  /* ── SOCIAL ROW ── */
+  .sct-social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sct-social-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--sun-muted);
+    margin-right: 4px;
+  }
+
+  .sct-social-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--sun-mauve);
+    text-decoration: none;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .sct-social-btn svg { width: 14px; height: 14px; }
+  .sct-social-btn:hover {
+    background: rgba(255,255,255,0.82);
+    border-color: rgba(196,96,122,0.40);
+    transform: translateY(-2px);
+  }
+
+  /* ── FORM PANEL ── */
+  .sct-form-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sct-form-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin-bottom: 4px;
+  }
+
+  .sct-form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 700;
+    line-height: 1.18;
+    color: var(--sun-ink);
+    margin: 0 0 24px;
+  }
+
+  .sct-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sct-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 480px) { .sct-field-row { grid-template-columns: 1fr; } }
+
+  .sct-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sct-field label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sun-muted);
+  }
+
+  .sct-field input,
+  .sct-field select,
+  .sct-field textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.62);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--sun-ink);
+    outline: none;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .sct-field input::placeholder,
+  .sct-field textarea::placeholder { color: var(--sun-muted); }
+
+  .sct-field input:focus,
+  .sct-field select:focus,
+  .sct-field textarea:focus {
+    border-color: rgba(196,96,122,0.55);
+    background: rgba(255,255,255,0.88);
+    box-shadow: 0 0 0 3px rgba(196,96,122,0.10);
+  }
+
+  .sct-field textarea { resize: vertical; min-height: 120px; }
+
+  .sct-select-wrap { position: relative; }
+  .sct-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    border-right: 1.5px solid var(--sun-rose);
+    border-bottom: 1.5px solid var(--sun-rose);
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .sct-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 36px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s, opacity 0.25s;
+    box-shadow: 0 4px 20px rgba(196,96,122,0.28);
+    align-self: flex-start;
+  }
+  .sct-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(196,96,122,0.38);
+  }
+  .sct-btn:active { transform: translateY(0); opacity: 0.88; }
+  .sct-btn svg { width: 16px; height: 16px; }
+
+  /* ── SUCCESS MESSAGE ── */
+  .sct-success {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    padding: 40px 32px;
+    background: rgba(255,255,255,0.68);
+    border: 1px solid rgba(196,96,122,0.22);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .sct-success.sct-show { display: flex; }
+  .sct-success-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(232,160,180,0.3), rgba(196,96,122,0.2));
+    border: 1px solid rgba(196,96,122,0.25);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sun-rose);
+  }
+  .sct-success-icon svg { width: 26px; height: 26px; }
+  .sct-success h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--sun-ink);
+    margin: 0;
+  }
+  .sct-success p { font-size: 14px; color: var(--sun-muted); font-weight: 300; line-height: 1.7; margin: 0; }
+
+  /* ── STAT STRIP ── */
+  .sct-stats {
+    border-top: 1px solid rgba(196,96,122,0.14);
+    border-bottom: 1px solid rgba(196,96,122,0.14);
+    padding: 48px 24px;
+  }
+  .sct-stats-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  @media (min-width: 640px) {
+    .sct-stats-inner { grid-template-columns: repeat(4, 1fr); gap: 0; }
+  }
+  .sct-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+    position: relative;
+  }
+  .sct-stat + .sct-stat::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10%; height: 80%;
+    width: 1px;
+    background: rgba(196,96,122,0.18);
+    display: none;
+  }
+  @media (min-width: 640px) { .sct-stat + .sct-stat::before { display: block; } }
+  .sct-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 5vw, 44px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .sct-stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sun-muted);
+    white-space: nowrap;
+  }
+
+  /* ── MISSION BAND ── */
+  .sct-mission {
+    position: relative;
+    padding: 100px 24px;
+    text-align: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 50%,  rgba(255,225,235,0.70) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 0%,   rgba(255,248,230,0.60) 0%, transparent 60%),
+      linear-gradient(180deg, #fde8f0 0%, #fff8e8 100%);
+  }
+  .sct-mission::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .sct-mission-inner {
+    position: relative; z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .sct-mission-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+  }
+  .sct-mission-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3.5vw, 32px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.42;
+    color: var(--sun-ink);
+    margin: 0;
+  }
+  .sct-mission-quote strong {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--sun-peach), var(--sun-rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .sct-mission-body {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--sun-text);
+    font-weight: 300;
+    margin: 0;
+  }
+  .sct-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .sct-tag {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(196,96,122,0.22);
+    background: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sun-mauve);
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ── ANIMATIONS ── */
+  .sct-anim {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .sct-anim.sct-visible { opacity: 1; transform: translateY(0); }
+  .sct-anim[data-delay="1"] { transition-delay: 0.10s; }
+  .sct-anim[data-delay="2"] { transition-delay: 0.20s; }
+  .sct-anim[data-delay="3"] { transition-delay: 0.30s; }
+  .sct-anim[data-delay="4"] { transition-delay: 0.40s; }
+{% endstyle %}
+
+<div class="sct-wrap">
+
+  <!-- ── HERO ── -->
+  <div class="sct-hero">
+    <p class="sct-hero-eyebrow sct-anim" data-delay="1">{{ section.settings.eyebrow }}</p>
+    <h1 class="sct-hero-title sct-anim" data-delay="2">Get in <em>Touch</em></h1>
+    <p class="sct-hero-desc sct-anim" data-delay="3">{{ section.settings.hero_desc }}</p>
+    <div class="sct-hero-pill sct-anim" data-delay="4">
+      <span></span>{{ section.settings.hero_pill }}
+    </div>
+    <div class="sct-scroll-hint" aria-hidden="true">
+      <div class="sct-scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </div>
+
+  <div class="sct-divider"></div>
+
+  <!-- ── MAIN: INFO + FORM ── -->
+  <div class="sct-main">
+
+    <!-- Contact Info -->
+    <div class="sct-info sct-anim">
+      <p class="sct-info-label">Contact Information</p>
+      <h2 class="sct-info-title">We're here<br>to <em>help you.</em></h2>
+      <p class="sct-info-intro">{{ section.settings.info_intro }}</p>
+
+      {% comment %} <div class="sct-contact-cards">
+
+        <a href="mailto:{{ section.settings.email }}" class="sct-card">
+          <div class="sct-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 6 10-6"/>
+            </svg>
+          </div>
+          <div class="sct-card-body">
+            <span class="sct-card-label">Email</span>
+            <span class="sct-card-value">{{ section.settings.email }}</span>
+            <span class="sct-card-sub">We reply within 24 hours</span>
+          </div>
+        </a>
+
+        <a href="tel:{{ section.settings.phone | remove: ' ' }}" class="sct-card">
+          <div class="sct-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.38 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <div class="sct-card-body">
+            <span class="sct-card-label">Phone</span>
+            <span class="sct-card-value">{{ section.settings.phone }}</span>
+            <span class="sct-card-sub">Mon–Fri, 9 AM–6 PM</span>
+          </div>
+        </a>
+
+        <div class="sct-card">
+          <div class="sct-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/>
+            </svg>
+          </div>
+          <div class="sct-card-body">
+            <span class="sct-card-label">Address</span>
+            <span class="sct-card-value">{{ section.settings.address }}</span>
+            <span class="sct-card-sub">{{ section.settings.address_sub }}</span>
+          </div>
+        </div>
+
+      </div> {% endcomment %}
+
+      <!-- Social -->
+      <div class="sct-social sct-anim" data-delay="2" style="margin-top:24px">
+        <span class="sct-social-label">Follow</span>
+        {% if section.settings.instagram_url != blank %}
+        <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" class="sct-social-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+          </svg>
+          Instagram
+        </a>
+        {% endif %}
+        {% if section.settings.tiktok_url != blank %}
+        <a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener" class="sct-social-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+          </svg>
+          TikTok
+        </a>
+        {% endif %}
+        {% if section.settings.youtube_url != blank %}
+        <a href="{{ section.settings.youtube_url }}" target="_blank" rel="noopener" class="sct-social-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/>
+          </svg>
+          YouTube
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="sct-form-wrap sct-anim" data-delay="2">
+      <p class="sct-form-label">Send a Message</p>
+      <h2 class="sct-form-title">{{ section.settings.form_title }}</h2>
+
+      <div id="sct-success-msg" class="sct-success">
+        <div class="sct-success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h3>Message Sent!</h3>
+        <p>Thanks for reaching out. We'll get back to you within 24 hours.</p>
+      </div>
+
+      {% form 'contact', id: 'sct-contact-form', class: 'sct-form' %}
+        {{ form.errors | default_errors }}
+
+        <div class="sct-field-row">
+          <div class="sct-field">
+            <label for="ContactFormName">First Name</label>
+            <input type="text" id="ContactFormName" name="contact[first_name]" placeholder="Jordan" autocomplete="given-name">
+          </div>
+          <div class="sct-field">
+            <label for="ContactFormLast">Last Name</label>
+            <input type="text" id="ContactFormLast" name="contact[last_name]" placeholder="Rivera" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="sct-field">
+          <label for="ContactFormEmail">Email Address</label>
+          <input type="email" id="ContactFormEmail" name="contact[email]" value="{{ form.email }}" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+
+        <div class="sct-field">
+          <label for="ContactFormSubject">Subject</label>
+          <div class="sct-select-wrap">
+            <select id="ContactFormSubject" name="contact[subject]">
+              <option value="">Select a topic…</option>
+              <option value="Product Question">Product Question</option>
+              <option value="Order Support">Order Support</option>
+              <option value="Wholesale">Wholesale Inquiry</option>
+              <option value="Press">Press & Media</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sct-field">
+          <label for="ContactFormMessage">Your Message</label>
+          <textarea id="ContactFormMessage" name="contact[body]" placeholder="Tell us how we can help…" rows="5">{{ form.body }}</textarea>
+        </div>
+
+        <button type="submit" class="sct-btn">
+          Send Message
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+
+        {% if form.posted_successfully? %}
+          <script>
+            document.getElementById('sct-success-msg').classList.add('sct-show');
+            document.getElementById('sct-contact-form').style.display = 'none';
+          </script>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+
+  <div class="sct-divider"></div>
+
+  <!-- ── STAT STRIP ── -->
+  <div class="sct-stats">
+    <div class="sct-stats-inner">
+      <div class="sct-stat sct-anim">
+        <span class="sct-stat-num">24h</span>
+        <span class="sct-stat-label">Reply Time</span>
+      </div>
+      <div class="sct-stat sct-anim" data-delay="1">
+        <span class="sct-stat-num">100%</span>
+        <span class="sct-stat-label">Hand Rolled</span>
+      </div>
+      <div class="sct-stat sct-anim" data-delay="2">
+        <span class="sct-stat-num">0.5G</span>
+        <span class="sct-stat-label">Cold Cure Rosin</span>
+      </div>
+      <div class="sct-stat sct-anim" data-delay="3">
+        <span class="sct-stat-num">21+</span>
+        <span class="sct-stat-label">Only</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MISSION BAND ── -->
+  <div class="sct-mission">
+    <div class="sct-mission-inner">
+      <p class="sct-mission-label sct-anim">Our Promise</p>
+      <blockquote class="sct-mission-quote sct-anim" data-delay="1">
+        "Every question deserves <strong>flavor, creativity, and care.</strong>"
+      </blockquote>
+      <p class="sct-mission-body sct-anim" data-delay="2">{{ section.settings.mission_text }}</p>
+      <div class="sct-tags sct-anim" data-delay="3">
+        <span class="sct-tag">Fast Replies</span>
+        <span class="sct-tag">Real People</span>
+        <span class="sct-tag">Community First</span>
+        <span class="sct-tag">Detail Obsessed</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    var els = document.querySelectorAll('.sct-anim');
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('sct-visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { obs.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze Contact Us",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_desc",
+      "label": "Hero Description",
+      "default": "Have questions? We're here to help. Reach out and we'll get back to you within 24 hours."
+    },
+    {
+      "type": "text",
+      "id": "hero_pill",
+      "label": "Hero Pill Tag",
+      "default": "Flavor · Support · Community"
+    },
+    {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "textarea",
+      "id": "info_intro",
+      "label": "Info Intro Text",
+      "default": "Whether you have a question about a product, an order, or just want to say hey — we'd love to hear from you. Real people. Real replies."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "support@sundaze.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "+1 (234) 567-8900"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Address",
+      "default": "123 W 13th St, New York, NY 10011"
+    },
+    {
+      "type": "text",
+      "id": "address_sub",
+      "label": "Address Sub-label",
+      "default": "USA"
+    },
+    {
+      "type": "header",
+      "content": "Social Links"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form Heading",
+      "default": "Drop us a line and we'll be in touch."
+    },
+    {
+      "type": "header",
+      "content": "Bottom Band"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_text",
+      "label": "Promise Body Text",
+      "default": "We are here for the flavor seekers, the loyal supporters, and anyone who believes the little details matter. Your message won't get lost in a queue — it'll get to someone who actually cares about making your experience better."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Contact Us"
+    }
+  ]
+}
+{% endschema %}

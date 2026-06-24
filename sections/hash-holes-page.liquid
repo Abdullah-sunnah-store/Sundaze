@@ -1,0 +1,909 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  /* =============================================
+     HASH HOLES PAGE LAYOUT
+     ============================================= */
+  .hash-page-wrapper {
+    overflow-x: hidden;
+    font-family: 'DM Sans', sans-serif;
+    color: #1a1a1a;
+  }
+
+  /* --- Utility & Animations --- */
+  .anim-fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .anim-fade-in.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- Section 1: Anatomy --- */
+  .hash-section-anatomy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 16px 64px;
+    background: linear-gradient(180deg, #fff8e8 0%, #fff1cc 40%, #ffe4ef 100%);
+    overflow: hidden;
+    z-index: 0;
+    isolation: isolate;
+  }
+  .hash-section-anatomy::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent 0%, #ffffff 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hash-section-anatomy > * {
+    position: relative;
+    z-index: 2;
+  }
+  @media (min-width: 640px) {
+    .hash-section-anatomy { padding: 96px 24px 64px; }
+  }
+
+  .hash-back-btn {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: linear-gradient(to right, #c5824c, #e8a0bf);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 10;
+  }
+  .hash-back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  }
+  @media (min-width: 640px) {
+    .hash-back-btn { top: 24px; left: 24px; }
+  }
+
+  .hash-anatomy-card {
+    width: 100%;
+    max-width: 512px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 0 0 1px rgba(200, 180, 160, 0.12),
+      0 20px 40px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 640px) {
+    .hash-anatomy-card { max-width: 576px; padding: 10px; }
+  }
+
+  .hash-anatomy-img {
+    width: 100%;
+    border-radius: 16px;
+    display: block;
+  }
+  @media (min-width: 640px) { .hash-anatomy-img { max-width: 576px; } }
+
+  .hash-info-card {
+    margin-top: 32px;
+    width: 100%;
+    max-width: 512px;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  }
+  @media (min-width: 640px) {
+    .hash-info-card { max-width: 576px; padding: 32px; }
+  }
+
+  /* Info title — Playfair Display, matches FAQ h3 style */
+  .hash-info-title {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #3f2417;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 640px) { .hash-info-title { font-size: 26px; } }
+
+  /* Info desc — DM Sans light, matches FAQ answer style */
+  .hash-info-desc {
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.82;
+    color: rgba(107, 66, 38, 0.8);
+  }
+  @media (min-width: 640px) { .hash-info-desc { font-size: 15px; } }
+
+  .hash-badges-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 640px) { .hash-badges-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .hash-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #e8ddd4;
+    background: rgba(255,255,255,0.6);
+    text-align: center;
+  }
+  .hash-badge-icon { font-size: 34px; margin-bottom: 4px; }
+  .hash-badge-icon-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 4px;
+  }
+  /* Badge title — DM Sans medium, small caps feel */
+  .hash-badge-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: #3f2417;
+  }
+  /* Badge desc — DM Sans light */
+  .hash-badge-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgba(107,66,38,0.6);
+    margin-top: 4px;
+  }
+
+  /* Learn btn — DM Sans, uppercase tracked */
+  .hash-learn-btn {
+    display: inline-block;
+    margin-top: 32px;
+    padding: 16px 80px;
+    border-radius: 50px;
+    background: #2a2a2a;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hash-learn-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    color: #fff;
+  }
+  @media (min-width: 640px) { .hash-learn-btn { font-size: 13px; } }
+
+  /* Subtitle — DM Sans eyebrow style, matches FAQ eyebrow */
+  .hash-subtitle {
+    margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: rgba(107,66,38,0.5);
+  }
+  @media (min-width: 640px) { .hash-subtitle { font-size: 11px; } }
+
+  /* --- Transition 1 --- */
+  .hash-transition-1 {
+    height: 0px;
+    width: 100%;
+    background: linear-gradient(to bottom, #ffe4ef, #ffffff);
+  }
+  @media (min-width: 640px) { .hash-transition-1 { height: 128px; } }
+
+  /* --- Section 2: Collections --- */
+  .hash-section-collections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    padding: 32px 16px 64px;
+  }
+  @media (min-width: 640px) { .hash-section-collections { padding: 48px 24px 96px; } }
+
+  /* Collections title — Playfair Display, editorial weight */
+  .hash-collections-title {
+    margin-bottom: 40px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+  }
+  @media (min-width: 640px) { .hash-collections-title { margin-bottom: 56px; font-size: 48px; } }
+
+  .hash-collection-link {
+    display: block;
+    width: 100%;
+    max-width: 512px;
+    text-decoration: none;
+    color: inherit;
+  }
+  @media (min-width: 640px) { .hash-collection-link { max-width: 640px; } }
+
+  .hash-collection-img-wrap {
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+  }
+  .hash-collection-link:hover .hash-collection-img-wrap {
+    transform: scale(1.02);
+  }
+
+  .hash-collection-img {
+    width: 100%;
+    display: block;
+    position: relative;
+  }
+
+  .hash-collection-badge {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(255,255,255,0.9);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #1a1a1a;
+  }
+
+  /* Collection name — DM Sans tracked caps */
+  .hash-collection-name {
+    margin-top: 16px;
+    text-align: center;
+    {% comment %} font-style: italic; {% endcomment %}
+    text-transform: uppercase;
+    letter-spacing: 0;
+    color: #1a1a1a;
+    line-height: 1.3;
+  }
+
+
+  /* --- Section 3: What's Inside --- */
+  .hash-section-inside {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #000;
+    padding: 300px 16px 96px;
+    color: #fff;
+    overflow: visible;
+  }
+  @media (min-width: 640px) {
+    .hash-section-inside { padding: 350px 24px 96px; }
+  }
+
+  .hash-section-inside::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(to bottom, #ffffff 0%, #ffffff 30%, #000000 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hash-rosin-container {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    z-index: 4;
+  }
+  @media (min-width: 640px) {
+    .hash-rosin-container { max-width: 600px; }
+  }
+
+  .hash-rosin-wrap {
+    width: 100%;
+    border-radius: 0;
+    overflow: visible;
+    will-change: transform;
+  }
+
+  .hash-rosin-img {
+    width: 100%;
+    display: block;
+    will-change: transform;
+  }
+
+  .hash-inside-content {
+    position: relative;
+    z-index: 4;
+    margin-top: 32px;
+    width: 100%;
+    max-width: 512px;
+    text-align: center;
+    color: #ffffff;
+  }
+  @media (min-width: 640px) { .hash-inside-content { max-width: 640px; margin-top: 48px; } }
+
+  /* Inside title — Playfair Display italic, dramatic scale */
+  .hash-inside-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    font-style: italic;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+  @media (min-width: 640px) { .hash-inside-title { font-size: 60px; } }
+  @media (min-width: 1024px) { .hash-inside-title { font-size: 72px; } }
+
+  /* Inside sub — DM Sans eyebrow */
+  .hash-inside-sub {
+    margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: rgba(255,255,255,0.9);
+  }
+  @media (min-width: 640px) { .hash-inside-sub { font-size: 12px; } }
+
+  /* Inside desc — DM Sans light */
+  .hash-inside-desc {
+    margin-top: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: rgba(255,255,255,0.6);
+  }
+  @media (min-width: 640px) { .hash-inside-desc { font-size: 13px; } }
+
+  /* Worm title — Playfair Display */
+  .hash-worm-title {
+    margin-top: 40px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 640px) { .hash-worm-title { font-size: 24px; } }
+
+  /* Worm desc — DM Sans light */
+  .hash-worm-desc {
+    margin-top: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.82;
+    letter-spacing: 0.01em;
+    color: rgba(255,255,255,0.7);
+  }
+  @media (min-width: 640px) { .hash-worm-desc { font-size: 15px; } }
+
+  /* Smoke title — DM Sans eyebrow, tracked caps */
+  .hash-smoke-title {
+    margin-top: 64px;
+    margin-bottom: 48px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.30em;
+    color: rgba(255,255,255,0.7);
+  }
+  @media (min-width: 640px) { .hash-smoke-title { margin-top: 80px; font-size: 12px; } }
+
+  .hash-smoke-tips {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+    color: #ffffff;
+  }
+
+  .hash-smoke-tip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .hash-tip-icon { color: #fff; width: 40px; height: 40px; }
+  @media (min-width: 640px) { .hash-tip-icon { width: 48px; height: 48px; } }
+
+  /* Tip title — Playfair Display italic, matches FAQ question serif style */
+  .hash-tip-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 640px) { .hash-tip-title { font-size: 22px; } }
+
+  /* Tip desc — DM Sans light */
+  .hash-tip-desc {
+    max-width: 384px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.82;
+    color: rgba(255,255,255,0.7);
+  }
+  @media (min-width: 640px) { .hash-tip-desc { font-size: 15px; } }
+</style>
+
+<div class="hash-page-wrapper">
+
+  <!-- ===== SECTION 1 — Product Anatomy ===== -->
+  <section class="hash-section-anatomy">
+    <a href="{{ section.settings.back_url }}" class="hash-back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Back to Categories
+    </a>
+
+    <div class="anim-fade-in hash-anatomy-card">
+      <img class="hash-anatomy-img" 
+           src="{{ section.settings.anatomy_image | img_url: '1000x' }}" 
+           alt="{{ section.settings.anatomy_image.alt | escape }}"
+           draggable="false" loading="eager">
+    </div>
+
+    <div class="hash-info-card anim-fade-in">
+      <h2 class="hash-info-title">{{ section.settings.info_title }}</h2>
+      <p class="hash-info-desc">{{ section.settings.info_desc }}</p>
+
+      <div class="hash-badges-grid">
+        <div class="hash-badge">
+          {% if section.settings.badge_1_icon != blank %}
+            <img class="hash-badge-icon-img" src="{{ section.settings.badge_1_icon | img_url: '60x' }}" alt="No Smalls">
+          {% else %}
+            <span class="hash-badge-icon">🚫</span>
+          {% endif %}
+          <span class="hash-badge-title">{{ section.settings.badge_1_title }}</span>
+        </div>
+
+        <div class="hash-badge">
+          {% if section.settings.badge_2_icon != blank %}
+            <img class="hash-badge-icon-img" src="{{ section.settings.badge_2_icon | img_url: '60x' }}" alt="No Trim">
+          {% else %}
+            <span class="hash-badge-icon">🚫</span>
+          {% endif %}
+          <span class="hash-badge-title">{{ section.settings.badge_2_title }}</span>
+        </div>
+
+        <div class="hash-badge">
+          {% if section.settings.badge_3_icon != blank %}
+            <img class="hash-badge-icon-img" src="{{ section.settings.badge_3_icon | img_url: '60x' }}" alt="Cold Cure Rosin">
+          {% else %}
+            <span class="hash-badge-icon">💧</span>
+          {% endif %}
+          <span class="hash-badge-title">{{ section.settings.badge_3_title }}</span>
+        </div>
+
+        <div class="hash-badge">
+          {% if section.settings.badge_4_icon != blank %}
+            <img class="hash-badge-icon-img" src="{{ section.settings.badge_4_icon | img_url: '60x' }}" alt="Fully Flushed">
+          {% else %}
+            <span class="hash-badge-icon">💎</span>
+          {% endif %}
+          <span class="hash-badge-title">{{ section.settings.badge_4_title }}</span>
+          {% if section.settings.badge_4_desc != blank %}
+            <span class="hash-badge-desc">{{ section.settings.badge_4_desc }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <a href="{{ section.settings.learn_btn_link }}" class="hash-learn-btn anim-fade-in">{{ section.settings.learn_btn_text }}</a>
+    <p class="hash-subtitle anim-fade-in">{{ section.settings.learn_subtitle }}</p>
+  </section>
+
+  <!-- ===== TRANSITION 1 ===== -->
+  <div class="hash-transition-1" aria-hidden="true"></div>
+
+  <!-- ===== SECTION 2 — Collections ===== -->
+  <section class="hash-section-collections">
+    <h2 class="hash-collections-title anim-fade-in">Collections</h2>
+
+    <a href="{{ section.settings.collection_link }}" class="hash-collection-link anim-fade-in">
+      <div class="hash-collection-img-wrap">
+        <div style="position: relative;">
+          <img class="hash-collection-img" 
+               src="{{ section.settings.collection_image | img_url: '1000x' }}" 
+               alt="{{ section.settings.collection_image.alt | escape }}"
+               draggable="false" loading="lazy">
+          {% comment %} <div class="hash-collection-badge">{{ section.settings.collection_badge }}</div> {% endcomment %}
+        </div>
+      </div>
+      <h3 class="hash-collection-name">{{ section.settings.collection_name }}</h3>
+    </a>
+  </section>
+
+  <!-- ===== SECTION 3 — What's Inside + How to Smoke ===== -->
+  <section class="hash-section-inside">
+
+    <div class="hash-rosin-container anim-fade-in">
+      <div class="hash-rosin-wrap">
+        <img class="hash-rosin-img" 
+             id="hashRosinImg"
+             src="{{ section.settings.rosin_image | img_url: '1000x' }}" 
+             alt="{{ section.settings.rosin_image.alt | escape }}"
+             draggable="false" loading="lazy">
+      </div>
+    </div>
+
+    <div class="hash-inside-content anim-fade-in">
+      <h2 class="hash-inside-title">{{ section.settings.inside_title }}</h2>
+      <h3 class="hash-inside-sub">{{ section.settings.inside_sub }}</h3>
+      <p class="hash-inside-desc">{{ section.settings.inside_desc }}</p>
+
+      <h3 class="hash-worm-title">{{ section.settings.worm_title }}</h3>
+      <p class="hash-worm-desc">{{ section.settings.worm_desc }}</p>
+    </div>
+
+    <div class="anim-fade-in" style="width: 100%; max-width: 512px; text-align: center; position: relative; z-index: 4;">
+      <h2 class="hash-smoke-title">{{ section.settings.smoke_title }}</h2>
+
+      <div class="hash-smoke-tips">
+        <div class="hash-smoke-tip">
+          <svg class="hash-tip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>
+          <h3 class="hash-tip-title">{{ section.settings.tip1_title }}</h3>
+          <p class="hash-tip-desc">{{ section.settings.tip1_desc }}</p>
+        </div>
+
+        <div class="hash-smoke-tip">
+          <svg class="hash-tip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
+          <h3 class="hash-tip-title">{{ section.settings.tip2_title }}</h3>
+          <p class="hash-tip-desc">{{ section.settings.tip2_desc }}</p>
+        </div>
+
+        <div class="hash-smoke-tip">
+          <svg class="hash-tip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z"/><path d="M4 18v2"/><path d="M20 18v2"/><path d="M12 4v9"/></svg>
+          <h3 class="hash-tip-title">{{ section.settings.tip3_title }}</h3>
+          <p class="hash-tip-desc">{{ section.settings.tip3_desc }}</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.anim-fade-in').forEach(el => {
+    observer.observe(el);
+  });
+
+  const rosinImg = document.getElementById('hashRosinImg');
+  let ticking = false;
+
+  function updateScrollEffects() {
+    if (!rosinImg) return;
+
+    const windowHeight = window.innerHeight;
+    const rectR = rosinImg.getBoundingClientRect();
+    
+    let progressR = (windowHeight - rectR.top) / (windowHeight + rectR.height);
+    progressR = Math.max(0, Math.min(1, progressR));
+    
+    const rotation = progressR * 720; 
+    rosinImg.style.transform = `rotate(${rotation}deg)`;
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateScrollEffects);
+      ticking = true;
+    }
+  });
+  
+  updateScrollEffects();
+</script>
+
+{% schema %}
+{
+  "name": "Hash Holes Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "url",
+      "id": "back_url",
+      "label": "Back Button Link",
+      "default": "/"
+    },
+    {
+      "type": "image_picker",
+      "id": "anatomy_image",
+      "label": "Anatomy Cutaway Image"
+    },
+    {
+      "type": "text",
+      "id": "info_title",
+      "label": "Info Card Title",
+      "default": "Premium Rosin-Infused"
+    },
+    {
+      "type": "textarea",
+      "id": "info_desc",
+      "label": "Info Card Description",
+      "default": "Crafted with 1.5G of whole bud flower and 0.5G of cold cure 90u–120u rosin derived from bubble hash, every Sundaze hand roll is made for smooth flavor, proper airflow, and a premium burn from first spark to final pull."
+    },
+    {
+      "type": "header",
+      "content": "Badge 1 (No Smalls)"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_1_icon",
+      "label": "Custom Icon (Replaces Emoji)"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_title",
+      "label": "Title",
+      "default": "No Smalls"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2 (No Trim)"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_2_icon",
+      "label": "Custom Icon (Replaces Emoji)"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_title",
+      "label": "Title",
+      "default": "No Trim"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3 (Cold Cure Rosin)"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_3_icon",
+      "label": "Custom Icon (Replaces Emoji)"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_title",
+      "label": "Title",
+      "default": "Cold Cure Rosin"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4 (Fully Flushed)"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_4_icon",
+      "label": "Custom Icon (Replaces Emoji)"
+    },
+    {
+      "type": "text",
+      "id": "badge_4_title",
+      "label": "Title",
+      "default": "Fully Flushed"
+    },
+    {
+      "type": "text",
+      "id": "badge_4_desc",
+      "label": "Description (Optional)",
+      "default": "Flushed before harvest to support white ash and a cleaner, smoother burn."
+    },
+    {
+      "type": "text",
+      "id": "learn_btn_text",
+      "label": "Learn More Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "learn_btn_link",
+      "label": "Learn More Button Link"
+    },
+    {
+      "type": "text",
+      "id": "learn_subtitle",
+      "label": "Learn More Subtitle",
+      "default": "Explore the Craft of a Sundaze Hash Hole"
+    },
+    {
+      "type": "header",
+      "content": "Collections Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "collection_image",
+      "label": "Collection Image (Neapolitan)"
+    },
+    {
+      "type": "text",
+      "id": "collection_badge",
+      "label": "Collection Image Badge Text",
+      "default": "Neapolitan"
+    },
+    {
+      "type": "text",
+      "id": "collection_name",
+      "label": "Collection Name",
+      "default": "Neapolitan Hash Hole"
+    },
+    {
+      "type": "url",
+      "id": "collection_link",
+      "label": "Collection Link"
+    },
+    {
+      "type": "header",
+      "content": "What's Inside Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "rosin_image",
+      "label": "Rosin Worm Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "gradient_overlay",
+      "label": "White-to-Black Gradient Overlay Image"
+    },
+    {
+      "type": "text",
+      "id": "inside_title",
+      "label": "What's Inside Title",
+      "default": "Whats Inside"
+    },
+    {
+      "type": "text",
+      "id": "inside_sub",
+      "label": "Inside Subtitle",
+      "default": "90U-120U Cold Cure Rosin"
+    },
+    {
+      "type": "text",
+      "id": "inside_desc",
+      "label": "Inside Description",
+      "default": "Made from our fresh frozen whole plant cannabis flower"
+    },
+    {
+      "type": "text",
+      "id": "worm_title",
+      "label": "Rosin Worm Title",
+      "default": "Our Rosin Worm"
+    },
+    {
+      "type": "textarea",
+      "id": "worm_desc",
+      "label": "Rosin Worm Description",
+      "default": "Perfectly curated directly in the middle — each of our hand rolled hash holes is our rosin worm evenly placed to give a perfect even hit with zero clog and even burn."
+    },
+    {
+      "type": "header",
+      "content": "How to Smoke Section"
+    },
+    {
+      "type": "text",
+      "id": "smoke_title",
+      "label": "Section Title",
+      "default": "How to Smoke"
+    },
+    {
+      "type": "text",
+      "id": "tip1_title",
+      "label": "Tip 1 Title",
+      "default": "Start Slow"
+    },
+    {
+      "type": "textarea",
+      "id": "tip1_desc",
+      "label": "Tip 1 Description",
+      "default": "Due to their potency, take a few gentle puffs and pause to appreciate the complex flavors and effects."
+    },
+    {
+      "type": "text",
+      "id": "tip2_title",
+      "label": "Tip 2 Title",
+      "default": "Stay Hydrated"
+    },
+    {
+      "type": "textarea",
+      "id": "tip2_desc",
+      "label": "Tip 2 Description",
+      "default": "Keep water nearby to prevent dry mouth and enhance your overall experience."
+    },
+    {
+      "type": "text",
+      "id": "tip3_title",
+      "label": "Tip 3 Title",
+      "default": "Relax & Savor"
+    },
+    {
+      "type": "textarea",
+      "id": "tip3_desc",
+      "label": "Tip 3 Description",
+      "default": "Choose a comfortable spot to fully enjoy your hand roll. Whether alone or with friends, a relaxed setting enhances the experience."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hash Holes Page"
+    }
+  ]
+}
+{% endschema %}

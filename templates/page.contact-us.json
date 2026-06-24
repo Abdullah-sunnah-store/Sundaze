@@ -1,0 +1,44 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_contact_us_cxqMBi": {
+      "type": "sundaze-contact-us",
+      "name": "Sundaze Contact Us",
+      "settings": {
+        "eyebrow": "Contact Us",
+        "hero_desc": "Have questions? We're here to help. Reach out and we'll get back to you within 24 hours.",
+        "hero_pill": "Flavor · Support · Community",
+        "info_intro": "Whether you have a question about a product, an order, or just want to say hey — we'd love to hear from you. Real people. Real replies.",
+        "email": "support@sundaze.com",
+        "phone": "+1 (234) 567-8900",
+        "address": "123 W 13th St, New York, NY 10011",
+        "address_sub": "USA",
+        "instagram_url": "",
+        "tiktok_url": "",
+        "youtube_url": "",
+        "form_title": "Drop us a line and we'll be in touch.",
+        "mission_text": "We are here for the flavor seekers, the loyal supporters, and anyone who believes the little details matter. Your message won't get lost in a queue — it'll get to someone who actually cares about making your experience better."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_contact_us_cxqMBi"
+  ]
+}

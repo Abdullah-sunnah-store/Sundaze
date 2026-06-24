@@ -1,0 +1,275 @@
+{% doc %}
+  @prompt
+    White background section. Max width 1200px. Centered.
+    Padding top 60px bottom 40px.
+    Padding left 20px right 20px for desktop.
+    Padding left 10px right 10px for mobile.
+    
+    Row 1 — Logo:
+    - One image block centered
+    - Image placeholder: [SUNDAZE-LOGO.png]
+    - Display size: 300px wide x 110px tall
+    - Margin bottom: 40px
+    
+    Row 2 — Anatomy Image:
+    - One single image block centered
+    - Image placeholder: [HASH-HOLE-ANATOMY.png]
+    - Display width: 100%
+    - No card, no gradient background
+    - No border radius
+    - No extra text, no extra labels
+    - White background behind image
+    - Align: center
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-anatomy-section-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.background_color }};
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    width: 100%;
+  }
+
+  .ai-anatomy-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding-left: {{ block.settings.padding_horizontal_desktop }}px;
+    padding-right: {{ block.settings.padding_horizontal_desktop }}px;
+  }
+
+  .ai-anatomy-logo-wrapper-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.logo_margin_bottom }}px;
+  }
+
+  .ai-anatomy-logo-{{ ai_gen_id }} {
+    width: {{ block.settings.logo_width }}px;
+    height: {{ block.settings.logo_height }}px;
+    object-fit: contain;
+  }
+
+  .ai-anatomy-logo-placeholder-{{ ai_gen_id }} {
+    display: inline-block;
+    width: {{ block.settings.logo_width }}px;
+    height: {{ block.settings.logo_height }}px;
+    background-color: #f4f4f4;
+  }
+
+  .ai-anatomy-logo-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-anatomy-image-wrapper-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-anatomy-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 28px;
+  }
+
+  .ai-anatomy-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #ffffff;
+  }
+
+  .ai-anatomy-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-anatomy-container-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.padding_horizontal_mobile }}px;
+      padding-right: {{ block.settings.padding_horizontal_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<anatomy-section-{{ ai_gen_id }} class="ai-anatomy-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-anatomy-container-{{ ai_gen_id }}">
+    <div class="ai-anatomy-logo-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.logo_image %}
+        <img
+          src="{{ block.settings.logo_image | image_url: width: 600 }}"
+          alt="{{ block.settings.logo_image.alt | escape }}"
+          class="ai-anatomy-logo-{{ ai_gen_id }}"
+          width="{{ block.settings.logo_width }}"
+          height="{{ block.settings.logo_height }}"
+          loading="lazy"
+        >
+      {% comment %} {% else %}
+        <div class="ai-anatomy-logo-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+        </div> {% endcomment %}
+      {% endif %}
+    </div>
+
+    <div class="ai-anatomy-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.anatomy_image %}
+        <img
+          src="{{ block.settings.anatomy_image | image_url: width: 2400 }}"
+          alt="{{ block.settings.anatomy_image.alt | escape }}"
+          class="ai-anatomy-image-{{ ai_gen_id }}"
+          width="{{ block.settings.anatomy_image.width }}"
+          height="{{ block.settings.anatomy_image.height }}"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="ai-anatomy-image-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</anatomy-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnatomySection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+    customElements.define('anatomy-section-{{ ai_gen_id }}', AnatomySection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Anatomy section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_desktop",
+      "label": "Horizontal padding (desktop)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "label": "Horizontal padding (mobile)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "logo_margin_bottom",
+      "label": "Logo margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Anatomy image"
+    },
+    {
+      "type": "image_picker",
+      "id": "anatomy_image",
+      "label": "Anatomy image"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Anatomy section"
+    }
+  ]
+}
+{% endschema %}

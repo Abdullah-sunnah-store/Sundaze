@@ -1,0 +1,108 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "coa_Tfj3nP": {
+      "type": "coa",
+      "blocks": {
+        "hero_NLGbnt": {
+          "type": "hero",
+          "settings": {
+            "eyebrow": "Lab Results",
+            "page_title": "Certificates of Analysis",
+            "hero_desc": "All Sundaze products are third-party tested to ensure purity, potency, and safety. Find our latest Certificates of Analysis organized by category below.",
+            "hero_pill": "Third-Party Tested · Purity · Potency · Safety"
+          }
+        },
+        "category_QWa4JG": {
+          "type": "category",
+          "settings": {
+            "category_title": "3.5G Flower"
+          }
+        },
+        "pdf_entry_gDKCPx": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": " dubai drip.pdf",
+            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_DUBAI_DRIP_COA.pdf?v=1780983108"
+          }
+        },
+        "pdf_entry_iLtcPa": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": " FROSTY SHORTY.pdf",
+            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_FROSTY_SHORTY_COA.pdf?v=1780983108"
+          }
+        },
+        "pdf_entry_Rx4yxP": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": " MYSTIC CANDY SWIRL.pdf",
+            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_MYSTIC_CANDY_SWIRL_COA.pdf?v=1780983463"
+          }
+        },
+        "pdf_entry_AAtrED": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": " MAPLE SOAKED PANCAKES.pdf",
+            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_MAPLE_SOAKED_PANCAKES_COA.pdf?v=1780983464"
+          }
+        },
+        "category_qgewwB": {
+          "type": "category",
+          "settings": {
+            "category_title": "Hash Holes"
+          }
+        },
+        "pdf_entry_jiLH3w": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": " HASH HOLE.pdf",
+            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_HASH_HOLE_COA.pdf?v=1780983456"
+          }
+        },
+        "promise_ikqzmg": {
+          "type": "promise",
+          "settings": {
+            "label": "Our Standard",
+            "quote": "\"Every product. Every batch. Every test.\"",
+            "body_text": "We partner with accredited third-party labs to verify that every Sundaze product meets our strict standards for purity, potency, and safety before it ever reaches you.",
+            "tags": "Third-Party Tested, No Pesticides, Heavy Metal Free, 21+ Only, Federally Legal"
+          }
+        }
+      },
+      "block_order": [
+        "hero_NLGbnt",
+        "category_QWa4JG",
+        "pdf_entry_gDKCPx",
+        "pdf_entry_iLtcPa",
+        "pdf_entry_Rx4yxP",
+        "pdf_entry_AAtrED",
+        "category_qgewwB",
+        "pdf_entry_jiLH3w",
+        "promise_ikqzmg"
+      ],
+      "name": "COA Page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "coa_Tfj3nP"
+  ]
+}

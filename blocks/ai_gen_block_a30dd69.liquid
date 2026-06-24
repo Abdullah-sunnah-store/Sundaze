@@ -1,0 +1,531 @@
+{% doc %}
+  @prompt
+    Header section. Width 100%.
+    Background: #000000 black
+    Padding top: 16px bottom: 16px
+    Sticky header: ON
+    Position: fixed top
+    Z-index: 999
+    
+    Layout: 3 columns horizontal
+    - Left column: empty (for balance)
+    - Center column: Logo + Navigation below
+    - Right column: Account icon + Cart icon
+    
+    CENTER COLUMN:
+    
+    Logo:
+    - Image placeholder: [SUNDAZE-LOGO.png]
+    - Display width: 180px
+    - Align: center
+    - Margin bottom: 12px
+    
+    Navigation menu below logo:
+    - Display: flex
+    - Flex direction: row
+    - Align: center
+    - Justify content: center
+    - Gap: 40px
+    
+    Menu items:
+    1. Home
+    2. Products
+    3. About Us
+    4. Contact Us
+    5. Verification
+    6. FAQ
+    
+    Menu item style:
+    - Font: sans-serif medium
+    - Font weight: 500
+    - Font size: 15px
+    - Color: #ffffff
+    - Text decoration: none
+    - Letter spacing: 0.5px
+    
+    Menu item hover style:
+    - Color: #f4a0b8 (pink)
+    - Transition: color 0.2s ease
+    
+    RIGHT COLUMN:
+    - Position: absolute right 20px
+    - Display: flex
+    - Flex direction: row
+    - Align items: center
+    - Gap: 16px
+    
+    Account icon:
+    - Icon: person outline
+    - Size: 22px x 22px
+    - Color: #ffffff
+    - Cursor: pointer
+    
+    Cart icon:
+    - Icon: shopping cart outline
+    - Size: 22px x 22px
+    - Color: #ffffff
+    - Cursor: pointer
+    
+    Cart hover:
+    - Color: #f4a0b8 (pink)
+    - Transition: color 0.2s ease
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-{{ ai_gen_id }} {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    z-index: 999;
+  }
+
+  .ai-header-container-{{ ai_gen_id }} {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-header-layout-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  .ai-header-left-{{ ai_gen_id }} {
+    grid-column: 1;
+  }
+
+  .ai-header-center-{{ ai_gen_id }} {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ai-header-logo-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.logo_margin_bottom }}px;
+  }
+
+  .ai-header-logo-{{ ai_gen_id }} img {
+    display: block;
+    width: {{ block.settings.logo_width }}px;
+    height: auto;
+  }
+
+  .ai-header-logo-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.logo_width }}px;
+    height: 60px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-header-logo-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: {{ block.settings.logo_width }}px;
+    max-height: 60px;
+  }
+
+  .ai-header-nav-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: {{ block.settings.nav_gap }}px;
+  }
+
+  .ai-header-nav-link-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: {{ block.settings.nav_font_weight }};
+    font-size: {{ block.settings.nav_font_size }}px;
+    color: {{ block.settings.nav_color }};
+    text-decoration: none;
+    letter-spacing: {{ block.settings.nav_letter_spacing }}px;
+    transition: color {{ block.settings.nav_transition_duration }}s ease;
+  }
+
+  .ai-header-nav-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.nav_hover_color }};
+  }
+
+  .ai-header-right-{{ ai_gen_id }} {
+    grid-column: 3;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: {{ block.settings.icon_gap }}px;
+  }
+
+  .ai-header-icon-{{ ai_gen_id }} {
+    cursor: pointer;
+    transition: color {{ block.settings.icon_transition_duration }}s ease;
+  }
+
+  .ai-header-icon-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    stroke: {{ block.settings.icon_color }};
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ai-header-icon-{{ ai_gen_id }}:hover svg {
+    stroke: {{ block.settings.icon_hover_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-header-nav-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} img,
+    .ai-header-logo-placeholder-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_width | times: 0.7 }}px;
+    }
+
+    .ai-header-icon-{{ ai_gen_id }} svg {
+      width: {{ block.settings.icon_size | times: 0.9 }}px;
+      height: {{ block.settings.icon_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<header-sticky-{{ ai_gen_id }} class="ai-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-header-container-{{ ai_gen_id }}">
+    <div class="ai-header-layout-{{ ai_gen_id }}">
+      <div class="ai-header-left-{{ ai_gen_id }}"></div>
+
+      <div class="ai-header-center-{{ ai_gen_id }}">
+        <div class="ai-header-logo-{{ ai_gen_id }}">
+          {% if block.settings.logo %}
+            <a href="/">
+              <img
+                src="{{ block.settings.logo | image_url: width: 400 }}"
+                alt="{{ shop.name }}"
+                width="{{ block.settings.logo_width }}"
+                height="auto"
+                loading="eager"
+              >
+            </a>
+          {% else %}
+            <div class="ai-header-logo-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+        <nav class="ai-header-nav-{{ ai_gen_id }}">
+          <a href="/" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.menu_item_1 }}</a>
+          <a href="/collections/all" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.menu_item_2 }}</a>
+          <a href="/pages/about-us" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.menu_item_3 }}</a>
+          <a href="/pages/contact-us" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.menu_item_4 }}</a>
+          <a href="/pages/verification" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.menu_item_5 }}</a>
+          <a href="/pages/faq" class="ai-header-nav-link-{{ ai_gen_id }}">{{ block.settings.menu_item_6 }}</a>
+        </nav>
+      </div>
+
+      <div class="ai-header-right-{{ ai_gen_id }}">
+        <a href="/account" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Account">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+
+        <a href="/cart" class="ai-header-icon-{{ ai_gen_id }}" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</header-sticky-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeaderSticky{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        if ({{ block.settings.sticky_header }}) {
+          this.setupStickyHeader();
+        }
+      }
+
+      setupStickyHeader() {
+        const header = this;
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', function() {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          
+          if (scrollTop > lastScrollTop && scrollTop > 100) {
+            header.style.transform = 'translateY(-100%)';
+          } else {
+            header.style.transform = 'translateY(0)';
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+
+        header.style.transition = 'transform 0.3s ease';
+      }
+    }
+
+    customElements.define('header-sticky-{{ ai_gen_id }}', HeaderSticky{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Enable sticky header",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "logo_margin_bottom",
+      "label": "Logo margin bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "text",
+      "id": "menu_item_1",
+      "label": "Menu item 1",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "menu_item_2",
+      "label": "Menu item 2",
+      "default": "Products"
+    },
+    {
+      "type": "text",
+      "id": "menu_item_3",
+      "label": "Menu item 3",
+      "default": "About Us"
+    },
+    {
+      "type": "text",
+      "id": "menu_item_4",
+      "label": "Menu item 4",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "menu_item_5",
+      "label": "Menu item 5",
+      "default": "Verification"
+    },
+    {
+      "type": "text",
+      "id": "menu_item_6",
+      "label": "Menu item 6",
+      "default": "FAQ"
+    },
+    {
+      "type": "range",
+      "id": "nav_gap",
+      "label": "Navigation gap",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "nav_font_weight",
+      "label": "Font weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "nav_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0.5
+    },
+    {
+      "type": "color",
+      "id": "nav_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_color",
+      "label": "Hover color",
+      "default": "#f4a0b8"
+    },
+    {
+      "type": "range",
+      "id": "nav_transition_duration",
+      "label": "Transition duration",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "label": "Icon gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Icon hover color",
+      "default": "#f4a0b8"
+    },
+    {
+      "type": "range",
+      "id": "icon_transition_duration",
+      "label": "Icon transition duration",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

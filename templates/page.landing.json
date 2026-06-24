@@ -1,0 +1,39 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_age_gate_zwQTw3": {
+      "type": "sundaze-age-gate",
+      "name": "Sundaze Landing",
+      "settings": {
+        "logo": "shopify://shop_images/SUNDAZE_WEB_LOGO.png",
+        "tagline": "Dont You Just Love Sundaze?",
+        "button_text": "I Am 21+ Enter Site",
+        "redirect_url": "shopify://pages/collection-page",
+        "tube_1": "shopify://shop_images/Nugtella2.png",
+        "tube_2": "shopify://shop_images/Vanilla2.png",
+        "tube_3": "shopify://shop_images/Strawberry2.png",
+        "tube_4": "shopify://shop_images/Nugtella2.png"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_age_gate_zwQTw3"
+  ]
+}

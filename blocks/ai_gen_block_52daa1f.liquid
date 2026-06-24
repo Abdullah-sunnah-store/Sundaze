@@ -1,0 +1,431 @@
+{% doc %}
+  @prompt
+    Full black background section. Width 100%.
+    Background: #000000
+    Padding top: 64px bottom: 64px
+    Padding left: 20px right: 20px desktop
+    Padding left: 10px right: 10px mobile
+    Text align: center
+    Max width: 700px
+    Centered horizontally
+    
+    Scroll Animation on ALL elements:
+    - Start state: opacity 0, translateY 50px
+    - End state: opacity 1, translateY 0px
+    - Duration: 0.8s
+    - Easing: ease-out
+    - Trigger: when element enters viewport
+    - Each block has 0.15s delay after previous
+    
+    HOW TO SMOKE Heading:
+    - Text: "HOW TO SMOKE"
+    - Font: sans-serif extrabold
+    - Size: 22px desktop / 18px mobile
+    - Color: #ffffff
+    - Text transform: uppercase
+    - Letter spacing: 3px
+    - Margin bottom: 48px
+    - Animation delay: 0s
+    
+    --- TIP 1 — START SLOW ---
+    
+    Icon block:
+    - Icon: circular pause symbol ⏸
+    - Style: thin circle outline with pause bars inside
+    - Icon size: 72px x 72px
+    - Icon color: #ffffff
+    - Icon stroke: thin outline only
+    - Margin bottom: 20px
+    - Animation delay: 0.1s
+    
+      Icon spinning animation:
+      - On scroll into view: rotate 0 to 360deg once
+      - Duration: 1s
+      - Easing: ease-in-out
+      - Plays once on scroll trigger
+    
+    Title:
+    - Text: "START SLOW"
+    - Font: sans-serif black italic bold
+    - Size: 36px desktop / 28px mobile
+    - Color: #ffffff
+    - Text transform: uppercase
+    - Letter spacing: 2px
+    - Margin bottom: 20px
+    - Animation delay: 0.2s
+    
+    Body text:
+    - Text: "Due to their potency, take a few gentle
+      puffs and pause to appreciate the complex
+      flavors and effects."
+    - Font: sans-serif regular
+    - Size: 18px desktop / 16px mobile
+    - Color: #ffffff
+    - Line height: 1.8
+    - Align: center
+    - Max width: 600px
+    - Centered
+    - Margin bottom: 72px
+    - Animation delay: 0.3s
+    
+    --- TIP 2 — STAY HYDRATED ---
+    
+    Icon block:
+    - Icon: two water bottles outline
+    - Icon size: 72px x 72px
+    - Icon color: #ffffff
+    - Icon stroke: thin outline only
+    - Margin bottom: 20px
+    - Animation delay: 0.4s
+    
+      Icon bounce animation:
+      - On scroll into view: bounce up 10px then back
+      - Duration: 0.6s
+      - Easing: ease-in-out
+      - Plays once on scroll trigger
+    
+    Title:
+    - Text: "STAY HYDRATED"
+    - Font: sans-serif black italic bold
+    - Size: 36px desktop / 28px mobile
+    - Color: #ffffff
+    - Text transform: uppercase
+    - Letter spacing: 2px
+    - Margin bottom: 20px
+    - Animation delay: 0.5s
+    
+    Body text:
+    - Text: "Keep water nearby to prevent dry mouth
+      and enhance your overall experience."
+    - Font: sans-serif regular
+    - Size: 18px desktop / 16px mobile
+    - Color: #ffffff
+    - Line height: 1.8
+    - Align: center
+    - Max width: 600px
+    - Centered
+    - Margin bottom: 72px
+    - Animation delay: 0.6s
+    
+    --- TIP 3 — RELAX & SAVOR ---
+    
+    Icon block:
+    - Icon: couch / sofa outline
+    - Icon size: 72px x 72px
+    - Icon color: #ffffff
+    - Icon stroke: thin outline only
+    - Margin bottom: 20px
+    - Animation delay: 0.7s
+    
+      Icon pulse animation:
+      - On scroll into view: scale 1 to 1.1 to 1
+      - Duration: 0.8s
+      - Easing: ease-in-out
+      - Plays once on scroll trigger
+    
+    Title:
+    - Text: "RELAX & SAVOR"
+    - Font: sans-serif black italic bold
+    - Size: 36px desktop / 28px mobile
+    - Color: #ffffff
+    - Text transform: uppercase
+    - Letter spacing: 2px
+    - Margin bottom: 20px
+    - Animation delay: 0.8s
+    
+    Body text:
+    - Text: "Choose a comfortable spot to fully enjoy
+      your hand roll. Whether alone or with friends,
+      a relaxed setting enhances the experience."
+    - Font: sans-serif regular
+    - Size: 18px desktop / 16px mobile
+    - Color: #ffffff
+    - Line height: 1.8
+    - Align: center
+    - Max width: 600px
+    - Centered
+    - Margin bottom: 0px
+    - Animation delay: 0.9s
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-how-to-smoke-{{ ai_gen_id }} {
+    display: block;
+    background-color: #000000;
+    padding: 64px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    {% comment %} width: 100%; {% endcomment %}
+  }
+
+  .ai-how-to-smoke-container-{{ ai_gen_id }} {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .ai-how-to-smoke-heading-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0 0 48px 0;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .ai-how-to-smoke-heading-{{ ai_gen_id }}.ai-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ai-how-to-smoke-tip-{{ ai_gen_id }} {
+    margin-bottom: 72px;
+  }
+
+  .ai-how-to-smoke-tip-{{ ai_gen_id }}:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-how-to-smoke-icon-{{ ai_gen_id }} {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .ai-how-to-smoke-icon-{{ ai_gen_id }}.ai-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ai-how-to-smoke-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: #ffffff;
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .ai-how-to-smoke-icon-{{ ai_gen_id }}.ai-spin svg {
+    animation: ai-spin-{{ ai_gen_id }} 1s ease-in-out;
+  }
+
+  .ai-how-to-smoke-icon-{{ ai_gen_id }}.ai-bounce svg {
+    animation: ai-bounce-{{ ai_gen_id }} 0.6s ease-in-out;
+  }
+
+  .ai-how-to-smoke-icon-{{ ai_gen_id }}.ai-pulse svg {
+    animation: ai-pulse-{{ ai_gen_id }} 0.8s ease-in-out;
+  }
+
+  @keyframes ai-spin-{{ ai_gen_id }} {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes ai-bounce-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes ai-pulse-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .ai-how-to-smoke-title-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 36px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 20px 0;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .ai-how-to-smoke-title-{{ ai_gen_id }}.ai-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ai-how-to-smoke-body-{{ ai_gen_id }} {
+    font-family: sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: #ffffff;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .ai-how-to-smoke-body-{{ ai_gen_id }}.ai-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-how-to-smoke-{{ ai_gen_id }} {
+      padding: 64px 10px;
+    }
+
+    .ai-how-to-smoke-heading-{{ ai_gen_id }} {
+      font-size: 18px;
+    }
+
+    .ai-how-to-smoke-title-{{ ai_gen_id }} {
+      font-size: 28px;
+    }
+
+    .ai-how-to-smoke-body-{{ ai_gen_id }} {
+      font-size: 16px;
+    }
+  }
+{% endstyle %}
+
+<how-to-smoke-{{ ai_gen_id }} class="ai-how-to-smoke-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-how-to-smoke-container-{{ ai_gen_id }}">
+    <h2 class="ai-how-to-smoke-heading-{{ ai_gen_id }}" data-delay="0">HOW TO SMOKE</h2>
+
+    <div class="ai-how-to-smoke-tip-{{ ai_gen_id }}">
+      <div class="ai-how-to-smoke-icon-{{ ai_gen_id }} ai-spin" data-delay="0.1">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="36" cy="36" r="30" />
+          <rect x="28" y="24" width="4" height="24" />
+          <rect x="40" y="24" width="4" height="24" />
+        </svg>
+      </div>
+      <h3 class="ai-how-to-smoke-title-{{ ai_gen_id }}" data-delay="0.2">START SLOW</h3>
+      <p class="ai-how-to-smoke-body-{{ ai_gen_id }}" data-delay="0.3">
+        Due to their potency, take a few gentle puffs and pause to appreciate the complex flavors and effects.
+      </p>
+    </div>
+
+    <div class="ai-how-to-smoke-tip-{{ ai_gen_id }}">
+      <div class="ai-how-to-smoke-icon-{{ ai_gen_id }} ai-bounce" data-delay="0.4">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+          <rect x="22" y="20" width="10" height="32" rx="2" />
+          <rect x="40" y="20" width="10" height="32" rx="2" />
+          <ellipse cx="27" cy="18" rx="3" ry="4" />
+          <ellipse cx="45" cy="18" rx="3" ry="4" />
+        </svg>
+      </div>
+      <h3 class="ai-how-to-smoke-title-{{ ai_gen_id }}" data-delay="0.5">STAY HYDRATED</h3>
+      <p class="ai-how-to-smoke-body-{{ ai_gen_id }}" data-delay="0.6">
+        Keep water nearby to prevent dry mouth and enhance your overall experience.
+      </p>
+    </div>
+
+    <div class="ai-how-to-smoke-tip-{{ ai_gen_id }}">
+      <div class="ai-how-to-smoke-icon-{{ ai_gen_id }} ai-pulse" data-delay="0.7">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+          <rect x="12" y="28" width="48" height="24" rx="3" />
+          <line x1="12" y1="28" x2="8" y2="20" />
+          <line x1="60" y1="28" x2="64" y2="20" />
+          <rect x="8" y="18" width="4" height="4" rx="1" />
+          <rect x="60" y="18" width="4" height="4" rx="1" />
+          <line x1="20" y1="36" x2="28" y2="36" />
+          <line x1="44" y1="36" x2="52" y2="36" />
+        </svg>
+      </div>
+      <h3 class="ai-how-to-smoke-title-{{ ai_gen_id }}" data-delay="0.8">RELAX & SAVOR</h3>
+      <p class="ai-how-to-smoke-body-{{ ai_gen_id }}" data-delay="0.9">
+        Choose a comfortable spot to fully enjoy your hand roll. Whether alone or with friends, a relaxed setting enhances the experience.
+      </p>
+    </div>
+  </div>
+</how-to-smoke-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HowToSmoke{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.animatedElements = [];
+        this.iconAnimations = new Set();
+      }
+
+      connectedCallback() {
+        this.setupIntersectionObserver();
+      }
+
+      setupIntersectionObserver() {
+        const elements = this.querySelectorAll('[data-delay]');
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.animatedElements.includes(entry.target)) {
+              const delay = parseFloat(entry.target.getAttribute('data-delay')) * 1000;
+              
+              setTimeout(() => {
+                entry.target.classList.add('ai-visible');
+                
+                if (entry.target.classList.contains('ai-how-to-smoke-icon-{{ ai_gen_id }}')) {
+                  if (!this.iconAnimations.has(entry.target)) {
+                    this.iconAnimations.add(entry.target);
+                  }
+                }
+              }, delay);
+              
+              this.animatedElements.push(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.2
+        });
+
+        elements.forEach((el) => observer.observe(el));
+      }
+    }
+
+    customElements.define('how-to-smoke-{{ ai_gen_id }}', HowToSmoke{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "How to smoke",
+  "settings": [
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "How to smoke"
+    }
+  ]
+}
+{% endschema %}

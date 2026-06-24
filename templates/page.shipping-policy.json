@@ -1,0 +1,69 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_policy_Shipping": {
+      "type": "sundaze-policy",
+      "blocks": {
+        "hero_block": {
+          "type": "hero",
+          "settings": {
+            "page_title": "Shipping Policy",
+            "eyebrow": "Legal",
+            "hero_desc": "We ship fast, we ship discreet, and we keep you updated every step of the way.",
+            "hero_pill": "Shipping · Delivery · Tracking"
+          }
+        },
+        "content_block": {
+          "type": "content",
+          "settings": {
+            "effective_date": "June 1, 2026",
+            "policy_content": "<p><strong>Website:</strong> sundaze.com<br/><strong>Contact:</strong> support@sundaze.com</p><p>Sundaze ships hemp-derived products only where permitted by applicable law and carrier rules.</p><h2>1. Age Requirement</h2><p>You must be 21 years of age or older to place an order.</p><p>By purchasing from Sundaze, you confirm that:</p><ul><li>You are 21 years of age or older.</li><li>You are legally allowed to receive hemp-derived products at your shipping address.</li></ul><p>We reserve the right to require age verification before processing or delivering an order.</p><h2>2. Shipping Locations</h2><p>Sundaze currently ships only within the United States where permitted by law.</p><p>We do not ship internationally.</p><p>We do not ship to any state, city, county, territory, military address, P.O. Box, or jurisdiction where hemp-derived THCA products, smokable hemp, infused hemp products, or related products are prohibited or restricted.</p><h2>3. Restricted States and Locations</h2><p>Sundaze reserves the right to block, cancel, or refuse orders shipping to restricted jurisdictions.</p><p>We do not ship to any jurisdiction where hemp-derived THCA, smokable hemp, infused hemp products, or related products are prohibited or restricted. Our restricted shipping list may change at any time based on federal, state, local, carrier, payment-processor, or banking requirements.</p><h2>4. Processing Times</h2><p>Orders are typically processed within <strong>1–3 business days</strong>, excluding weekends and holidays.</p><p>Processing times may be longer during high-volume periods, product launches, holidays, compliance reviews, or carrier delays.</p><h2>5. Delivery Times</h2><p>Estimated delivery times vary by carrier and destination.</p><p>Delivery estimates are not guaranteed.</p><p>Sundaze is not responsible for carrier delays, weather delays, misrouted packages, failed delivery attempts, or other events outside our control.</p><h2>6. Shipping Confirmation and Tracking</h2><p>Once your order ships, you may receive a tracking number by email or SMS.</p><p>Tracking updates are controlled by the carrier and may take time to appear.</p><h2>7. Address Accuracy</h2><p>Customers are responsible for entering accurate shipping information.</p><p>Please double-check your:</p><ul><li>Full name</li><li>Street address</li><li>Apartment or unit number</li><li>City</li><li>State</li><li>ZIP code</li><li>Phone number</li><li>Email address</li></ul><p>Sundaze is not responsible for orders delayed, lost, returned, or delivered incorrectly due to customer address errors.</p><h2>8. Carrier Restrictions</h2><p>Some carriers may restrict hemp-derived products or require specific shipping procedures.</p><p>Sundaze reserves the right to choose, change, or limit shipping carriers based on compliance, availability, cost, product type, or destination.</p><h2>9. Returned Packages</h2><p>If a package is returned to Sundaze due to failed delivery, incorrect address, refusal, restricted location, or customer error, the order is not automatically eligible for a refund.</p><p>Sundaze may, in its sole discretion, offer:</p><ul><li>Reshipment at the customer's expense</li><li>Store credit</li><li>Replacement</li><li>No remedy</li></ul><p>depending on the circumstances.</p><h2>10. Lost, Stolen, or Delivered Packages</h2><p>Sundaze is not responsible for packages marked as delivered by the carrier.</p><p>If your package is lost in transit or marked delivered but not received:</p><ol><li>Contact the carrier first.</li><li>Contact us at <strong>support@sundaze.com</strong>.</li></ol><h2>11. Compliance Cancellations</h2><p>Sundaze may cancel any order if we determine that shipping the product may violate applicable law, carrier policy, payment-processor policy, or internal compliance standards.</p><h2>12. Contact</h2><p>For shipping questions, contact:</p><p><strong>Sundaze Support</strong><br/><strong>Email:</strong> support@sundaze.com</p>"
+          }
+        },
+        "promise_block": {
+          "type": "promise",
+          "settings": {
+            "label": "Our Promise",
+            "quote": "\"Fast, discreet, and delivered <strong>with care every time.</strong>\"",
+            "body_text": "Have questions about your shipment or need help tracking an order? We're here for you. Reach out at support@sundaze.com and we'll get back to you within 24 hours.",
+            "tags": "Discreet Packaging, Fast Processing, Order Tracking, 21+ Only, Community First"
+          }
+        },
+        "legal_block": {
+          "type": "legal",
+          "disabled": true,
+          "settings": {
+            "legal_text": "Our products are not intended for sale or use by persons under the age of 21. All products contain less than 0.3% Δ9 THC per the Controlled Substances Act. This product does not claim to diagnose, treat, cure, or prevent any disease and has not been evaluated by the United States Food and Drug Administration (FDA)."
+          }
+        }
+      },
+      "block_order": [
+        "hero_block",
+        "content_block",
+        "promise_block",
+        "legal_block"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_policy_Shipping"
+  ]
+}

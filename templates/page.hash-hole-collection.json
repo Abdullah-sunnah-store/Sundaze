@@ -1,0 +1,114 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "1779400634cf7a1e88": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "neapolitan_product_XXGbHh": {
+      "type": "neapolitan-product",
+      "name": "Neapolitan Product Page",
+      "settings": {
+        "bg_color": "#f7ece2",
+        "title_top": "Neapolitan",
+        "title_gradient": "Bucket",
+        "flavor_line": "Vanilla • Strawberry Shortcake • Nugtella",
+        "price_fallback": "$45.00",
+        "description": "A dessert-inspired trio of Sundaze buckets featuring Vanilla, Strawberry Shortcake, and Nugtella flavors in one premium Neapolitan collection.",
+        "flavor_notes": "A creamy dessert-style mix of vanilla, strawberry, and chocolate-hazelnut inspired profiles.",
+        "hasholes_image": "shopify://shop_images/Shopify_Hash_Hole_Bucket_Icon_Mix_Bucket.png",
+        "bucket_icon": "shopify://shop_images/bucket_icon_5.png",
+        "hasholes_image_strawberry": "shopify://shop_images/bucket_icon_1.png",
+        "bucket_icon_strawberry": "shopify://shop_images/bucket_icon_a7e2b0ef-d141-4510-95e5-9461956bb9e6.png",
+        "hasholes_image_vanilla": "shopify://shop_images/bucket_icon_2.png",
+        "bucket_icon_vanilla": "shopify://shop_images/bucket_icon_3.png",
+        "hasholes_image_nugtella": "shopify://shop_images/bucket_icon_4.png",
+        "bucket_icon_nugtella": "shopify://shop_images/bucket_icon_5.png",
+        "mixed_product": "mixed-bucket",
+        "bucket_image_mixed": "shopify://shop_images/All_Bucket_6d2a35ba-1ded-4e4d-a887-aae57bfcf138.png",
+        "mixed_acc_desc": "A dessert-inspired trio of Sundaze buckets featuring Vanilla, Strawberry Shortcake, and Nugtella flavors in one premium Neapolitan collection.",
+        "mixed_acc_flavor": "A creamy dessert-style mix of vanilla, strawberry, and chocolate-hazelnut inspired profiles.",
+        "mixed_acc_specs": "<ul><li>0.6G 90u Hash Rosin</li><li>1.5G Exotic Flower</li><li>Glass Tip</li><li>Hand Rolled</li><li>Dessert-Inspired Flavor Profile</li></ul>",
+        "mixed_acc_highlight": "🍓 12 Hash Holes Inside Every Bucket",
+        "nugtella_product": "nugtella-bucket",
+        "bucket_image_nugtella": "shopify://shop_images/Nugtella_3_43880daa-14f4-4417-aead-869993b33d37.png",
+        "nugtella_desc": "A decadent chocolate-hazelnut bucket inspired by everyone's favourite spread.",
+        "nugtella_acc_desc": "A decadent chocolate-hazelnut bucket inspired by everyone's favourite spread. Rich, smooth, and unforgettable.",
+        "nugtella_acc_flavor": "Rich chocolate and roasted hazelnut inspired profile with a deep, creamy hash rosin finish.",
+        "nugtella_acc_specs": "<ul><li>0.6G 90u Hash Rosin</li><li>1.5G Exotic Flower</li><li>Glass Tip</li><li>Hand Rolled</li><li> Dessert-Inspired Flavor Profile</li></ul>",
+        "nugtella_acc_highlight": "🍫 12 Hash Holes Inside Every Bucket",
+        "strawberry_product": "strawberry-shortcake-bucket",
+        "bucket_image_strawberry": "shopify://shop_images/Strawberry_3.png",
+        "strawberry_desc": "A sweet strawberry cake-inspired bucket bursting with berry flavour.",
+        "strawberry_acc_desc": "A sweet strawberry cake-inspired bucket bursting with berry flavour and a smooth, creamy finish.",
+        "strawberry_acc_flavor": "Sweet strawberry and vanilla cake inspired profile with a smooth, floral hash rosin finish.",
+        "strawberry_acc_specs": "<ul><li>0.6G 90u Hash Rosin</li><li>1.5G Exotic Flower</li><li>Glass Tip</li><li>Hand Rolled</li><li> Dessert-Inspired Flavor Profile</li></ul>",
+        "strawberry_acc_highlight": "🍓 12 Hash Holes Inside Every Bucket",
+        "vanilla_product": "vanilla-bucket",
+        "bucket_image_vanilla": "shopify://shop_images/Vanilla_3.png",
+        "vanilla_desc": "A rich, creamy vanilla bucket with smooth flavour and a clean finish.",
+        "vanilla_acc_desc": "A rich, creamy vanilla bucket with smooth flavour and a clean finish. The classic Sundaze experience.",
+        "vanilla_acc_flavor": "Classic vanilla cream inspired profile with a soft, buttery hash rosin finish.",
+        "vanilla_acc_specs": "<ul><li>0.6G 90u Hash Rosin</li><li>1.5G Exotic Flower</li><li>Glass Tip</li><li>Hand Rolled</li><li>Dessert-Inspired Flavor Profile</li></ul>",
+        "vanilla_acc_highlight": "🍦 12 Hash Holes Inside Every Bucket",
+        "hero_image": "shopify://shop_images/Neapolitan_Product.png",
+        "hero_image_bg": "shopify://shop_images/Neapolitan_Background.png",
+        "hero_image_alt": "Neapolitan Donuttes collection",
+        "hero_flavors": "Vanilla • Strawberry Shortcake • Nugtella",
+        "hero_price": "$45.00",
+        "hero_desc": "A dessert-inspired trio of rosin-infused hash holes, crafted with 0.6G 90u hash rosin and 1.5G exotic flower.",
+        "hero_variant_id": "46429720051873",
+        "hero_accordion_desc": "The Neapolitan Collection brings together three Sundaze Farm Donutte flavors in one colorful dessert-inspired lineup.",
+        "hero_accordion_flavor": "Creamy vanilla, sweet strawberry cake, rich chocolate hazelnut, smooth rosin, and exotic flower.",
+        "hero_accordion_collection": "Part of the Sundaze Farm Donutte Hash Hole collection.",
+        "s1_image": "shopify://shop_images/strawberry-shortcake-donutte.png",
+        "s1_name": "Strawberry Shortcake",
+        "s1_flavors": "Sweet • Berry • Cake",
+        "s1_price": "$15.00",
+        "s1_desc": "A sweet strawberry cake-inspired hash hole bursting with berry flavor.",
+        "s1_variant_id": "46412150341793",
+        "s1_accordion_desc": "The Strawberry Shortcake Donutte delivers a sweet, berry-forward flavor.",
+        "s1_accordion_flavor": "Sweet strawberry, vanilla cake, whipped cream, smooth rosin, and exotic flower.",
+        "s2_image": "shopify://shop_images/vanilla-donutte.png",
+        "s2_name": "Vanilla",
+        "s2_flavors": "Creamy • Smooth • Classic",
+        "s2_price": "$15.00",
+        "s2_desc": "A rich, creamy vanilla hash hole with smooth flavor and a clean burn.",
+        "s2_variant_id": "46412235931809",
+        "s2_accordion_desc": "The Vanilla Donutte delivers a smooth, creamy flavor profile.",
+        "s2_accordion_flavor": "Rich vanilla bean, buttery cream, subtle sweetness, smooth rosin, and exotic flower.",
+        "s3_image": "shopify://shop_images/nugtella-donutte.png",
+        "s3_name": "Nugtella",
+        "s3_flavors": "Chocolate • Hazelnut • Indulgent",
+        "s3_price": "$15.00",
+        "s3_desc": "A decadent chocolate-hazelnut hash hole inspired by everyone's favorite spread.",
+        "s3_variant_id": "46412309037217",
+        "s3_accordion_desc": "The Nugtella Donutte brings a rich chocolate-hazelnut twist to the Sundaze Farm lineup.",
+        "s3_accordion_flavor": "Dark chocolate, roasted hazelnut, creamy spread, smooth rosin, and exotic flower."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1779400634cf7a1e88",
+    "neapolitan_product_XXGbHh"
+  ]
+}

@@ -1,0 +1,1971 @@
+{% comment %}
+  Neapolitan Bucket Product Page
+  Matches reference design exactly:
+  — Left:   Back link · title · flavor sub · price · desc · bucket selector · ATC · mini hash-holes card
+  — Center: Hero card with gradient bg · selected pill · nav arrows · jars · frosted feature card · bottom pills
+  — Right:  Description / Flavor Notes / Product Specs / Collection accordions
+{% endcomment %}
+
+<!-- ════════════════════════════════════════════════════════════
+     BUCKET / SINGLE PILL BAR — shared navigation
+════════════════════════════════════════════════════════════ -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+  .nbp-variant-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 14px 16px 8px;
+  }
+
+  .nbp-variant-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    border: 2px solid transparent;
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+  }
+
+  .nbp-variant-pill--bucket {
+    background: #1a1a1a;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+  .nbp-variant-pill--bucket:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+  }
+
+  .nbp-variant-pill--single {
+    background: #1a1a1a;
+    color: #ffffff;
+    border: 2px solid #1a1a1a;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  .nbp-variant-pill--single:hover {
+    background: #1a1a1a;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+  }
+
+  .nbp-variant-pill--active {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 3px;
+    pointer-events: none;
+  }
+
+  .nbp-variant-pill--bucket.nbp-variant-pill--active {
+    background: #1a1a1a;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  .nbp-variant-pill--single.nbp-variant-pill--active {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  .nbp-variant-pill:active { transform: scale(0.97) translateY(0); }
+
+  .nbp-variant-pill__icon { font-size: 16px; line-height: 1; }
+</style>
+
+{%- assign _path      = request.path -%}
+{%- assign _is_bucket = false -%}
+{%- assign _is_single = false -%}
+{%- if _path contains 'neapolitan-bucket'     -%}{%- assign _is_bucket = true -%}{%- endif -%}
+{%- if _path contains 'hash-holes-collection' -%}{%- assign _is_single = true -%}{%- endif -%}
+
+<section id="nbp-{{ section.id }}" class="nbp">
+  {% comment %} <nav class="nbp-variant-bar" aria-label="View type">
+    <a
+      href="{{ section.settings.bucket_page_link }}"
+      class="nbp-variant-pill nbp-variant-pill--bucket{% if _is_bucket %} nbp-variant-pill--active{% endif %}"
+      {% if _is_bucket %}aria-current="page"{% endif %}>
+      <span class="nbp-variant-pill__icon" aria-hidden="true">🪣</span>
+      Bucket
+    </a>
+    <a
+      href="{{ section.settings.single_page_link }}"
+      class="nbp-variant-pill nbp-variant-pill--single{% if _is_single %} nbp-variant-pill--active{% endif %}"
+      {% if _is_single %}aria-current="page"{% endif %}>
+      <span class="nbp-variant-pill__icon" aria-hidden="true">🍩</span>
+      Single
+    </a>
+  </nav> {% endcomment %}
+
+  <div class="nbp-shell">
+    <div class="nbp-grid">
+
+      <!-- ══════════════════════════════
+           LEFT COLUMN
+      ══════════════════════════════ -->
+      <div class="nbp-left">
+
+        <h1 class="nbp-title">
+          <span class="nbp-title__top">{{ section.settings.title_top | default: 'Neapolitan' }}</span>
+          <span class="nbp-title__gradient">{{ section.settings.title_gradient | default: 'Bucket' }}</span>
+        </h1>
+
+        <p class="nbp-flavor-sub" id="nbp-sub-{{ section.id }}">
+          {{ section.settings.flavor_line | default: 'Vanilla • Strawberry Shortcake • Nugtella' }}
+        </p>
+
+        <div class="nbp-price" id="nbp-price-{{ section.id }}">
+          {% if section.settings.mixed_product != blank %}
+            {{ section.settings.mixed_product.price | money }}
+          {% else %}
+            {{ section.settings.price_fallback | default: '$45.00' }}
+          {% endif %}
+        </div>
+
+        <p class="nbp-desc" id="nbp-desc-{{ section.id }}">
+          {{ section.settings.description }}
+        </p>
+
+        <p class="nbp-choose-label">Choose Your Bucket</p>
+
+        <div class="nbp-options">
+
+          {% if section.settings.nugtella_product != blank %}
+            <button type="button" class="nbp-opt" data-nbp-opt
+              data-variant="{{ section.settings.nugtella_product.selected_or_first_available_variant.id }}"
+              data-price="{{ section.settings.nugtella_product.price | money }}"
+              data-sub="Chocolate • Hazelnut • Indulgent"
+              data-desc="{{ section.settings.nugtella_desc | default: section.settings.description | escape }}"
+              data-label="Nugtella Selected"
+              data-pill="🍫 Nugtella"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.nugtella_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.nugtella_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.nugtella_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.nugtella_acc_highlight | escape }}"
+              data-image="{{ section.settings.bucket_image_nugtella | image_url: width: 900 | default: section.settings.nugtella_product.featured_image | image_url: width: 900 }}"
+              data-mode="single">
+              Nugtella
+            </button>
+          {% endif %}
+
+          {% if section.settings.strawberry_product != blank %}
+            <button type="button" class="nbp-opt" data-nbp-opt
+              data-variant="{{ section.settings.strawberry_product.selected_or_first_available_variant.id }}"
+              data-price="{{ section.settings.strawberry_product.price | money }}"
+              data-sub="Sweet • Berry • Cake"
+              data-desc="{{ section.settings.strawberry_desc | default: section.settings.description | escape }}"
+              data-label="Strawberry Shortcake Selected"
+              data-pill="🍓 Strawberry Shortcake"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.strawberry_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.strawberry_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.strawberry_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.strawberry_acc_highlight | escape }}"
+              data-image="{{ section.settings.bucket_image_strawberry | image_url: width: 900 | default: section.settings.strawberry_product.featured_image | image_url: width: 900 }}"
+              data-mode="single">
+              Strawberry Shortcake
+            </button>
+          {% endif %}
+
+          {% if section.settings.vanilla_product != blank %}
+            <button type="button" class="nbp-opt" data-nbp-opt
+              data-variant="{{ section.settings.vanilla_product.selected_or_first_available_variant.id }}"
+              data-price="{{ section.settings.vanilla_product.price | money }}"
+              data-sub="Creamy • Smooth • Classic"
+              data-desc="{{ section.settings.vanilla_desc | default: section.settings.description | escape }}"
+              data-label="Vanilla Selected"
+              data-pill="🍦 Vanilla"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.vanilla_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.vanilla_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.vanilla_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.vanilla_acc_highlight | escape }}"
+              data-image="{{ section.settings.bucket_image_vanilla | image_url: width: 900 | default: section.settings.vanilla_product.featured_image | image_url: width: 900 }}"
+              data-mode="single">
+              Vanilla
+            </button>
+          {% endif %}
+
+          {% if section.settings.mixed_product != blank %}
+            <button type="button" class="nbp-opt active" data-nbp-opt
+              data-variant="{{ section.settings.mixed_product.selected_or_first_available_variant.id }}"
+              data-price="{{ section.settings.mixed_product.price | money }}"
+              data-sub="{{ section.settings.flavor_line | default: 'Vanilla • Strawberry Shortcake • Nugtella' }}"
+              data-desc="{{ section.settings.description | escape }}"
+              data-label="Mixed Bucket Selected"
+              data-pill="🍨 Neapolitan Collection"
+              data-pill2="⬡ 3 Flavor Bundle"
+              data-acc-desc="{{ section.settings.mixed_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.mixed_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.mixed_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.mixed_acc_highlight | escape }}"
+              data-image=""
+              data-mode="mixed">
+              Mixed Bucket
+            </button>
+          {% endif %}
+
+        </div><!-- /.nbp-options -->
+
+        <div class="nbp-actions">
+          <form method="post" action="/cart/add" data-nbp-form>
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="id" id="nbp-vid-{{ section.id }}"
+              value="{% if section.settings.mixed_product != blank %}{{ section.settings.mixed_product.selected_or_first_available_variant.id }}{% elsif section.settings.nugtella_product != blank %}{{ section.settings.nugtella_product.selected_or_first_available_variant.id }}{% endif %}">
+            <button type="submit" class="nbp-atc">
+              <span class="nbp-atc__check">✓</span> Add to cart
+            </button>
+          </form>
+          <button type="button" class="nbp-wish nbp-wish-btn" id="nbp-wish-{{ section.id }}" aria-label="Add to wishlist"
+            data-variant-id="{% if section.settings.mixed_product != blank %}{{ section.settings.mixed_product.selected_or_first_available_variant.id }}{% elsif section.settings.nugtella_product != blank %}{{ section.settings.nugtella_product.selected_or_first_available_variant.id }}{% endif %}"
+            data-product-name="Mixed Bucket"
+            data-product-price="{% if section.settings.mixed_product != blank %}{{ section.settings.mixed_product.price | money }}{% endif %}"
+            data-product-image="{{ section.settings.bucket_image_mixed | image_url: width: 200 }}"
+            data-product-emoji="🪣"
+            onclick="NbpWish.toggle(this)">
+            ♡
+          </button>
+        </div>
+
+        <!-- Mini hash-holes card -->
+        <div class="nbp-mini-card">
+          {% if section.settings.hasholes_image != blank %}
+            <img src="{{ section.settings.hasholes_image | image_url: width: 160 }}"
+                 alt="12 Hash Holes" class="nbp-mini-card__img">
+          {% else %}
+            <div class="nbp-dot-grid nbp-dot-grid--sm">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+          {% endif %}
+          <div class="nbp-mini-card__text">
+            <strong>12 HASH HOLES</strong>
+            <b>INSIDE EVERY BUCKET</b>
+            <small>Pre-roll Style • Ready to Enjoy</small>
+          </div>
+          
+        </div>
+
+      </div><!-- /.nbp-left -->
+
+
+      <!-- ══════════════════════════════
+           CENTER COLUMN — HERO CARD
+      ══════════════════════════════ -->
+      <div class="nbp-center">
+        <div class="nbp-hero-card">
+
+          <!-- Top row: selected pill + nav arrows -->
+          <div class="nbp-hero-top">
+            <div class="nbp-selected-pill">
+              <span class="nbp-selected-pill__check" aria-hidden="true">✓</span>
+              <span id="nbp-label-{{ section.id }}">Mixed Bucket Selected</span>
+            </div>
+          </div>
+
+          <!-- ══ LIVE VIEWERS BADGE ══ -->
+          <div class="nbp-live-badge" id="nbpLiveBadge">
+            <span class="nbp-live-dot"></span>
+            <span id="nbpLiveCount">0</span> viewing now
+          </div>
+
+          <!-- Jars display area -->
+          <div class="nbp-jars" id="nbp-jars-{{ section.id }}">
+            {% if section.settings.bucket_image_mixed != blank %}
+              <img src="{{ section.settings.bucket_image_mixed | image_url: width: 900 }}"
+                   alt="Mixed Bucket" class="nbp-jar nbp-jar--single" loading="lazy">
+            {% else %}
+              {% if section.settings.nugtella_product.featured_image != blank %}
+                <img src="{{ section.settings.nugtella_product.featured_image | image_url: width: 600 }}"
+                     alt="Nugtella" class="nbp-jar nbp-jar--l" loading="lazy">
+              {% endif %}
+              {% if section.settings.strawberry_product.featured_image != blank %}
+                <img src="{{ section.settings.strawberry_product.featured_image | image_url: width: 600 }}"
+                     alt="Strawberry Shortcake" class="nbp-jar nbp-jar--c" loading="lazy">
+              {% endif %}
+              {% if section.settings.vanilla_product.featured_image != blank %}
+                <img src="{{ section.settings.vanilla_product.featured_image | image_url: width: 600 }}"
+                     alt="Vanilla" class="nbp-jar nbp-jar--r" loading="lazy">
+              {% endif %}
+            {% endif %}
+          </div><!-- /#nbp-jars -->
+
+          <!-- Frosted feature card -->
+          <div class="nbp-feat-card">
+            {% if section.settings.hasholes_image != blank %}
+              <img src="{{ section.settings.hasholes_image | image_url: width: 160 }}"
+                   alt="12 Hash Holes" class="nbp-feat-card__img">
+            {% else %}
+              <div class="nbp-dot-grid nbp-dot-grid--lg">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </div>
+            {% endif %}
+            <div class="nbp-feat-card__text">
+              <strong>12 HASH HOLES</strong>
+              <b>INSIDE EVERY BUCKET</b>
+              <small>Pre-roll Style • Ready to Enjoy</small>
+            </div>
+            <div class="nbp-feat-card__divider" aria-hidden="true"></div>
+            <div class="nbp-feat-card__bucket" aria-hidden="true">
+              {% if section.settings.bucket_icon != blank %}
+                <img src="{{ section.settings.bucket_icon | image_url: width: 140 }}"
+                     alt="" class="nbp-feat-card__bucket-img">
+              {% else %}
+                <svg viewBox="0 0 120 120" fill="none" aria-hidden="true" class="nbp-bucket-svg">
+                  <path d="M35 40H85L78 98H42L35 40Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                  <path d="M42 40C43 24 77 24 78 40" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M47 33H73" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M49 70C57 60 70 60 75 72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M52 78C59 73 67 73 73 79" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              {% endif %}
+            </div>
+          </div><!-- /.nbp-feat-card -->
+
+          <!-- Bottom pills -->
+          <div class="nbp-bottom-pills">
+            <div class="nbp-pill" id="nbp-pill1-{{ section.id }}">🍦 Neapolitan Collection</div>
+            <div class="nbp-pill" id="nbp-pill2-{{ section.id }}">⬡ 3 Flavor Bundle</div>
+          </div>
+
+        </div><!-- /.nbp-hero-card -->
+      </div><!-- /.nbp-center -->
+
+
+      <!-- ══════════════════════════════
+           RIGHT COLUMN — ACCORDIONS
+      ══════════════════════════════ -->
+      <div class="nbp-right">
+
+        <div class="nbp-acc">
+          <button type="button" class="nbp-acc__btn" data-nbp-acc>
+            Description <span class="nbp-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbp-acc__panel">
+            <p id="nbp-acc-desc-{{ section.id }}">{{ section.settings.description }}</p>
+          </div>
+        </div>
+
+        <div class="nbp-acc">
+          <button type="button" class="nbp-acc__btn" data-nbp-acc>
+            Flavor Notes <span class="nbp-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbp-acc__panel">
+            <p id="nbp-acc-flavor-{{ section.id }}">{{ section.settings.flavor_notes }}</p>
+          </div>
+        </div>
+
+        <div class="nbp-acc nbp-acc--open">
+          <button type="button" class="nbp-acc__btn" data-nbp-acc>
+            Product Specs <span class="nbp-acc__icon nbp-acc__icon--open" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbp-acc__panel" id="nbp-acc-specs-panel-{{ section.id }}">
+            <div id="nbp-acc-specs-{{ section.id }}">
+              {{ section.settings.mixed_acc_specs }}
+            </div>
+            <p class="nbp-acc__highlight" id="nbp-acc-highlight-{{ section.id }}">
+              {{ section.settings.mixed_acc_highlight | default: '🍓 12 Hash Holes Inside Every Bucket' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="nbp-acc">
+          <button type="button" class="nbp-acc__btn" data-nbp-acc>
+            Collection <span class="nbp-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbp-acc__panel">
+            <p>Part of the Sundaze Neapolitan collection.</p>
+          </div>
+        </div>
+
+      </div><!-- /.nbp-right -->
+
+    </div><!-- /.nbp-grid -->
+  </div><!-- /.nbp-shell -->
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FLOATING BADGES — Cart & Wishlist
+════════════════════════════════════════════════════════════ -->
+
+{% comment %} <!-- Cart Badge -->
+<a href="/cart" class="nbp-badge nbp-badge--cart" id="nbpCartBadge" aria-label="View cart">
+  <span class="nbp-badge__icon" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+  </span>
+  <span class="nbp-badge__label">Cart</span>
+  <span class="nbp-badge__count nbp-badge__count--dark" id="nbpCartCount">0</span>
+</a>
+
+<!-- Wishlist Badge -->
+<button
+  type="button"
+  class="nbp-badge nbp-badge--wish"
+  id="nbpWishBadge"
+  onclick="NbpWish.openDrawer()"
+  aria-label="View wishlist">
+  <span class="nbp-badge__icon nbp-badge__icon--heart" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+  </span>
+  <span class="nbp-badge__label">Wishlist</span>
+  <span class="nbp-badge__count nbp-badge__count--purple" id="nbpWishCount">0</span>
+</button> {% endcomment %}
+
+<!-- Toast notification -->
+<div class="nbp-toast" id="nbpToast" role="status" aria-live="polite">
+  <span class="nbp-toast__icon" id="nbpToastIcon"></span>
+  <span id="nbpToastMsg"></span>
+</div>
+
+<!-- Wishlist Overlay -->
+<div class="nbp-wish-overlay" id="nbpWishOverlay"></div>
+
+<!-- Wishlist Drawer -->
+<div class="nbp-wish-drawer" id="nbpWishDrawer" role="dialog" aria-modal="true" aria-label="Wishlist">
+  <div class="nbp-wish-drawer__header">
+    <p class="nbp-wish-drawer__title">
+      <span aria-hidden="true">💗</span> Wishlist
+    </p>
+    <button type="button" class="nbp-wish-drawer__close" id="nbpWishClose" aria-label="Close wishlist">✕</button>
+  </div>
+  <div id="nbpWishList"></div>
+</div>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     INDIVIDUAL BUCKET CARDS
+════════════════════════════════════════════════════════════ -->
+<div class="nbc-wrap" id="nbc-{{ section.id }}">
+
+  <!-- ── Nugtella ── -->
+  {% if section.settings.nugtella_product != blank %}
+  <div class="nbc-card nbc-card--nugtella" data-nbc-card>
+    <div class="nbc-grid">
+
+      <div class="nbc-left" data-nbc-animate>
+        <span class="nbc-flavor-badge" style="background:linear-gradient(135deg,#3d1f0a,#6b3a1f);color:#f5d9b8;">🍫 Nugtella</span>
+        <h2 class="nbc-title">
+          <span class="nbc-title__word">Nugtella</span>
+          <span class="nbc-title__word nbc-title__gradient" style="background-image:linear-gradient(90deg,#5D3A1A 0%,#a0622a 50%,#c8883c 100%);">Bucket</span>
+        </h2>
+        <p class="nbc-sub">Chocolate • Hazelnut • Indulgent</p>
+        <p class="nbc-price">{{ section.settings.nugtella_product.price | money }}</p>
+        <p class="nbc-desc">{{ section.settings.nugtella_desc }}</p>
+        <div class="nbc-actions">
+          <form method="post" action="/cart/add" data-nbc-form>
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="id" value="{{ section.settings.nugtella_product.selected_or_first_available_variant.id }}">
+            <button type="submit" class="nbc-atc">
+              <span class="nbc-atc__check">✓</span> Add to cart
+            </button>
+          </form>
+          <button type="button" class="nbc-wish" aria-label="Wishlist">♡</button>
+        </div>
+      </div>
+
+      <div class="nbc-center">
+        <div class="nbc-arch" style="background:linear-gradient(180deg,#d7ccc8 0%,#bcaaa4 50%,#a1887f 100%);"></div>
+        {% if section.settings.bucket_image_nugtella != blank %}
+          <img class="nbc-img" src="{{ section.settings.bucket_image_nugtella | image_url: width: 700 }}" alt="Nugtella Bucket" loading="lazy">
+        {% elsif section.settings.nugtella_product.featured_image != blank %}
+          <img class="nbc-img" src="{{ section.settings.nugtella_product.featured_image | image_url: width: 700 }}" alt="Nugtella Bucket" loading="lazy">
+        {% endif %}
+        <div class="nbc-orb nbc-orb--1"></div>
+        <div class="nbc-orb nbc-orb--2" style="background:#5D3A1A;"></div>
+      </div>
+
+      <div class="nbc-right" data-nbc-animate>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Description <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>{{ section.settings.nugtella_acc_desc | default: section.settings.nugtella_desc }}</p>
+          </div>
+        </div>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Flavor Notes <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>{{ section.settings.nugtella_acc_flavor }}</p>
+          </div>
+        </div>
+        <div class="nbc-acc nbc-acc--open">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Product Specs <span class="nbc-acc__icon nbc-acc__icon--open" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <ul>
+              <li>Single Flavor Bucket</li>
+              <li>Chocolate • Hazelnut Inspired Profile</li>
+              <li>Premium Sundaze Bucket Packaging</li>
+              <li>Dessert-Inspired Flavor</li>
+            </ul>
+            <p class="nbc-acc__highlight">🍫 12 Hash Holes Inside Every Bucket</p>
+          </div>
+        </div>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Collection <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>Part of the Sundaze Neapolitan collection.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endif %}
+
+
+  <!-- ── Strawberry Shortcake ── -->
+  {% if section.settings.strawberry_product != blank %}
+  <div class="nbc-card nbc-card--strawberry" data-nbc-card>
+    <div class="nbc-grid">
+
+      <div class="nbc-left" data-nbc-animate>
+        <span class="nbc-flavor-badge" style="background:linear-gradient(135deg,#c2185b,#e91e8c);color:#fff;">🍓 Strawberry Shortcake</span>
+        <h2 class="nbc-title">
+          <span class="nbc-title__word">Strawberry</span>
+          <span class="nbc-title__word nbc-title__gradient" style="background-image:linear-gradient(90deg,#ec4f9a 0%,#f099bd 50%,#f5c6d0 100%);">Shortcake</span>
+        </h2>
+        <p class="nbc-sub">Sweet • Berry • Cake</p>
+        <p class="nbc-price">{{ section.settings.strawberry_product.price | money }}</p>
+        <p class="nbc-desc">{{ section.settings.strawberry_desc }}</p>
+        <div class="nbc-actions">
+          <form method="post" action="/cart/add" data-nbc-form>
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="id" value="{{ section.settings.strawberry_product.selected_or_first_available_variant.id }}">
+            <button type="submit" class="nbc-atc nbc-atc--pink">
+              <span class="nbc-atc__check">✓</span> Add to cart
+            </button>
+          </form>
+          <button type="button" class="nbc-wish" aria-label="Wishlist">♡</button>
+        </div>
+      </div>
+
+      <div class="nbc-center">
+        <div class="nbc-arch" style="background:linear-gradient(180deg,#fce4ec 0%,#f8bbd0 50%,#f48fb1 100%);"></div>
+        {% if section.settings.bucket_image_strawberry != blank %}
+          <img class="nbc-img" src="{{ section.settings.bucket_image_strawberry | image_url: width: 700 }}" alt="Strawberry Shortcake Bucket" loading="lazy">
+        {% elsif section.settings.strawberry_product.featured_image != blank %}
+          <img class="nbc-img" src="{{ section.settings.strawberry_product.featured_image | image_url: width: 700 }}" alt="Strawberry Shortcake Bucket" loading="lazy">
+        {% endif %}
+        <div class="nbc-orb nbc-orb--1"></div>
+        <div class="nbc-orb nbc-orb--2" style="background:#e8a0bf;"></div>
+      </div>
+
+      <div class="nbc-right" data-nbc-animate>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Description <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>{{ section.settings.strawberry_acc_desc | default: section.settings.strawberry_desc }}</p>
+          </div>
+        </div>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Flavor Notes <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>{{ section.settings.strawberry_acc_flavor }}</p>
+          </div>
+        </div>
+        <div class="nbc-acc nbc-acc--open">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Product Specs <span class="nbc-acc__icon nbc-acc__icon--open" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <ul>
+              <li>Single Flavor Bucket</li>
+              <li>Sweet Berry Cake Profile</li>
+              <li>Premium Sundaze Bucket Packaging</li>
+              <li>Dessert-Inspired Flavor</li>
+            </ul>
+            <p class="nbc-acc__highlight">🍓 12 Hash Holes Inside Every Bucket</p>
+          </div>
+        </div>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Collection <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>Part of the Sundaze Neapolitan collection.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endif %}
+
+
+  <!-- ── Vanilla ── -->
+  {% if section.settings.vanilla_product != blank %}
+  <div class="nbc-card nbc-card--vanilla" data-nbc-card>
+    <div class="nbc-grid">
+
+      <div class="nbc-left" data-nbc-animate>
+        <span class="nbc-flavor-badge" style="background:linear-gradient(135deg,#d4a574,#f5e6d3);color:#5c3a1e;">🍦 Vanilla</span>
+        <h2 class="nbc-title">
+          <span class="nbc-title__word">Vanilla</span>
+          <span class="nbc-title__word nbc-title__gradient" style="background-image:linear-gradient(90deg,#d4a574 0%,#e8c99a 50%,#f5e6d3 100%);">Bucket</span>
+        </h2>
+        <p class="nbc-sub">Creamy • Smooth • Classic</p>
+        <p class="nbc-price">{{ section.settings.vanilla_product.price | money }}</p>
+        <p class="nbc-desc">{{ section.settings.vanilla_desc }}</p>
+        <div class="nbc-actions">
+          <form method="post" action="/cart/add" data-nbc-form>
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="id" value="{{ section.settings.vanilla_product.selected_or_first_available_variant.id }}">
+            <button type="submit" class="nbc-atc nbc-atc--vanilla">
+              <span class="nbc-atc__check">✓</span> Add to cart
+            </button>
+          </form>
+          <button type="button" class="nbc-wish" aria-label="Wishlist">♡</button>
+        </div>
+      </div>
+
+      <div class="nbc-center">
+        <div class="nbc-arch" style="background:linear-gradient(180deg,#fdf6e3 0%,#f5e6d3 50%,#ede0c8 100%);"></div>
+        {% if section.settings.bucket_image_vanilla != blank %}
+          <img class="nbc-img" src="{{ section.settings.bucket_image_vanilla | image_url: width: 700 }}" alt="Vanilla Bucket" loading="lazy">
+        {% elsif section.settings.vanilla_product.featured_image != blank %}
+          <img class="nbc-img" src="{{ section.settings.vanilla_product.featured_image | image_url: width: 700 }}" alt="Vanilla Bucket" loading="lazy">
+        {% endif %}
+        <div class="nbc-orb nbc-orb--1"></div>
+        <div class="nbc-orb nbc-orb--2" style="background:#c5824c;"></div>
+      </div>
+
+      <div class="nbc-right" data-nbc-animate>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Description <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>{{ section.settings.vanilla_acc_desc | default: section.settings.vanilla_desc }}</p>
+          </div>
+        </div>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Flavor Notes <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>{{ section.settings.vanilla_acc_flavor }}</p>
+          </div>
+        </div>
+        <div class="nbc-acc nbc-acc--open">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Product Specs <span class="nbc-acc__icon nbc-acc__icon--open" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <ul>
+              <li>Single Flavor Bucket</li>
+              <li>Creamy Smooth Vanilla Profile</li>
+              <li>Premium Sundaze Bucket Packaging</li>
+              <li>Dessert-Inspired Flavor</li>
+            </ul>
+            <p class="nbc-acc__highlight">🍦 12 Hash Holes Inside Every Bucket</p>
+          </div>
+        </div>
+        <div class="nbc-acc">
+          <button type="button" class="nbc-acc__btn" data-nbc-acc>
+            Collection <span class="nbc-acc__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="nbc-acc__panel">
+            <p>Part of the Sundaze Neapolitan collection.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endif %}
+
+</div><!-- /.nbc-wrap -->
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ALL STYLES
+════════════════════════════════════════════════════════════ -->
+<style>
+
+  /* ════════════════════════════════
+     BADGE STYLES
+  ════════════════════════════════ */
+  .nbp-badge {
+    position: fixed;
+    right: 24px;
+    z-index: 9000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e8e0d8;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,.10);
+    transition: background .2s ease, border-color .2s ease, color .2s ease,
+                transform .3s cubic-bezier(.34,1.56,.64,1), opacity .35s ease;
+    opacity: 0;
+    transform: translateY(-14px);
+    pointer-events: none;
+  }
+  .nbp-badge.nbp-badge--show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .nbp-badge--cart { top: 124px; }
+  .nbp-badge--wish { top: 172px; border-color: #f0d6e8; }
+
+  @media (max-width: 640px) {
+    .nbp-badge--wish { top: 105px; right: 2px; }
+    .nbp-badge--cart { top: 62px;  right: 2px; }
+  }
+
+  .nbp-badge--cart:hover { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+  .nbp-badge--wish:hover { background: #fef0f5; border-color: #e8a0bf; }
+  .nbp-badge__icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .nbp-badge__icon--heart { color: #e8a0bf; }
+  .nbp-badge__label { line-height: 1; }
+  .nbp-badge__count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; padding: 0 5px; line-height: 1; flex-shrink: 0;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .nbp-badge__count.nbp-bump { transform: scale(1.45); }
+  .nbp-badge__count--dark { background: #1a1a1a; color: #fff; }
+  .nbp-badge--cart:hover .nbp-badge__count--dark { background: #e8a0bf; color: #1a1a1a; }
+  .nbp-badge__count--purple { background: linear-gradient(135deg, #e8a0bf, #c77dff); color: #fff; }
+
+  /* ════════════════════════════════
+     TOAST
+  ════════════════════════════════ */
+  .nbp-toast {
+    position: fixed; bottom: 32px; left: 50%; z-index: 9999;
+    display: inline-flex; align-items: center; gap: 9px;
+    background: #1a1a1a; color: #fff; border-radius: 999px; padding: 12px 22px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 13px; font-weight: 600; box-shadow: 0 8px 32px rgba(0,0,0,.22);
+    white-space: nowrap; pointer-events: none; opacity: 0;
+    transform: translateX(-50%) translateY(24px);
+    transition: opacity .35s ease, transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .nbp-toast.nbp-toast--show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .nbp-toast.nbp-toast--wish  { background: linear-gradient(135deg, #e8a0bf, #c77dff); }
+  .nbp-toast.nbp-toast--error { background: #c0392b; }
+  .nbp-toast.nbp-toast--added { background: #2d7a2d; }
+
+  /* ════════════════════════════════
+     WISHLIST OVERLAY + DRAWER
+  ════════════════════════════════ */
+  .nbp-wish-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.32);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    z-index: 9100; opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  .nbp-wish-overlay.nbp-open { opacity: 1; pointer-events: all; }
+  .nbp-wish-drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: min(400px, 100vw);
+    background: #fff; z-index: 9200; padding: 32px 24px;
+    box-shadow: -8px 0 40px rgba(0,0,0,.12); display: flex; flex-direction: column;
+    overflow-y: auto; transform: translateX(100%);
+    transition: transform .38s cubic-bezier(.25,.46,.45,.94);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .nbp-wish-drawer.nbp-open { transform: translateX(0); }
+  .nbp-wish-drawer__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .nbp-wish-drawer__title { font-size: 20px; font-weight: 800; color: #1a1a1a; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; margin: 0; }
+  .nbp-wish-drawer__close {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid #e8e0d8;
+    background: transparent; cursor: pointer; font-size: 16px; color: #888;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .2s, color .2s; font-family: inherit;
+  }
+  .nbp-wish-drawer__close:hover { border-color: #c0392b; color: #c0392b; }
+  .nbp-wish-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: rgba(107,66,38,.45); font-size: 14px; text-align: center; }
+  .nbp-wish-empty__icon { font-size: 48px; }
+  .nbp-wish-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0ebe4; }
+  .nbp-wish-item__img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: #f5f2ee; flex-shrink: 0; }
+  .nbp-wish-item__placeholder { width: 64px; height: 64px; border-radius: 12px; background: linear-gradient(135deg, #fce4ec, #f5e6d3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+  .nbp-wish-item__info { flex: 1; min-width: 0; }
+  .nbp-wish-item__name { font-size: 13px; font-weight: 700; color: #1a1a1a; margin: 0 0 2px; }
+  .nbp-wish-item__price { font-size: 12px; color: rgba(107,66,38,.6); margin: 0 0 8px; }
+  .nbp-wish-item__actions { display: flex; gap: 8px; }
+  .nbp-wish-item__add { font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 999px; border: none; background: #1a1a1a; color: #fff; cursor: pointer; transition: background .2s; font-family: inherit; }
+  .nbp-wish-item__add:hover { background: #333; }
+  .nbp-wish-item__remove { font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: 999px; border: 1px solid #e8e0d8; background: transparent; color: rgba(107,66,38,.6); cursor: pointer; transition: border-color .2s, color .2s; font-family: inherit; }
+  .nbp-wish-item__remove:hover { border-color: #c0392b; color: #c0392b; }
+
+  @media screen and (max-width: 480px) {
+    .nbp-badge { right: 12px; padding: 9px 12px; font-size: 12px; }
+    .nbp-badge--cart { top: 62px; }
+    .nbp-badge--wish { top: 102px; }
+  }
+
+  /* ════════════════════════════════
+     LIVE VIEWERS BADGE
+  ════════════════════════════════ */
+  #nbp-{{ section.id }} .nbp-live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50px;
+    padding: 8px 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a1a;
+    width: fit-content;
+    margin-top: 12px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    position: relative;
+    z-index: 4;
+  }
+
+  #nbp-{{ section.id }} .nbp-live-badge.nbp-live-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #nbp-{{ section.id }} .nbp-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+    animation: nbp-pulse-dot 1.5s infinite ease-in-out;
+  }
+
+  @keyframes nbp-pulse-dot {
+    0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+    70%  { transform: scale(1);    box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+  }
+
+  /* ════════════════════════════════
+     BUCKET CARD STYLES
+  ════════════════════════════════ */
+  .nbc-wrap {
+    background: {{ section.settings.bg_color | default: '#f7ece2' }};
+    padding: 0 16px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    display: flex; flex-direction: column; gap: 32px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  .nbc-card {
+    background: #fff; border-radius: 28px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.08); overflow: hidden;
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .65s ease, transform .65s ease;
+  }
+  .nbc-card.nbc-visible { opacity: 1; transform: translateY(0); }
+  .nbc-grid { display: grid; grid-template-columns: 1fr 460px 1fr; min-height: 580px; }
+
+  .nbc-left {
+    padding: 52px 32px 52px 48px; display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; transform: translateX(-18px);
+    transition: opacity .6s ease .15s, transform .6s ease .15s;
+  }
+  .nbc-left.nbc-col-visible { opacity: 1; transform: translateX(0); }
+  .nbc-flavor-badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 7px 16px; font-size: 12px; font-weight: 700; letter-spacing: .02em; width: fit-content; margin-bottom: 20px; }
+  .nbc-title { margin: 0 0 14px; line-height: .9; letter-spacing: -.05em; }
+  .nbc-title__word { display: block; font-size: clamp(40px, 3.8vw, 60px); font-weight: 800; color: #111; }
+  .nbc-title__gradient { display: block; font-size: clamp(40px, 3.8vw, 60px); font-weight: 800; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .nbc-sub { font-size: 14px; font-weight: 600; color: #777; margin: 0 0 14px; }
+  .nbc-price { font-size: 32px; font-weight: 800; letter-spacing: -.04em; color: #111; margin: 0 0 14px; }
+  .nbc-desc { font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 28px; max-width: 270px; }
+  .nbc-actions { display: flex; align-items: center; gap: 12px; }
+  .nbc-atc {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: #111; color: #fff; border: none; border-radius: 999px;
+    padding: 16px 26px; font-size: 15px; font-weight: 800; cursor: pointer;
+    font-family: inherit; letter-spacing: -.02em;
+    transition: background .15s, transform .1s, box-shadow .15s;
+    box-shadow: 0 6px 20px rgba(0,0,0,.18); white-space: nowrap;
+  }
+  .nbc-atc:hover { background: #333; transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,.22); }
+  .nbc-atc:active { transform: translateY(0); }
+  .nbc-atc--pink    { background: linear-gradient(135deg, #e8a0bf, #c2185b); }
+  .nbc-atc--pink:hover { background: linear-gradient(135deg, #d48aa8, #a71549); }
+  .nbc-atc--vanilla { background: linear-gradient(135deg, #c5824c, #8b5e2c); }
+  .nbc-atc--vanilla:hover { background: linear-gradient(135deg, #b06e3a, #744e22); }
+  .nbc-atc__check { width: 20px; height: 20px; background: rgba(255,255,255,.2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex-shrink: 0; }
+  .nbc-wish { width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #e0e0e0; background: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .15s, color .15s; color: #999; flex-shrink: 0; }
+  .nbc-wish:hover { border-color: #ec4f9a; color: #ec4f9a; }
+
+  .nbc-center { position: relative; display: flex; align-items: center; justify-content: center; min-height: 400px; overflow: hidden; }
+  .nbc-arch { position: absolute; inset: 24px; border-radius: 32px; z-index: 1; }
+  .nbc-img { position: relative; z-index: 2; width: 88%; height: auto; max-height: 420px; object-fit: contain; filter: drop-shadow(0 22px 22px rgba(0,0,0,.16)); animation: nbcFloat 4s ease-in-out infinite; user-select: none; }
+  @keyframes nbcFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .nbc-orb { position: absolute; z-index: 3; border-radius: 50%; pointer-events: none; }
+  .nbc-orb--1 { width: 10px; height: 10px; background: rgba(255,255,255,.85); top: 80px; left: 44px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+  .nbc-orb--2 { width: 7px; height: 7px; opacity: .45; bottom: 100px; right: 52px; }
+
+  .nbc-right {
+    padding: 52px 48px 52px 32px; display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; transform: translateX(18px);
+    transition: opacity .6s ease .25s, transform .6s ease .25s;
+  }
+  .nbc-right.nbc-col-visible { opacity: 1; transform: translateX(0); }
+  .nbc-acc { border-bottom: 1px solid #ececec; }
+  .nbc-acc__btn { width: 100%; border: none; background: transparent; padding: 18px 0; display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; color: #111; letter-spacing: -.02em; text-align: left; transition: color .15s; }
+  .nbc-acc__btn:hover { color: #6b4226; }
+  .nbc-acc__icon { font-size: 15px; color: #bbb; display: inline-block; transition: transform .22s; flex-shrink: 0; }
+  .nbc-acc__icon--open { transform: rotate(180deg); }
+  .nbc-acc__panel { display: none; padding: 0 0 18px; color: #666; font-size: 13.5px; line-height: 1.65; }
+  .nbc-acc--open .nbc-acc__panel { display: block; }
+  .nbc-acc__panel ul { list-style: none; padding: 0; margin: 0; }
+  .nbc-acc__panel li { position: relative; padding-left: 18px; margin-bottom: 10px; font-size: 13.5px; font-weight: 600; color: #444; }
+  .nbc-acc__panel li::before { content: ''; width: 5px; height: 5px; background: #d39a59; border-radius: 50%; position: absolute; left: 0; top: 7px; }
+  .nbc-acc__highlight { color: #d94e8f; font-weight: 800; margin-top: 14px; font-size: 13.5px; }
+
+  @media screen and (max-width: 1100px) {
+    .nbc-grid { grid-template-columns: 280px 1fr 260px; }
+    .nbc-left  { padding: 40px 24px 40px 32px; }
+    .nbc-right { padding: 40px 32px 40px 24px; }
+  }
+  @media screen and (max-width: 860px) {
+    .nbc-grid { grid-template-columns: 1fr; min-height: unset; }
+    .nbc-center { order: 1; min-height: 320px; padding-top: 24px; }
+    .nbc-left   { order: 2; padding: 36px 28px; transform: none; opacity: 1; }
+    .nbc-right  { order: 3; padding: 28px 28px 36px; transform: none; opacity: 1; }
+    .nbc-arch   { inset: 16px; top: 0; }
+    .nbc-desc   { max-width: 100%; }
+  }
+  @media screen and (max-width: 500px) {
+    .nbc-wrap { padding: 0 10px 40px; gap: 20px; }
+    .nbc-card { border-radius: 20px; }
+    .nbc-center { min-height: 260px; }
+    .nbc-img { width: 78%; max-height: 280px; }
+    .nbc-arch { inset: 10px; border-radius: 22px; }
+    .nbc-title__word, .nbc-title__gradient { font-size: 36px; }
+  }
+
+  /* ════════════════════════════════
+     MAIN SECTION STYLES
+  ════════════════════════════════ */
+  #nbp-{{ section.id }} *,
+  #nbp-{{ section.id }} *::before,
+  #nbp-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #nbp-{{ section.id }} {
+    background: {{ section.settings.bg_color | default: '#f7ece2' }};
+    padding: 32px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    color: #111;
+  }
+
+  #nbp-{{ section.id }} .nbp-shell {
+    background: #fff; border-radius: 28px;
+    max-width: 1400px; margin: 0 auto; width: 100%;
+    box-shadow: 0 20px 70px rgba(0,0,0,.09); overflow: hidden;
+  }
+
+  #nbp-{{ section.id }} .nbp-grid {
+    display: grid; grid-template-columns: 1fr 620px 1fr; min-height: 700px;
+  }
+
+  #nbp-{{ section.id }} .nbp-left { padding: 44px 0px 44px 44px; display: flex; flex-direction: column; }
+
+  #nbp-{{ section.id }} .nbp-title { margin: 0 0 18px; line-height: .88; letter-spacing: -.055em; }
+  #nbp-{{ section.id }} .nbp-title__top { display: block; font-size: clamp(48px, 4.4vw, 68px); font-weight: 800; color: #111; }
+  #nbp-{{ section.id }} .nbp-title__gradient { display: block; font-size: clamp(48px, 4.4vw, 68px); font-weight: 800; background: linear-gradient(90deg, #ec4f9a 0%, #f099bd 30%, #b57938 72%, #2a1b14 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  #nbp-{{ section.id }} .nbp-flavor-sub { font-size: 15px; font-weight: 600; color: #555; margin: 0 0 18px; }
+  #nbp-{{ section.id }} .nbp-price { font-size: 36px; font-weight: 800; letter-spacing: -.04em; color: #111; margin-bottom: 16px; }
+  #nbp-{{ section.id }} .nbp-desc { font-size: 14px; color: #444; line-height: 1.62; margin-bottom: 26px; max-width: 280px; }
+  #nbp-{{ section.id }} .nbp-choose-label { font-size: 14px; font-weight: 800; color: #111; margin-bottom: 12px; }
+
+  #nbp-{{ section.id }} .nbp-options { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 26px; }
+  #nbp-{{ section.id }} .nbp-opt {
+    border: 1.5px solid #d8d8d8; background: #fff; color: #111; border-radius: 999px;
+    padding: 11px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s, box-shadow .15s;
+    font-family: inherit; line-height: 1.25; text-align: center;
+    display: inline-flex; align-items: center; justify-content: center;
+    white-space: normal; max-width: 110px;
+  }
+  #nbp-{{ section.id }} .nbp-opt:hover { border-color: #999; }
+  #nbp-{{ section.id }} .nbp-opt.active { background: #111; color: #fff; border-color: #111; box-shadow: 0 6px 18px rgba(0,0,0,.22); }
+
+  #nbp-{{ section.id }} .nbp-actions { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  #nbp-{{ section.id }} .nbp-atc {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: #111; color: #fff; border: none; border-radius: 999px;
+    padding: 17px 28px; font-size: 16px; font-weight: 800; cursor: pointer;
+    font-family: inherit; letter-spacing: -.02em;
+    transition: background .15s, transform .1s; white-space: nowrap;
+  }
+  #nbp-{{ section.id }} .nbp-atc:hover { background: #333; transform: translateY(-1px); }
+  #nbp-{{ section.id }} .nbp-atc__check { width: 22px; height: 22px; background: rgba(255,255,255,.18); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; flex-shrink: 0; }
+  #nbp-{{ section.id }} .nbp-wish { width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid #e0e0e0; background: #fff; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .15s, color .15s; color: #888; flex-shrink: 0; }
+  #nbp-{{ section.id }} .nbp-wish:hover { border-color: #ec4f9a; color: #ec4f9a; }
+
+  #nbp-{{ section.id }} .nbp-mini-card { display: flex; align-items: center; gap: 14px; border: 1.5px solid #f5c8d8; border-radius: 20px; padding: 13px 15px; background: #fff8fa; max-width: 340px; margin-top: auto; }
+  #nbp-{{ section.id }} .nbp-mini-card__img { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
+  #nbp-{{ section.id }} .nbp-mini-card__text { flex: 1; min-width: 0; }
+  #nbp-{{ section.id }} .nbp-mini-card__text strong { display: block; color: #7c431b; font-weight: 800; font-size: 15px; letter-spacing: -.01em; line-height: 1.1; }
+  #nbp-{{ section.id }} .nbp-mini-card__text b { display: block; color: #cf4d8a; font-size: 12px; font-weight: 800; margin-top: 3px; letter-spacing: -.01em; }
+  #nbp-{{ section.id }} .nbp-mini-card__text small { display: block; color: #6b5a50; font-size: 11.5px; font-weight: 500; margin-top: 4px; }
+  #nbp-{{ section.id }} .nbp-mini-card__arrow { width: 28px; height: 28px; background: #f4b8d0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #a02060; font-size: 18px; font-weight: 700; line-height: 1; flex-shrink: 0; }
+
+  #nbp-{{ section.id }} .nbp-dot-grid { background: radial-gradient(circle, #ead4a9 0%, #c69959 100%); border-radius: 50%; display: grid; grid-template-columns: repeat(4, 1fr); flex-shrink: 0; }
+  #nbp-{{ section.id }} .nbp-dot-grid span { background: #ee9abe; border-radius: 50%; display: block; aspect-ratio: 1; }
+  #nbp-{{ section.id }} .nbp-dot-grid--sm { width: 66px; height: 66px; gap: 4px; padding: 9px; border: 5px solid #f4e3c4; }
+  #nbp-{{ section.id }} .nbp-dot-grid--lg { width: 80px; height: 80px; gap: 4px; padding: 10px; border: 5px solid #f4e3c4; }
+
+  #nbp-{{ section.id }} .nbp-center { padding: 32px 28px; display: flex; flex-direction: column; }
+  #nbp-{{ section.id }} .nbp-hero-card {
+    flex: 1; border-radius: 40px; padding: 30px 30px 24px; display: flex; flex-direction: column;
+    position: relative; overflow: hidden; min-height: 580px;
+    background:
+      radial-gradient(circle at 10% 14%, rgba(255,213,166,.92), transparent 32%),
+      radial-gradient(circle at 76% 16%, rgba(255,177,215,.88), transparent 36%),
+      radial-gradient(circle at 52% 90%, rgba(255,237,179,.92), transparent 40%),
+      linear-gradient(135deg, #ffe9c9 0%, #ffc7dc 48%, #fff0bf 100%);
+  }
+
+  #nbp-{{ section.id }} .nbp-hero-top { display: flex; align-items: flex-start; justify-content: space-between; position: relative; z-index: 3; margin-bottom: 0; }
+  #nbp-{{ section.id }} .nbp-selected-pill { display: inline-flex; align-items: center; gap: 9px; background: rgba(255,255,255,.86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 13px 20px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0,0,0,.08); font-size: 14px; font-weight: 700; color: #111; white-space: nowrap; }
+  #nbp-{{ section.id }} .nbp-selected-pill__check { width: 24px; height: 24px; background: #ddaa61; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; font-weight: 900; flex-shrink: 0; }
+
+  #nbp-{{ section.id }} .nbp-jars { flex: 1; display: flex; align-items: flex-end; justify-content: center; position: relative; z-index: 2; padding-top: 16px; padding-bottom: 8px; min-height: 320px; }
+  #nbp-{{ section.id }} .nbp-jar { height: auto; object-fit: contain; filter: drop-shadow(0 20px 18px rgba(81,45,22,.18)); transition: opacity .3s, transform .3s; }
+  #nbp-{{ section.id }} .nbp-jar--l { height: clamp(180px, 22vw, 280px); }
+  #nbp-{{ section.id }} .nbp-jar--c { z-index: 2; height: clamp(200px, 24vw, 300px); position: relative; transform: translateY(-16px); }
+  #nbp-{{ section.id }} .nbp-jar--r { height: clamp(180px, 22vw, 280px); }
+  #nbp-{{ section.id }} .nbp-jar--single { width: 100%; max-width: 100%; height: 100%; max-height: 320px; object-fit: contain; transform: translateY(-8px); }
+
+  #nbp-{{ section.id }} .nbp-feat-card { background: rgba(255,248,236,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 20px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.07); border: 1px solid rgba(255,220,180,.5); max-width: 380px; margin: 14px auto; position: relative; z-index: 3;  }
+  #nbp-{{ section.id }} .nbp-feat-card__img { width: 68px; height: 68px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
+  #nbp-{{ section.id }} .nbp-feat-card__text { flex: 1; min-width: 0; }
+  #nbp-{{ section.id }} .nbp-feat-card__text strong { display: block; color: #7c431b; font-weight: 800; font-size: 15px; letter-spacing: -.02em; line-height: 1.1; }
+  #nbp-{{ section.id }} .nbp-feat-card__text b { display: block; color: #cf4d8a; font-size: 11px; font-weight: 800; margin-top: 3px; letter-spacing: -.01em; }
+  #nbp-{{ section.id }} .nbp-feat-card__text small { display: block; color: #6b5244; font-size: 11px; font-weight: 500; margin-top: 3px; }
+  #nbp-{{ section.id }} .nbp-feat-card__divider { width: 1px; height: 48px; background: rgba(160,100,50,.25); flex-shrink: 0; display: block !important; }
+  #nbp-{{ section.id }} .nbp-feat-card__bucket { display: flex !important; align-items: center; justify-content: center; flex-shrink: 0; color: #9d6638; }
+  #nbp-{{ section.id }} .nbp-feat-card__bucket-img { width: 54px; height: 54px; object-fit: contain; }
+  #nbp-{{ section.id }} .nbp-bucket-svg { width: 54px; height: 54px; }
+
+  #nbp-{{ section.id }} .nbp-bottom-pills { display: flex; gap: 14px; justify-content: center; margin-top: 18px; position: relative; z-index: 3; flex-wrap: nowrap; }
+  #nbp-{{ section.id }} .nbp-pill { background: rgba(255,255,255,.86); padding: 14px 24px; border-radius: 999px; font-size: 13px; font-weight: 700; box-shadow: 0 12px 28px rgba(0,0,0,.07); color: #111; white-space: nowrap; }
+
+  #nbp-{{ section.id }} .nbp-right { padding: 48px 40px 48px 0px; display: flex; flex-direction: column; justify-content: flex-start; }
+  #nbp-{{ section.id }} .nbp-acc { border-bottom: 1px solid #e8e8e8; }
+  #nbp-{{ section.id }} .nbp-acc__btn { width: 100%; border: none; background: transparent; padding: 22px 0; display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 800; cursor: pointer; font-family: inherit; color: #111; letter-spacing: -.02em; text-align: left; transition: color .15s; }
+  #nbp-{{ section.id }} .nbp-acc__btn:hover { color: #6b4226; }
+  #nbp-{{ section.id }} .nbp-acc__icon { font-size: 16px; color: #999; display: inline-block; transition: transform .2s; flex-shrink: 0; }
+  #nbp-{{ section.id }} .nbp-acc__icon--open { transform: rotate(180deg); }
+  #nbp-{{ section.id }} .nbp-acc__panel { display: none; padding: 0 0 22px; color: #555; font-size: 14px; line-height: 1.65; }
+  #nbp-{{ section.id }} .nbp-acc--open .nbp-acc__panel { display: block; }
+  #nbp-{{ section.id }} .nbp-acc__panel ul { list-style: none; padding: 0; margin: 0; }
+  #nbp-{{ section.id }} .nbp-acc__panel li { position: relative; padding-left: 20px; margin-bottom: 12px; font-size: 14px; font-weight: 600; color: #333; }
+  #nbp-{{ section.id }} .nbp-acc__panel li::before { content: ''; width: 6px; height: 6px; background: #d39a59; border-radius: 50%; position: absolute; left: 0; top: 7px; }
+  #nbp-{{ section.id }} .nbp-acc__highlight { color: #d94e8f; font-weight: 800; margin-top: 16px; font-size: 14px; }
+
+  @media screen and (max-width: 1200px) {
+    #nbp-{{ section.id }} .nbp-grid { grid-template-columns: 300px 1fr 280px; }
+    #nbp-{{ section.id }} .nbp-left  { padding: 36px 28px 36px 32px; }
+    #nbp-{{ section.id }} .nbp-right { padding: 36px 28px; }
+  }
+  @media screen and (max-width: 960px) {
+    #nbp-{{ section.id }} .nbp-grid { grid-template-columns: 1fr; }
+    #nbp-{{ section.id }} .nbp-center { order: 1; }
+    #nbp-{{ section.id }} .nbp-left  { order: 2; border-right: none; border-bottom: 1px solid #f0ebe4; }
+    #nbp-{{ section.id }} .nbp-right { order: 3; border-left: none; border-top: 1px solid #f0ebe4; }
+    #nbp-{{ section.id }} .nbp-desc  { max-width: 100%; }
+    #nbp-{{ section.id }} .nbp-mini-card { max-width: 100%; }
+  }
+  @media screen and (max-width: 600px) {
+    #nbp-{{ section.id }} .nbp-jar--l,
+    #nbp-{{ section.id }} .nbp-jar--r { height: 130px; }
+    #nbp-{{ section.id }} .nbp-jar--c { height: 150px; transform: translateY(-12px); }
+    #nbp-{{ section.id }} .nbp-jar--single { max-height: 200px; max-width: 100%; width: 100%; }
+    #nbp-{{ section.id }} .nbp-hero-card { border-radius: 28px; padding: 20px 18px; min-height: auto; }
+    #nbp-{{ section.id }} .nbp-jars    { min-height: 200px; padding-top: 8px; }
+    #nbp-{{ section.id }} .nbp-jar--l,
+    #nbp-{{ section.id }} .nbp-jar--r  { width: 30%; }
+    #nbp-{{ section.id }} .nbp-jar--c  { width: 34%; }
+    #nbp-{{ section.id }} .nbp-jar--single { width: 58%; }
+    #nbp-{{ section.id }} .nbp-feat-card { gap: 10px; padding: 12px 14px; }
+    #nbp-{{ section.id }} .nbp-bottom-pills { flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    #nbp-{{ section.id }} .nbp-pill { padding: 12px 16px; font-size: 12px; }
+    #nbp-{{ section.id }} .nbp-live-badge { font-size: 11px; padding: 7px 12px; }
+  }
+</style>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ALL JAVASCRIPT
+════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+
+  /* ══════════════════════════════
+     TOAST
+  ══════════════════════════════ */
+  var NbpToast = {
+    _t: null,
+    show: function (msg, icon, type) {
+      var el  = document.getElementById('nbpToast');
+      var txt = document.getElementById('nbpToastMsg');
+      var ico = document.getElementById('nbpToastIcon');
+      el.className    = 'nbp-toast nbp-toast--' + (type || '');
+      txt.textContent = msg;
+      ico.textContent = icon || '';
+      el.classList.add('nbp-toast--show');
+      clearTimeout(this._t);
+      this._t = setTimeout(function () { el.classList.remove('nbp-toast--show'); }, 3000);
+    }
+  };
+
+  /* ══════════════════════════════
+     CART BADGE
+  ══════════════════════════════ */
+  var NbpCart = {
+    badge: document.getElementById('nbpCartBadge'),
+    count: document.getElementById('nbpCartCount'),
+    init: function () {
+      fetch('/cart.js')
+        .then(function (r) { return r.json(); })
+        .then(function (d) { NbpCart.update(d.item_count); })
+        .catch(function () {});
+    },
+    update: function (n) {
+      /* update theme header cart count if it exists */
+      fetch('/?section_id=cart-icon-bubble&t=' + Date.now())
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          var newContent = doc.getElementById('cart-icon-bubble') || doc.querySelector('.shopify-section') || doc.body;
+          var oldBubble = document.getElementById('cart-icon-bubble');
+          if (newContent && oldBubble) {
+            var newInner = newContent.innerHTML;
+            if (newInner) oldBubble.innerHTML = newInner;
+          }
+        })
+        .catch(function () {});
+
+      document.querySelectorAll('[data-cart-count], .cart-count, .header__cart-count, #CartCount, .cart-count-bubble span[aria-hidden="true"]').forEach(function(el) {
+        el.textContent = n;
+      });
+      if (this.count) {
+        this.count.textContent = n;
+        this.count.classList.remove('nbp-bump');
+        void this.count.offsetWidth;
+        this.count.classList.add('nbp-bump');
+        setTimeout(function () { if (NbpCart.count) NbpCart.count.classList.remove('nbp-bump'); }, 350);
+      }
+      if (this.badge) this.badge.classList.add('nbp-badge--show');
+    }
+  };
+
+  /* ══════════════════════════════
+     WISHLIST (localStorage)
+  ══════════════════════════════ */
+  var WISH_KEY = 'sundaze_wishlist_v1';
+
+  var NbpWish = {
+    badge:   document.getElementById('nbpWishBadge'),
+    countEl: document.getElementById('nbpWishCount'),
+    overlay: document.getElementById('nbpWishOverlay'),
+    drawer:  document.getElementById('nbpWishDrawer'),
+
+    _load: function () {
+      try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); }
+      catch (e) { return []; }
+    },
+    _save: function (list) { localStorage.setItem(WISH_KEY, JSON.stringify(list)); },
+    has: function (id) {
+      return this._load().some(function (i) { return i.id === id; });
+    },
+    init: function () {
+      if (this.badge) this.badge.classList.add('nbp-badge--show');
+      this._syncCount();
+      this._syncButtons();
+    },
+    _syncCount: function () {
+      var n = this._load().length;
+      if (this.countEl) {
+        this.countEl.textContent = n;
+        this.countEl.classList.remove('nbp-bump');
+        void this.countEl.offsetWidth;
+        this.countEl.classList.add('nbp-bump');
+        setTimeout(function () { if (NbpWish.countEl) NbpWish.countEl.classList.remove('nbp-bump'); }, 350);
+      }
+    },
+    _syncButtons: function () {
+      document.querySelectorAll('[data-nbp-wish-btn]').forEach(function (btn) {
+        var id = btn.dataset.variantId;
+        if (id && NbpWish.has(id)) btn.classList.add('nbp-wished');
+      });
+    },
+    toggle: function (btn) {
+      var id    = btn.dataset.variantId;
+      var name  = btn.dataset.productName  || 'Product';
+      var price = btn.dataset.productPrice || '';
+      var img   = btn.dataset.productImage || '';
+      var emoji = btn.dataset.productEmoji || '🪣';
+      if (!id) return;
+      var list = this._load();
+      var idx  = list.findIndex(function (i) { return i.id === id; });
+      if (idx === -1) {
+        list.push({ id: id, name: name, price: price, img: img, emoji: emoji });
+        this._save(list);
+        NbpToast.show(name + ' wishlisted', '💗', 'wish');
+      } else {
+        list.splice(idx, 1);
+        this._save(list);
+        NbpToast.show('Removed from wishlist', '🤍', '');
+      }
+      this._syncCount();
+      this._syncButtons();
+      this._renderDrawer();
+    },
+    openDrawer: function () {
+      this._renderDrawer();
+      this.overlay.classList.add('nbp-open');
+      this.drawer.classList.add('nbp-open');
+      document.body.style.overflow = 'hidden';
+    },
+    closeDrawer: function () {
+      this.overlay.classList.remove('nbp-open');
+      this.drawer.classList.remove('nbp-open');
+      document.body.style.overflow = '';
+    },
+    _renderDrawer: function () {
+      var list      = this._load();
+      var container = document.getElementById('nbpWishList');
+      if (!container) return;
+      if (list.length === 0) {
+        container.innerHTML =
+          '<div class="nbp-wish-empty">' +
+            '<div class="nbp-wish-empty__icon">🤍</div>' +
+            '<p>Your wishlist is empty</p>' +
+            '<p style="font-size:12px;opacity:.6">Tap a heart on any bucket to save it here</p>' +
+          '</div>';
+        return;
+      }
+      container.innerHTML = list.map(function (item) {
+        return (
+          '<div class="nbp-wish-item" data-wish-id="' + item.id + '">' +
+            (item.img
+              ? '<img class="nbp-wish-item__img" src="' + item.img + '" alt="' + item.name + '">'
+              : '<div class="nbp-wish-item__placeholder">' + item.emoji + '</div>') +
+            '<div class="nbp-wish-item__info">' +
+              '<p class="nbp-wish-item__name">' + item.name + '</p>' +
+              '<p class="nbp-wish-item__price">' + item.price + '</p>' +
+              '<div class="nbp-wish-item__actions">' +
+                '<button class="nbp-wish-item__add" onclick="NbpWish._addFromDrawer(\'' + item.id + '\',\'' + item.name + '\',this)">Add to cart</button>' +
+                '<button class="nbp-wish-item__remove" onclick="NbpWish._removeFromDrawer(\'' + item.id + '\')">Remove</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    },
+    _addFromDrawer: function (id, name, btn) {
+      btn.textContent = 'Adding…';
+      btn.disabled    = true;
+      fetch('/cart/add.js', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10), quantity: 1 })
+      })
+      .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+      .then(function () {
+        btn.textContent = '✓ Added!';
+        NbpToast.show(name + ' added to cart', '🛒', 'added');
+        fetch('/cart.js').then(function (r) { return r.json(); }).then(function (d) { NbpCart.update(d.item_count); });
+        document.dispatchEvent(new CustomEvent('cart:refresh'));
+        setTimeout(function () { btn.textContent = 'Add to cart'; btn.disabled = false; }, 2000);
+      })
+      .catch(function () { btn.textContent = 'Error'; btn.disabled = false; });
+    },
+    _removeFromDrawer: function (id) {
+      var list = this._load().filter(function (i) { return i.id !== id; });
+      this._save(list);
+      this._syncCount();
+      this._syncButtons();
+      this._renderDrawer();
+    }
+  };
+
+  window.NbpWish  = NbpWish;
+  window.NbpToast = NbpToast;
+  window.NbpCart  = NbpCart;
+
+  /* ══════════════════════════════
+     LIVE VIEWERS BADGE
+  ══════════════════════════════ */
+  var NbpLiveViewers = {
+    badge:   document.getElementById('nbpLiveBadge'),
+    countEl: document.getElementById('nbpLiveCount'),
+    wsUrl:   'wss://sundaze-live-viewers.mamunhossain-services.workers.dev',
+    _fallbackTimer: null,
+
+    init: function () {
+      if (!this.badge) return;
+      this.connectWebSocket();
+    },
+
+    connectWebSocket: function () {
+      try {
+        var self = this;
+        var ws   = new WebSocket(this.wsUrl);
+        ws.onopen = function () {
+          self.badge.classList.add('nbp-live-visible');
+          clearInterval(self._fallbackTimer);
+        };
+        ws.onmessage = function (event) {
+          try {
+            var data = JSON.parse(event.data);
+            if (data.type === 'count') self.updateCount(data.count);
+          } catch (e) {}
+        };
+        ws.onerror = function () { self.fallbackSimulation(); };
+        ws.onclose = function () { self.fallbackSimulation(); };
+      } catch (e) {
+        this.fallbackSimulation();
+      }
+    },
+
+    updateCount: function (count) {
+      if (count > 0 && this.countEl) {
+        this.countEl.textContent = count;
+        this.badge.classList.add('nbp-live-visible');
+      }
+    },
+
+    fallbackSimulation: function () {
+      if (this._fallbackTimer) return;
+      var self = this;
+      this.badge.classList.add('nbp-live-visible');
+      var v = Math.floor(Math.random() * 24) + 14;
+      this.updateCount(v);
+      this._fallbackTimer = setInterval(function () {
+        v = Math.max(8, v + Math.floor(Math.random() * 5) - 2);
+        self.updateCount(v);
+      }, 3500);
+    }
+  };
+
+  /* ══════════════════════════════
+     DRAWER CLOSE EVENTS
+  ══════════════════════════════ */
+  document.getElementById('nbpWishClose').addEventListener('click', function () { NbpWish.closeDrawer(); });
+  document.getElementById('nbpWishOverlay').addEventListener('click', function () { NbpWish.closeDrawer(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') NbpWish.closeDrawer(); });
+
+  /* ══════════════════════════════
+     CART REFRESH LISTENER
+  ══════════════════════════════ */
+  document.addEventListener('cart:refresh', function () {
+    /* cart count updated directly after each ATC — no fetch here to avoid conflicts */
+  });
+
+  /* ══════════════════════════════
+     WISH HEART TOGGLE ON BUCKET CARDS
+  ══════════════════════════════ */
+  document.querySelectorAll('.nbc-wish').forEach(function (btn) {
+    var card = btn.closest('.nbc-card');
+    var nameEl = card ? card.querySelector('.nbc-title__word') : null;
+    var priceEl = card ? card.querySelector('.nbc-price') : null;
+    var imgEl = card ? card.querySelector('.nbc-img') : null;
+    var formEl = card ? card.querySelector('[data-nbc-form]') : null;
+    var variantId = formEl ? (formEl.querySelector('[name="id"]') || {}).value : '';
+    var productName = nameEl ? nameEl.textContent.trim() : 'Bucket';
+    var productPrice = priceEl ? priceEl.textContent.trim() : '';
+    var productImg = imgEl ? imgEl.src : '';
+
+    btn.dataset.variantId    = variantId;
+    btn.dataset.productName  = productName + ' Bucket';
+    btn.dataset.productPrice = productPrice;
+    btn.dataset.productImage = productImg;
+    btn.dataset.productEmoji = '🪣';
+
+    if (variantId && NbpWish.has(variantId)) {
+      btn.textContent       = '♥';
+      btn.style.color       = '#ec4f9a';
+      btn.style.borderColor = '#ec4f9a';
+    }
+
+    btn.addEventListener('click', function () {
+      NbpWish.toggle(btn);
+      var wished = NbpWish.has(btn.dataset.variantId);
+      btn.textContent       = wished ? '♥' : '♡';
+      btn.style.color       = wished ? '#ec4f9a' : '';
+      btn.style.borderColor = wished ? '#ec4f9a' : '';
+    });
+  });
+
+  /* ══════════════════════════════
+     SCROLL REVEAL — BUCKET CARDS
+  ══════════════════════════════ */
+  var nbcObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      if (el.hasAttribute('data-nbc-card')) {
+        el.classList.add('nbc-visible');
+        el.querySelectorAll('[data-nbc-animate]').forEach(function (col) {
+          col.classList.add('nbc-col-visible');
+        });
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('[data-nbc-card]').forEach(function (card) {
+    nbcObserver.observe(card);
+  });
+
+  /* ══════════════════════════════
+     ACCORDIONS — BUCKET CARDS
+  ══════════════════════════════ */
+  document.querySelectorAll('#nbc-{{ section.id }} [data-nbc-acc]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var acc    = btn.closest('.nbc-acc');
+      var isOpen = acc.classList.contains('nbc-acc--open');
+      var icon   = btn.querySelector('.nbc-acc__icon');
+      var card   = btn.closest('.nbc-card');
+      card.querySelectorAll('.nbc-acc').forEach(function (a) {
+        a.classList.remove('nbc-acc--open');
+        var ic = a.querySelector('.nbc-acc__icon');
+        if (ic) ic.classList.remove('nbc-acc__icon--open');
+      });
+      if (!isOpen) {
+        acc.classList.add('nbc-acc--open');
+        if (icon) icon.classList.add('nbc-acc__icon--open');
+      }
+    });
+  });
+
+  /* ══════════════════════════════
+     MAIN SECTION LOGIC
+  ══════════════════════════════ */
+  var root = document.getElementById('nbp-{{ section.id }}');
+  if (root && !root.dataset.nbpReady) {
+    root.dataset.nbpReady = '1';
+
+    var sid = '{{ section.id }}';
+    var productImages = {
+      nugtella:   '{{ section.settings.nugtella_product.featured_image | image_url: width: 600 }}',
+      strawberry: '{{ section.settings.strawberry_product.featured_image | image_url: width: 600 }}',
+      vanilla:    '{{ section.settings.vanilla_product.featured_image | image_url: width: 600 }}'
+    };
+    var bucketImageMixed = '{{ section.settings.bucket_image_mixed | image_url: width: 900 }}';
+
+    var vidInput    = document.getElementById('nbp-vid-'    + sid);
+    var priceEl     = document.getElementById('nbp-price-'  + sid);
+    var subEl       = document.getElementById('nbp-sub-'    + sid);
+    var descEl      = document.getElementById('nbp-desc-'   + sid);
+    var labelEl     = document.getElementById('nbp-label-'  + sid);
+    var pill1El     = document.getElementById('nbp-pill1-'  + sid);
+    var pill2El     = document.getElementById('nbp-pill2-'  + sid);
+    var jarsEl      = document.getElementById('nbp-jars-'   + sid);
+    var accDescEl   = document.getElementById('nbp-acc-desc-'   + sid);
+    var accFlavorEl = document.getElementById('nbp-acc-flavor-' + sid);
+    var accSpecsEl  = document.getElementById('nbp-acc-specs-'  + sid);
+    var accHighlightEl = document.getElementById('nbp-acc-highlight-' + sid);
+    var optBtns     = root.querySelectorAll('[data-nbp-opt]');
+
+    function makeImg(src, alt, cls) {
+      if (!src) return '';
+      return '<img src="' + src + '" alt="' + (alt || '') + '" class="' + cls + '" loading="lazy">';
+    }
+
+    function renderJars(btn) {
+      var mode   = btn.dataset.mode;
+      var imgSrc = btn.dataset.image || '';
+      jarsEl.innerHTML = '';
+      if (mode === 'mixed') {
+        if (bucketImageMixed) {
+          jarsEl.innerHTML = makeImg(bucketImageMixed, 'Mixed Bucket', 'nbp-jar nbp-jar--single');
+        } else {
+          jarsEl.innerHTML =
+            makeImg(productImages.nugtella,   'Nugtella',             'nbp-jar nbp-jar--l') +
+            makeImg(productImages.strawberry, 'Strawberry Shortcake', 'nbp-jar nbp-jar--c') +
+            makeImg(productImages.vanilla,    'Vanilla',              'nbp-jar nbp-jar--r');
+        }
+      } else {
+        var src = imgSrc || productImages[btn.dataset.flavor] || '';
+        if (src) jarsEl.innerHTML = makeImg(src, btn.dataset.label, 'nbp-jar nbp-jar--single');
+      }
+    }
+
+    /* Flavor selector */
+    optBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        optBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (vidInput    && btn.dataset.variant)    vidInput.value          = btn.dataset.variant;
+        if (priceEl     && btn.dataset.price)       priceEl.textContent     = btn.dataset.price;
+        if (subEl       && btn.dataset.sub)         subEl.textContent       = btn.dataset.sub;
+        if (descEl      && btn.dataset.desc)        descEl.textContent      = btn.dataset.desc;
+        if (labelEl     && btn.dataset.label)       labelEl.textContent     = btn.dataset.label;
+        if (pill1El     && btn.dataset.pill)        pill1El.textContent     = btn.dataset.pill;
+        if (pill2El     && btn.dataset.pill2)       pill2El.textContent     = btn.dataset.pill2;
+
+        if (accDescEl)   accDescEl.textContent   = btn.dataset.accDesc   || '';
+        if (accFlavorEl) accFlavorEl.textContent = btn.dataset.accFlavor || '';
+
+        if (accSpecsEl) {
+          accSpecsEl.innerHTML = btn.dataset.accSpecs || '';
+        }
+        if (accHighlightEl) {
+          accHighlightEl.textContent = btn.dataset.accHighlight || '';
+        }
+
+        renderJars(btn);
+      });
+    });
+
+    /* Accordions — main section right column */
+    root.querySelectorAll('[data-nbp-acc]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc    = btn.closest('.nbp-acc');
+        var isOpen = acc.classList.contains('nbp-acc--open');
+        var icon   = btn.querySelector('.nbp-acc__icon');
+        root.querySelectorAll('.nbp-right .nbp-acc').forEach(function (a) {
+          a.classList.remove('nbp-acc--open');
+          var ic = a.querySelector('.nbp-acc__icon');
+          if (ic) ic.classList.remove('nbp-acc__icon--open');
+        });
+        if (!isOpen) {
+          acc.classList.add('nbp-acc--open');
+          if (icon) icon.classList.add('nbp-acc__icon--open');
+        }
+      });
+    });
+
+    /* Async ATC — hero form */
+    var heroForm = root.querySelector('[data-nbp-form]');
+    if (heroForm) {
+      heroForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn  = heroForm.querySelector('[type="submit"]');
+        var orig = btn.innerHTML;
+        btn.textContent = 'Adding…';
+        btn.disabled    = true;
+        fetch('/cart/add.js', { method: 'POST', body: new FormData(heroForm) })
+          .then(function (r) {
+            if (!r.ok) throw new Error('cart error');
+            btn.innerHTML = '<span class="nbp-atc__check">✓</span> Added!';
+            btn.style.background = '#2a7a4b';
+            NbpToast.show('Added to cart', '🛒', 'added');
+            fetch('/cart.js').then(function (r2) { return r2.json(); }).then(function (d) { NbpCart.update(d.item_count); });
+            document.dispatchEvent(new CustomEvent('cart:refresh'));
+            setTimeout(function () {
+              btn.innerHTML        = orig;
+              btn.style.background = '';
+              btn.disabled         = false;
+            }, 1800);
+          })
+          .catch(function () {
+            NbpToast.show('Could not add to cart', '❌', 'error');
+            btn.innerHTML = orig;
+            btn.disabled  = false;
+          });
+      });
+    }
+
+    /* Wishlist — hero .nbp-wish button, tracks selected flavor */
+    var heroWishBtn = root.querySelector('.nbp-wish');
+    if (heroWishBtn) {
+      /* build product data from the currently active opt button */
+      function getActiveOptData() {
+        var active = root.querySelector('[data-nbp-opt].active');
+        if (!active) return {};
+        return {
+          variantId:    active.dataset.variant   || '',
+          productName:  active.dataset.label      || 'Bucket',
+          productPrice: active.dataset.price      || '',
+          productImage: active.dataset.image      || '',
+          productEmoji: '🪣'
+        };
+      }
+
+      function syncHeroWish() {
+        var d = getActiveOptData();
+        if (!d.variantId) return;
+        var wished = NbpWish.has(d.variantId);
+        heroWishBtn.textContent       = wished ? '♥' : '♡';
+        heroWishBtn.style.color       = wished ? '#ec4f9a' : '';
+        heroWishBtn.style.borderColor = wished ? '#ec4f9a' : '';
+      }
+
+      heroWishBtn.addEventListener('click', function () {
+        var d = getActiveOptData();
+        if (!d.variantId) {
+          NbpToast.show('Select a flavor first', '⚠️', 'error');
+          return;
+        }
+        /* temporarily set dataset attrs so NbpWish.toggle can read them */
+        heroWishBtn.dataset.variantId    = d.variantId;
+        heroWishBtn.dataset.productName  = d.productName;
+        heroWishBtn.dataset.productPrice = d.productPrice;
+        heroWishBtn.dataset.productImage = d.productImage;
+        heroWishBtn.dataset.productEmoji = d.productEmoji;
+        NbpWish.toggle(heroWishBtn);
+        syncHeroWish();
+      });
+
+      /* re-sync heart state whenever flavor changes */
+      optBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setTimeout(syncHeroWish, 0);
+        });
+      });
+
+      syncHeroWish();
+    }
+  } /* end root block */
+
+  /* ══════════════════════════════
+     ASYNC ADD TO CART — BUCKET CARDS
+  ══════════════════════════════ */
+  document.querySelectorAll('#nbc-{{ section.id }} [data-nbc-form]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn  = form.querySelector('[type="submit"]');
+      var orig = btn.innerHTML;
+      btn.textContent = 'Adding…';
+      btn.disabled    = true;
+      fetch('/cart/add.js', { method: 'POST', body: new FormData(form) })
+        .then(function (r) {
+          if (!r.ok) throw new Error();
+          btn.innerHTML = '<span class="nbc-atc__check">✓</span> Added!';
+          btn.style.background = '#2a7a4b';
+          NbpToast.show('Added to cart', '🛒', 'added');
+          fetch('/cart.js').then(function (r2) { return r2.json(); }).then(function (d) { NbpCart.update(d.item_count); });
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+          setTimeout(function () {
+            btn.innerHTML        = orig;
+            btn.style.background = '';
+            btn.disabled         = false;
+          }, 1800);
+        })
+        .catch(function () {
+          NbpToast.show('Could not add to cart', '❌', 'error');
+          btn.innerHTML = orig;
+          btn.disabled  = false;
+        });
+    });
+  });
+
+  /* ══════════════════════════════
+     INIT ALL
+  ══════════════════════════════ */
+  NbpCart.init();
+  NbpWish.init();
+  NbpLiveViewers.init();
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Neapolitan Bucket Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page"
+    },
+    {
+      "type": "url",
+      "id": "bucket_page_link",
+      "label": "Bucket pill — link (this page, e.g. /pages/neapolitan-bucket)"
+    },
+    {
+      "type": "url",
+      "id": "single_page_link",
+      "label": "Single pill — link (e.g. /pages/hash-holes-collection)"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page background",
+      "default": "#f7ece2"
+    },
+    {
+      "type": "url",
+      "id": "back_link",
+      "label": "Back link"
+    },
+    {
+      "type": "url",
+      "id": "left_arrow_link",
+      "label": "Left arrow link"
+    },
+    {
+      "type": "url",
+      "id": "right_arrow_link",
+      "label": "Right arrow link"
+    },
+    {
+      "type": "header",
+      "content": "Hero text"
+    },
+    {
+      "type": "text",
+      "id": "title_top",
+      "label": "Title — top word",
+      "default": "Neapolitan"
+    },
+    {
+      "type": "text",
+      "id": "title_gradient",
+      "label": "Title — gradient word",
+      "default": "Bucket"
+    },
+    {
+      "type": "text",
+      "id": "flavor_line",
+      "label": "Flavor subtitle (default / Mixed)",
+      "default": "Vanilla • Strawberry Shortcake • Nugtella"
+    },
+    {
+      "type": "text",
+      "id": "price_fallback",
+      "label": "Fallback price (no product linked)",
+      "default": "$45.00"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description (default / Mixed)",
+      "default": "A dessert-inspired trio of Sundaze buckets featuring Vanilla, Strawberry Shortcake, and Nugtella flavors in one premium Neapolitan collection."
+    },
+    {
+      "type": "textarea",
+      "id": "flavor_notes",
+      "label": "Flavor Notes (default / Mixed)",
+      "default": "A creamy dessert-style mix of vanilla, strawberry, and chocolate-hazelnut inspired profiles."
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "image_picker",
+      "id": "hasholes_image",
+      "label": "Hash Holes image (top-view circle photo)"
+    },
+    {
+      "type": "image_picker",
+      "id": "bucket_icon",
+      "label": "Bucket icon (line-art illustration)"
+    },
+    {
+      "type": "header",
+      "content": "Mixed Bucket"
+    },
+    {
+      "type": "product",
+      "id": "mixed_product",
+      "label": "Mixed Bucket product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bucket_image_mixed",
+      "label": "Mixed Bucket hero image (all 3 jars together)"
+    },
+    {
+      "type": "textarea",
+      "id": "mixed_acc_desc",
+      "label": "Description accordion"
+    },
+    {
+      "type": "textarea",
+      "id": "mixed_acc_flavor",
+      "label": "Flavor Notes accordion"
+    },
+    {
+      "type": "richtext",
+      "id": "mixed_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>3 Flavor Neapolitan Bundle</li><li>Vanilla • Strawberry Shortcake • Nugtella</li><li>Premium Sundaze Bucket Packaging</li><li>Dessert-Inspired Flavor Profile</li><li>Mixed Bucket Option Available</li></ul>"
+    },
+    {
+      "type": "text",
+      "id": "mixed_acc_highlight",
+      "label": "Product Specs highlight text",
+      "default": "🍓 12 Hash Holes Inside Every Bucket"
+    },
+    {
+      "type": "header",
+      "content": "Nugtella Bucket"
+    },
+    {
+      "type": "product",
+      "id": "nugtella_product",
+      "label": "Nugtella product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bucket_image_nugtella",
+      "label": "Nugtella bucket image (overrides product image)"
+    },
+    {
+      "type": "textarea",
+      "id": "nugtella_desc",
+      "label": "Description when selected",
+      "default": "A decadent chocolate-hazelnut bucket inspired by everyone's favourite spread. Rich, smooth, and unforgettable."
+    },
+    {
+      "type": "textarea",
+      "id": "nugtella_acc_desc",
+      "label": "Description accordion"
+    },
+    {
+      "type": "textarea",
+      "id": "nugtella_acc_flavor",
+      "label": "Flavor Notes accordion"
+    },
+    {
+      "type": "richtext",
+      "id": "nugtella_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor Bucket</li><li>Chocolate • Hazelnut Inspired Profile</li><li>Premium Sundaze Bucket Packaging</li><li>Dessert-Inspired Flavor</li></ul>"
+    },
+    {
+      "type": "text",
+      "id": "nugtella_acc_highlight",
+      "label": "Product Specs highlight text",
+      "default": "🍫 12 Hash Holes Inside Every Bucket"
+    },
+    {
+      "type": "header",
+      "content": "Strawberry Shortcake Bucket"
+    },
+    {
+      "type": "product",
+      "id": "strawberry_product",
+      "label": "Strawberry Shortcake product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bucket_image_strawberry",
+      "label": "Strawberry bucket image (overrides product image)"
+    },
+    {
+      "type": "textarea",
+      "id": "strawberry_desc",
+      "label": "Description when selected",
+      "default": "A sweet strawberry cake-inspired bucket bursting with berry flavour and a smooth, creamy finish."
+    },
+    {
+      "type": "textarea",
+      "id": "strawberry_acc_desc",
+      "label": "Description accordion"
+    },
+    {
+      "type": "textarea",
+      "id": "strawberry_acc_flavor",
+      "label": "Flavor Notes accordion"
+    },
+    {
+      "type": "richtext",
+      "id": "strawberry_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor Bucket</li><li>Sweet Berry Cake Profile</li><li>Premium Sundaze Bucket Packaging</li><li>Dessert-Inspired Flavor</li></ul>"
+    },
+    {
+      "type": "text",
+      "id": "strawberry_acc_highlight",
+      "label": "Product Specs highlight text",
+      "default": "🍓 12 Hash Holes Inside Every Bucket"
+    },
+    {
+      "type": "header",
+      "content": "Vanilla Bucket"
+    },
+    {
+      "type": "product",
+      "id": "vanilla_product",
+      "label": "Vanilla product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bucket_image_vanilla",
+      "label": "Vanilla bucket image (overrides product image)"
+    },
+    {
+      "type": "textarea",
+      "id": "vanilla_desc",
+      "label": "Description when selected",
+      "default": "A rich, creamy vanilla bucket with smooth flavour and a clean finish. The classic Sundaze experience."
+    },
+    {
+      "type": "textarea",
+      "id": "vanilla_acc_desc",
+      "label": "Description accordion"
+    },
+    {
+      "type": "textarea",
+      "id": "vanilla_acc_flavor",
+      "label": "Flavor Notes accordion"
+    },
+    {
+      "type": "richtext",
+      "id": "vanilla_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor Bucket</li><li>Creamy Smooth Vanilla Profile</li><li>Premium Sundaze Bucket Packaging</li><li>Dessert-Inspired Flavor</li></ul>"
+    },
+    {
+      "type": "text",
+      "id": "vanilla_acc_highlight",
+      "label": "Product Specs highlight text",
+      "default": "🍦 12 Hash Holes Inside Every Bucket"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Neapolitan Bucket Page"
+    }
+  ]
+}
+{% endschema %}
