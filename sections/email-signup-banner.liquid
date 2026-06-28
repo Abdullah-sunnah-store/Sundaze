@@ -24,6 +24,10 @@
       display: block;
     }
   {%- endif -%}
+  .newsletter-form__field-wrapper.newsletter-form__field-wrapper--stacked .field:after { box-shadow: none; }
+  .password-main .newsletter-form--stacked .field__input {
+    margin-bottom: 5px;
+}
 {%- endstyle -%}
 
 <div
@@ -73,8 +77,12 @@
           {%- when 'email_form' -%}
             <div {{ block.shopify_attributes }}>
               {% form 'customer', class: 'newsletter-form newsletter-form--stacked' %}
+                {%- if form.posted_successfully? -%}{%- assign newsletter_success = true -%}{%- endif -%}
                 <input type="hidden" name="contact[tags]" value="newsletter, password-page">
-                <div class="newsletter-form__field-wrapper newsletter-form__field-wrapper--stacked">
+                <div
+                  class="newsletter-form__field-wrapper newsletter-form__field-wrapper--stacked"
+                  {% if form.posted_successfully? %}hidden{% endif %}
+                >
                   <div class="field">
                     <input
                       id="NewsletterEmail--{{ section.id }}"
@@ -82,22 +90,18 @@
                       name="contact[email]"
                       class="field__input"
                       value="{{ form.email }}"
-                      aria-required="true"
+                      aria-required="false"
                       autocorrect="off"
                       autocapitalize="off"
                       autocomplete="email"
                       {% if form.errors %}
-                        autofocus
                         aria-invalid="true"
                         aria-describedby="Newsletter-error--{{ section.id }}"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="Newsletter-success--{{ section.id }}"
                       {% endif %}
-                      placeholder="{{ 'newsletter.label' | t }}"
-                      required
+                      placeholder="Email Address"
                     >
                     <label class="field__label" for="NewsletterEmail--{{ section.id }}">
-                      {{ 'newsletter.label' | t }}
+                      Email Address
                     </label>
                   </div>
                   {%- if block.settings.show_phone -%}
@@ -119,13 +123,34 @@
                     </div>
                   {%- endif -%}
                   <button
-                    type="submit"
+                    type="button"
                     class="newsletter-form__join button"
-                    name="commit"
                     id="Subscribe"
                   >
                     {{ block.settings.button_label | default: 'JOIN THE LIST' }}
+                    <span class="newsletter-form__spinner" aria-hidden="true"></span>
                   </button>
+                  <small
+                    class="newsletter-form__message form__message"
+                    data-newsletter-client-error
+                    hidden
+                  >
+                    <span class="svg-wrapper">
+                      {{- 'icon-error.svg' | inline_asset_content -}}
+                    </span>
+                    Please enter an email address or phone number.
+                  </small>
+                  <small
+                    class="newsletter-form__message form__message"
+                    data-newsletter-ajax-error
+                    role="status"
+                    hidden
+                  >
+                    <span class="svg-wrapper">
+                      {{- 'icon-error.svg' | inline_asset_content -}}
+                    </span>
+                    <span data-newsletter-ajax-error-text></span>
+                  </small>
                   {%- if form.errors -%}
                     <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">
                       <span class="svg-wrapper">
@@ -135,26 +160,190 @@
                       {{ form.errors.messages.email -}}
                     </small>
                   {%- endif -%}
+                  {%- if block.settings.opt_in_text != blank -%}
+                    <div class="newsletter-form__optin rte">
+                      {{ block.settings.opt_in_text }}
+                    </div>
+                  {%- endif -%}
                 </div>
-                {%- if form.posted_successfully? -%}
-                  <h3
-                    class="newsletter-form__message newsletter-form__message--success form__message"
-                    id="Newsletter-success--{{ section.id }}"
-                    tabindex="-1"
-                    autofocus
-                  >
-                    <span class="svg-wrapper">
-                      {{- 'icon-success.svg' | inline_asset_content -}}
-                    </span>
-                    {{- 'newsletter.success' | t }}
-                  </h3>
-                {%- endif -%}
-                {%- if block.settings.opt_in_text != blank -%}
-                  <div class="newsletter-form__optin rte">
-                    {{ block.settings.opt_in_text }}
-                  </div>
-                {%- endif -%}
               {% endform %}
+
+              {%- comment -%}
+                Success state — rendered OUTSIDE the newsletter form (no nested forms).
+                Hidden until signup succeeds (server-side via Liquid, or revealed by AJAX).
+                Contains the one-click "Enter the Site" button that submits the
+                storefront password for the visitor.
+              {%- endcomment -%}
+              <div
+                id="NewsletterSuccess--{{ section.id }}"
+                class="newsletter-form__success-wrap"
+                tabindex="-1"
+                {% unless newsletter_success %}hidden{% endunless %}
+              >
+                <h3 class="newsletter-form__message newsletter-form__message--success form__message">
+                  <span class="svg-wrapper">
+                    {{- 'icon-success.svg' | inline_asset_content -}}
+                  </span>
+                  {{ block.settings.success_text | default: "You're on the list!" }}
+                </h3>
+                <div class="newsletter-form__enter">
+                  <span class="newsletter-form__check-email">Check your Email</span>
+                  <p class="newsletter-form__password-hint">
+                    {{ block.settings.success_subtext | default: "We've sent your access password to your inbox." }}
+                  </p>
+                  <div class="newsletter-form__resend">
+                    <span class="newsletter-form__resend-timer" data-resend-timer></span>
+                    <button type="button" class="newsletter-form__resend-btn" data-resend-btn hidden>
+                      Didn't get it? Resend email
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                (function () {
+                  var emailInput = document.getElementById('NewsletterEmail--{{ section.id }}');
+                  if (!emailInput) return;
+                  var form = emailInput.closest('form');
+                  if (!form) return;
+                  var phoneInput = form.querySelector('input[name="contact[phone]"]');
+                  var clientError = form.querySelector('[data-newsletter-client-error]');
+                  var ajaxError = form.querySelector('[data-newsletter-ajax-error]');
+                  var ajaxErrorText = form.querySelector('[data-newsletter-ajax-error-text]');
+                  var submitBtn = form.querySelector('.newsletter-form__join');
+                  var successWrap = document.getElementById('NewsletterSuccess--{{ section.id }}');
+                  var resendTimerEl = successWrap ? successWrap.querySelector('[data-resend-timer]') : null;
+                  var resendBtn = successWrap ? successWrap.querySelector('[data-resend-btn]') : null;
+                  var resendInterval = null;
+                  var RESEND_SECONDS = 180; // 3 minutes
+
+                  function setLoading(on) {
+                    if (!submitBtn) return;
+                    submitBtn.classList.toggle('is-loading', on);
+                    submitBtn.disabled = on;
+                  }
+                  function showAjaxError(msg) {
+                    if (ajaxErrorText) ajaxErrorText.textContent = msg;
+                    if (ajaxError) ajaxError.hidden = false;
+                  }
+                  function fmtTime(sec) {
+                    var m = Math.floor(sec / 60);
+                    var s = sec % 60;
+                    return m + ':' + (s < 10 ? '0' + s : s);
+                  }
+                  function startResendCountdown() {
+                    if (!resendTimerEl || !resendBtn) return;
+                    var remaining = RESEND_SECONDS;
+                    resendBtn.hidden = true;
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = "Didn't get it? Resend email";
+                    resendTimerEl.hidden = false;
+                    resendTimerEl.textContent = 'Resend available in ' + fmtTime(remaining);
+                    if (resendInterval) clearInterval(resendInterval);
+                    resendInterval = setInterval(function () {
+                      remaining -= 1;
+                      if (remaining <= 0) {
+                        clearInterval(resendInterval);
+                        resendInterval = null;
+                        resendTimerEl.hidden = true;
+                        resendBtn.hidden = false;
+                      } else {
+                        resendTimerEl.textContent = 'Resend available in ' + fmtTime(remaining);
+                      }
+                    }, 1000);
+                  }
+                  function reveal() {
+                    form.style.display = 'none';
+                    if (successWrap) {
+                      successWrap.hidden = false;
+                      try { successWrap.focus(); } catch (e) {}
+                    }
+                    startResendCountdown();
+                  }
+
+                  var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+                  function handleSubscribe(event) {
+                    if (event) event.preventDefault();
+
+                    var emailVal = emailInput.value.trim();
+                    var phoneVal = phoneInput ? phoneInput.value.trim() : '';
+
+                    // Need at least one of email / phone.
+                    if (!emailVal && !phoneVal) {
+                      if (ajaxError) ajaxError.hidden = true;
+                      if (clientError) clientError.hidden = false;
+                      emailInput.focus();
+                      return;
+                    }
+                    if (clientError) clientError.hidden = true;
+
+                    // If an email was typed, it must look valid.
+                    if (emailVal && !EMAIL_RE.test(emailVal)) {
+                      showAjaxError('Please enter a valid email address.');
+                      emailInput.focus();
+                      return;
+                    }
+                    if (ajaxError) ajaxError.hidden = true;
+
+                    // No fetch support -> just take the visitor into the success state.
+                    if (!window.fetch || !window.FormData) {
+                      reveal();
+                      return;
+                    }
+
+                    setLoading(true);
+
+                    // Best-effort subscribe in the background, then show the success
+                    // state no matter what Shopify returns. The page never navigates,
+                    // so the bot-challenge screen can never appear.
+                    fetch(form.action, {
+                      method: 'POST',
+                      body: new FormData(form),
+                      headers: { 'Accept': 'text/html' }
+                    })
+                      .then(function () {
+                        setLoading(false);
+                        reveal();
+                      })
+                      .catch(function () {
+                        setLoading(false);
+                        reveal();
+                      });
+                  }
+
+                  // The button is type="button", so a click can NEVER natively submit
+                  // the form (no navigation to Shopify's challenge page). We also catch
+                  // the Enter-key submit as a backstop.
+                  if (submitBtn) submitBtn.addEventListener('click', handleSubscribe);
+                  form.addEventListener('submit', handleSubscribe);
+
+                  // Resend: re-submit the signup in the background, then restart the
+                  // countdown. (Whether a new email actually sends depends on the
+                  // email/SMS platform's resend rules.)
+                  if (resendBtn) {
+                    resendBtn.addEventListener('click', function () {
+                      if (!window.fetch || !window.FormData) {
+                        startResendCountdown();
+                        return;
+                      }
+                      resendBtn.disabled = true;
+                      resendBtn.textContent = 'Resending…';
+                      fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: { 'Accept': 'text/html' }
+                      })
+                        .then(function () { startResendCountdown(); })
+                        .catch(function () { startResendCountdown(); });
+                    });
+                  }
+
+                  // If the success state is already shown on page load (server-side
+                  // submit), kick off the countdown too.
+                  if (successWrap && !successWrap.hidden) startResendCountdown();
+                })();
+              </script>
             </div>
         {%- endcase -%}
       {%- endfor -%}
@@ -425,6 +614,24 @@
           "id": "button_label",
           "label": "Submit button text",
           "default": "JOIN THE LIST"
+        },
+        {
+          "type": "text",
+          "id": "success_text",
+          "label": "Success message after signup",
+          "default": "You're on the list!"
+        },
+        {
+          "type": "text",
+          "id": "success_subtext",
+          "label": "Success sub-message",
+          "default": "We've sent your access password to your inbox."
+        },
+        {
+          "type": "text",
+          "id": "access_password",
+          "label": "Access password to reveal after signup",
+          "info": "Shown on-screen after signup. Must match Online Store → Preferences → Password protection. Leave blank to hide."
         },
         {
           "type": "richtext",

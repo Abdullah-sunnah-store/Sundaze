@@ -20,35 +20,7 @@
     "collections_carousel_nT93JM": {
       "type": "collections-carousel",
       "name": "Collections Carousel",
-      "settings": {
-        "logo": "shopify://shop_images/SUNDAZE_WEB_LOGO.png",
-        "subtitle": "Explore Our Collections",
-        "card1_image": "shopify://shop_images/sundaze-tubes.jpg",
-        "card1_tag": "Best Seller",
-        "card1_title": "Hash Holes",
-        "card1_desc": "Premium hand-rolled hash holes crafted with exotic flower",
-        "card1_link": "",
-        "card2_image": "shopify://shop_images/sundaze-limited-drops.png",
-        "card2_tag": "",
-        "card2_title": "Limited Drops",
-        "card2_desc": "Exclusive limited drops hand rolled to perfection",
-        "card2_link": "",
-        "card3_image": "shopify://shop_images/sundaze-flavors.jpg",
-        "card3_tag": "Explore",
-        "card3_title": "Flavors",
-        "card3_desc": "Discover bold dessert-inspired flavor profiles",
-        "card3_link": "",
-        "card4_image": "shopify://shop_images/sundaze-merch.png",
-        "card4_tag": "Lifestyle",
-        "card4_title": "Merch",
-        "card4_desc": "Sundaze apparel and accessories",
-        "card4_link": "",
-        "card5_image": "shopify://shop_images/sundaze-accessories.png",
-        "card5_tag": "Lifestyle",
-        "card5_title": "Accessories",
-        "card5_desc": "Making trays stash tins and more",
-        "card5_link": ""
-      }
+      "settings": {}
     }
   },
   "order": [
