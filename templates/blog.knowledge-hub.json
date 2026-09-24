@@ -1,0 +1,134 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumbs": {
+      "type": "sundaze-breadcrumbs",
+      "settings": {
+        "home_label": "Home",
+        "bg_color": "#FFFFFF",
+        "padding_top": 20,
+        "padding_bottom": 8
+      }
+    },
+    "hub": {
+      "type": "sundaze-knowledge-hub",
+      "blocks": {
+        "cat_thca_basics": {
+          "type": "category",
+          "settings": {
+            "title": "THCA Basics"
+          }
+        },
+        "link_what_is_thca": {
+          "type": "link",
+          "settings": {
+            "title": "What Is THCA?",
+            "link": "/blogs/knowledge-hub/what-is-thca"
+          }
+        },
+        "link_thca_vs_thc": {
+          "type": "link",
+          "settings": {
+            "title": "THCA vs THC",
+            "link": "/blogs/knowledge-hub/thca-vs-thc"
+          }
+        },
+        "cat_flower": {
+          "type": "category",
+          "settings": {
+            "title": "Flower"
+          }
+        },
+        "link_what_are_terpenes": {
+          "type": "link",
+          "settings": {
+            "title": "What Are Terpenes?",
+            "link": "/blogs/knowledge-hub/what-are-terpenes"
+          }
+        },
+        "cat_rosin_hash": {
+          "type": "category",
+          "settings": {
+            "title": "Rosin / Hash"
+          }
+        },
+        "link_what_is_hash_rosin": {
+          "type": "link",
+          "settings": {
+            "title": "What Is Hash Rosin?",
+            "link": "/blogs/knowledge-hub/what-is-hash-rosin"
+          }
+        },
+        "cat_lab_care": {
+          "type": "category",
+          "settings": {
+            "title": "Lab + Care"
+          }
+        },
+        "link_how_to_read_a_coa": {
+          "type": "link",
+          "settings": {
+            "title": "How to Read a COA",
+            "link": "/blogs/knowledge-hub/how-to-read-a-coa"
+          }
+        },
+        "link_how_to_store_thca": {
+          "type": "link",
+          "settings": {
+            "title": "How to Store THCA Products",
+            "link": "/blogs/knowledge-hub/how-to-store-thca"
+          }
+        }
+      },
+      "block_order": [
+        "cat_thca_basics",
+        "link_what_is_thca",
+        "link_thca_vs_thc",
+        "cat_flower",
+        "link_what_are_terpenes",
+        "cat_rosin_hash",
+        "link_what_is_hash_rosin",
+        "cat_lab_care",
+        "link_how_to_read_a_coa",
+        "link_how_to_store_thca"
+      ],
+      "settings": {
+        "eyebrow": "Learn Before You Shop",
+        "heading": "Sundaze",
+        "heading_accent": "Knowledge Hub",
+        "heading_tag": "h1",
+        "intro": "<p>Learn the basics of THCA, flower, terpenes, solventless concentrates, lab testing and product care. These guides are educational and designed to help you understand product labels, formats and quality indicators before you shop.</p>",
+        "blog": "",
+        "fallback_category_title": "All Guides",
+        "footer_text": "<p>These guides are general product education. They are not legal or medical advice. For product-specific potency, always use the COA tied to that product or batch.</p>",
+        "bg_color": "#F9F7F4"
+      }
+    },
+    "main": {
+      "type": "main-blog",
+      "disabled": true,
+      "settings": {
+        "layout": "collage",
+        "show_image": true,
+        "image_height": "medium",
+        "show_date": true,
+        "show_author": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "hub",
+    "main"
+  ]
+}

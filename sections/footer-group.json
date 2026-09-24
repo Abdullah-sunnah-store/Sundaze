@@ -19,11 +19,11 @@
           "settings": {
             "brand_description": "Our Products Are Not Intended For Sale Or Use By Persons Under The Age Of 21. All Products Contain Less Than 0.3% THC Per The Controlled Substances Act. This Product Does Not Claim To Diagnose, Treat, Cure, Or Prevent Any Disease And Has Not Been Evaluated Or Approved By The United States Food and Drug Administration (FDA).",
             "instagram_label": "Instagram",
-            "instagram_url": "",
+            "instagram_url": "https://www.instagram.com/sundaze_farms?igsh=NTc4MTIwNjQ2YQ==",
             "youtube_label": "",
             "youtube_url": "",
             "tiktok_label": "TikTok",
-            "tiktok_url": "",
+            "tiktok_url": "https://www.tiktok.com/@sundaze_farms?_r=1&_t=ZP-97oeC2MYJuo",
             "x_label": "X.com",
             "x_url": "",
             "facebook_label": "",
@@ -35,8 +35,8 @@
             "cat_link_2_url": "shopify://pages/hash-holes-collection",
             "cat_link_3_label": "Flavors",
             "cat_link_3_url": "shopify://pages/flavors",
-            "cat_link_4_label": "",
-            "cat_link_4_url": "",
+            "cat_link_4_label": "Hash Rosin",
+            "cat_link_4_url": "shopify://collections/hash-rosin",
             "cat_link_5_label": "",
             "cat_link_5_url": "",
             "quicklinks_heading": "Quick Links",
@@ -51,6 +51,7 @@
             "ql_link_5_label": "",
             "ql_link_5_url": "",
             "policy": "policy",
+            "thca_disclaimer": "Does not ship to states where THC-A is illegal. This product is not available for shipment to the following states: Arkansas, Idaho, Minnesota, Oregon, Rhode Island, Texas, and Vermont.",
             "copyright_text": "Copyright © 2026 Sundaze. All rights reserved"
           },
           "blocks": {}

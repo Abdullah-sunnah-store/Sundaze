@@ -38,29 +38,29 @@
         "pdf_entry_gDKCPx": {
           "type": "pdf_entry",
           "settings": {
-            "pdf_name": " dubai drip.pdf",
-            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_DUBAI_DRIP_COA.pdf?v=1780983108"
+            "pdf_name": "dubai drip.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/SUNDAZE_DUBAI_DRIP_COA.pdf?v=1780983108"
           }
         },
         "pdf_entry_iLtcPa": {
           "type": "pdf_entry",
           "settings": {
-            "pdf_name": " FROSTY SHORTY.pdf",
-            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_FROSTY_SHORTY_COA.pdf?v=1780983108"
+            "pdf_name": "FROSTY SHORTY.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/SUNDAZE_FROSTY_SHORTY_COA.pdf?v=1780983108"
           }
         },
         "pdf_entry_Rx4yxP": {
           "type": "pdf_entry",
           "settings": {
-            "pdf_name": " MYSTIC CANDY SWIRL.pdf",
-            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_MYSTIC_CANDY_SWIRL_COA.pdf?v=1780983463"
+            "pdf_name": "MYSTIC CANDY SWIRL.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/SUNDAZE_MYSTIC_CANDY_SWIRL_COA.pdf?v=1780983463"
           }
         },
         "pdf_entry_AAtrED": {
           "type": "pdf_entry",
           "settings": {
-            "pdf_name": " MAPLE SOAKED PANCAKES.pdf",
-            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_MAPLE_SOAKED_PANCAKES_COA.pdf?v=1780983464"
+            "pdf_name": "MAPLE SOAKED PANCAKES.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/SUNDAZE_MAPLE_SOAKED_PANCAKES_COA.pdf?v=1780983464"
           }
         },
         "category_qgewwB": {
@@ -72,8 +72,42 @@
         "pdf_entry_jiLH3w": {
           "type": "pdf_entry",
           "settings": {
-            "pdf_name": " HASH HOLE.pdf",
-            "pdf_url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0723\/7949\/8657\/files\/SUNDAZE_HASH_HOLE_COA.pdf?v=1780983456"
+            "pdf_name": "HASH HOLE.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/SUNDAZE_HASH_HOLE_COA.pdf?v=1780983456"
+          }
+        },
+        "category_rosin": {
+          "type": "category",
+          "settings": {
+            "category_title": "Hash Rosin"
+          }
+        },
+        "pdf_rosin_blh": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": "Banana Lemon Headz.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/BLH_2026_COA_10MB.pdf?v=1786548891"
+          }
+        },
+        "pdf_rosin_fs": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": "Frootie Scoops.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/FS_2026_COA_10MB.pdf?v=1786548891"
+          }
+        },
+        "pdf_rosin_ms": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": "Melted Strawberries.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/MS_2026_COA_10MB.pdf?v=1786548890"
+          }
+        },
+        "pdf_rosin_pc": {
+          "type": "pdf_entry",
+          "settings": {
+            "pdf_name": "Peaches & Cream.pdf",
+            "pdf_url": "https://cdn.shopify.com/s/files/1/0723/7949/8657/files/PC_2026_COA_10MB.pdf?v=1786548891"
           }
         },
         "promise_ikqzmg": {
@@ -95,6 +129,11 @@
         "pdf_entry_AAtrED",
         "category_qgewwB",
         "pdf_entry_jiLH3w",
+        "category_rosin",
+        "pdf_rosin_blh",
+        "pdf_rosin_fs",
+        "pdf_rosin_ms",
+        "pdf_rosin_pc",
         "promise_ikqzmg"
       ],
       "name": "COA Page",

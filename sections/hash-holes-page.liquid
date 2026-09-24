@@ -249,12 +249,18 @@
     margin-bottom: 40px;
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: 30px;
+    font-size: clamp(32px, 4.6vw, 56px);
     font-weight: 900;
-    letter-spacing: -0.02em;
-    color: #1a1a1a;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    /* Single-word heading — reads as the accent word, same gradient as "Collections". */
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
-  @media (min-width: 640px) { .hash-collections-title { margin-bottom: 56px; font-size: 48px; } }
+  @media (min-width: 640px) { .hash-collections-title { margin-bottom: 56px; } }
 
   .hash-collection-link {
     display: block;
@@ -377,14 +383,14 @@
   /* Inside title — Playfair Display italic, dramatic scale */
   .hash-inside-title {
     font-family: 'Playfair Display', serif;
-    font-size: 36px;
+    font-size: clamp(32px, 4.6vw, 56px);
     font-weight: 900;
     font-style: italic;
+    line-height: 1.08;
+    /* Sits on the dark panel — stays white for contrast. */
     color: #ffffff;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
-  @media (min-width: 640px) { .hash-inside-title { font-size: 60px; } }
-  @media (min-width: 1024px) { .hash-inside-title { font-size: 72px; } }
 
   /* Inside sub — DM Sans eyebrow */
   .hash-inside-sub {

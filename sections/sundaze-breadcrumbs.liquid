@@ -1,0 +1,205 @@
+{% comment %}
+  Sundaze — Breadcrumbs
+  Blueprint 12. Breadcrumbs on articles, collections and products.
+  Detects the current template automatically and emits BreadcrumbList data.
+{% endcomment %}
+
+{%- liquid
+  assign crumbs_title = ''
+  assign crumbs_url = ''
+  assign parent_title = ''
+  assign parent_url = ''
+
+  case template.name
+    when 'article'
+      assign parent_title = blog.title
+      assign parent_url = blog.url
+      assign crumbs_title = article.title
+      assign crumbs_url = article.url
+    when 'blog'
+      assign crumbs_title = blog.title
+      assign crumbs_url = blog.url
+    when 'collection'
+      assign crumbs_title = collection.title
+      assign crumbs_url = collection.url
+    when 'product'
+      assign first_collection = product.collections.first
+      if first_collection != blank
+        assign parent_title = first_collection.title
+        assign parent_url = first_collection.url
+      endif
+      assign crumbs_title = product.title
+      assign crumbs_url = product.url
+    when 'page'
+      assign crumbs_title = page.title
+      assign crumbs_url = page.url
+    when 'search'
+      assign crumbs_title = 'Search'
+      assign crumbs_url = routes.search_url
+  endcase
+-%}
+
+{%- if crumbs_title != blank -%}
+  <nav class="sz-bc" id="sz-bc-{{ section.id }}" aria-label="Breadcrumb">
+    <ol class="sz-bc__list">
+      <li>
+        <a href="{{ routes.root_url }}">{{ section.settings.home_label }}</a>
+        <span class="sz-bc__sep" aria-hidden="true">/</span>
+      </li>
+
+      {%- if parent_title != blank -%}
+        <li>
+          <a href="{{ parent_url }}">{{ parent_title }}</a>
+          <span class="sz-bc__sep" aria-hidden="true">/</span>
+        </li>
+      {%- endif -%}
+
+      <li>
+        <span aria-current="page">{{ crumbs_title }}</span>
+      </li>
+    </ol>
+  </nav>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": {{ section.settings.home_label | json }},
+          "item": {{ shop.url | append: routes.root_url | json }}
+        }
+        {%- if parent_title != blank -%}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ parent_title | json }},
+            "item": {{ shop.url | append: parent_url | json }}
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": {{ crumbs_title | json }},
+            "item": {{ shop.url | append: crumbs_url | json }}
+          }
+        {%- else -%}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ crumbs_title | json }},
+            "item": {{ shop.url | append: crumbs_url | json }}
+          }
+        {%- endif -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-bc-{{ section.id }} {
+    --sun-mauve: #a84f6a;
+    --sun-ink:   #1e1118;
+    --sun-muted: rgba(30,17,24,0.48);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    font-family: 'DM Sans', sans-serif;
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  #sz-bc-{{ section.id }} .sz-bc__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  #sz-bc-{{ section.id }} .sz-bc__list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #sz-bc-{{ section.id }} .sz-bc__list a,
+  #sz-bc-{{ section.id }} .sz-bc__list a:link,
+  #sz-bc-{{ section.id }} .sz-bc__list a:visited {
+    color: var(--sun-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  #sz-bc-{{ section.id }} .sz-bc__list a:hover {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #sz-bc-{{ section.id }} .sz-bc__list [aria-current='page'] {
+    color: var(--sun-ink);
+    font-weight: 500;
+  }
+
+  #sz-bc-{{ section.id }} .sz-bc__sep { color: var(--sun-muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-bc-{{ section.id }} .sz-bc__list a { transition: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Breadcrumbs",
+  "tag": "section",
+  "class": "sundaze-breadcrumbs-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home label",
+      "default": "Home"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Breadcrumbs"
+    }
+  ]
+}
+{% endschema %}

@@ -57,7 +57,7 @@
     font-size: 15px;
     font-weight: 500;
     font-family: 'DM Sans', sans-serif;
-    color: #555;
+    color: #e8357a;
     margin: 0 0 18px;
     letter-spacing: 0.04em;
   }
@@ -66,7 +66,11 @@
     font-weight: 700;
     font-family: 'Playfair Display', serif;
     letter-spacing: -.03em;
-    color: #111;
+    background: linear-gradient(90deg,#ec4f9a 0%,#f099bd 30%,#b57938 72%,#2a1b14 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
     margin-bottom: 16px;
   }
   .nbp-desc {
@@ -903,7 +907,11 @@
       font-family: 'Playfair Display', serif;
       font-size: 28px;
       font-weight: 700;
-      color: #1a1a1a;
+      background: linear-gradient(90deg,#ec4f9a 0%,#f099bd 30%,#b57938 72%,#2a1b14 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
       letter-spacing: -.02em;
     }
     #neo-combined-{{ section.id }} .neo-desc {
@@ -1115,7 +1123,7 @@
               </span>
             </h1>
             <p class="neo-flavors">{{ section.settings.hero_flavors }}</p>
-            <p class="neo-price">{{ section.settings.hero_price }}</p>
+            <p class="neo-price" style="background-image: linear-gradient(to right, #e8a0bf, #f5e6d3, #8B6914);">{{ section.settings.hero_price }}</p>
             <p class="neo-desc">{{ section.settings.hero_desc }}</p>
             <div class="neo-actions">
               <button class="neo-add-btn"
@@ -1216,7 +1224,7 @@
               <span class="neo-title-accent" style="background-image: linear-gradient(to right, #e8a0bf, #f5c6d0);">Donutte</span>
             </h2>
             <p class="neo-flavors">{{ section.settings.s1_flavors }}</p>
-            <p class="neo-price">{{ section.settings.s1_price }}</p>
+            <p class="neo-price" style="background-image: linear-gradient(to right, #e8a0bf, #f5c6d0);">{{ section.settings.s1_price }}</p>
             <p class="neo-desc">{{ section.settings.s1_desc }}</p>
             <div class="neo-actions">
               <button class="neo-add-btn"
@@ -1277,7 +1285,7 @@
               <span class="neo-title-accent" style="background-image: linear-gradient(to right, #d4a574, #f5e6d3);">Donutte</span>
             </h2>
             <p class="neo-flavors">{{ section.settings.s2_flavors }}</p>
-            <p class="neo-price">{{ section.settings.s2_price }}</p>
+            <p class="neo-price" style="background-image: linear-gradient(to right, #d4a574, #f5e6d3);">{{ section.settings.s2_price }}</p>
             <p class="neo-desc">{{ section.settings.s2_desc }}</p>
             <div class="neo-actions">
               <button class="neo-add-btn"
@@ -1338,7 +1346,7 @@
               <span class="neo-title-accent" style="background-image: linear-gradient(to right, #5D3A1A, #8B6914);">Donutte</span>
             </h2>
             <p class="neo-flavors">{{ section.settings.s3_flavors }}</p>
-            <p class="neo-price">{{ section.settings.s3_price }}</p>
+            <p class="neo-price" style="background-image: linear-gradient(to right, #5D3A1A, #8B6914);">{{ section.settings.s3_price }}</p>
             <p class="neo-desc">{{ section.settings.s3_desc }}</p>
             <div class="neo-actions">
               <button class="neo-add-btn"

@@ -326,15 +326,88 @@
   z-index: 1;
 }
 
-.sdz-product-img {
-  position: relative; z-index: 3;
-  width: 82%; max-width: 320px; height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 24px 36px rgba(180,30,80,0.22));
-  animation: sdz-float 3.5s ease-in-out infinite;
-  user-select: none; -webkit-user-drag: none;
-}
 @keyframes sdz-float { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+
+/* ══ PRODUCT GALLERY ══
+   Slides stack in a square box and crossfade, so a portrait jar render and a
+   landscape flower shot can share one frame without the panel jumping height. */
+.sdz-gallery {
+  position: relative; z-index: 3;
+  width: 82%; max-width: 340px;
+  aspect-ratio: 1 / 1;
+  animation: sdz-float 3.5s ease-in-out infinite;
+}
+
+.sdz-gallery__slide {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  /* Kept well under the 2s hold so each image reads as still, not mid-fade. */
+  transition: opacity 0.45s ease;
+  user-select: none; -webkit-user-drag: none;
+  pointer-events: none;
+}
+.sdz-gallery__slide.is-active { opacity: 1; }
+
+/* Arrows stay hidden until the product panel is hovered. */
+.sdz-gallery__nav {
+  position: absolute; top: 50%; z-index: 6;
+  transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0;
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #b4185a;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(180,30,80,0.18);
+  transition: opacity 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+.sdz-gallery__nav--prev { left: -20px; }
+.sdz-gallery__nav--next { right: -20px; }
+.sdz-gallery__nav svg { width: 17px; height: 17px; }
+
+.sdz-center-inner:hover .sdz-gallery__nav,
+.sdz-center-inner:focus-within .sdz-gallery__nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sdz-gallery__nav:hover { background: #fff; }
+.sdz-gallery__nav--prev:hover { transform: translateY(-50%) translateX(-2px); }
+.sdz-gallery__nav--next:hover { transform: translateY(-50%) translateX(2px); }
+.sdz-gallery__nav:focus-visible { outline: 2px solid #e8357a; outline-offset: 2px; }
+
+.sdz-gallery__dots {
+  position: absolute; z-index: 6;
+  left: 0; right: 0; bottom: -22px;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.sdz-gallery__dot {
+  width: 7px; height: 7px; padding: 0;
+  border: none; border-radius: 50%;
+  background: rgba(180,30,80,0.28);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.sdz-gallery__dot.is-active { background: #e8357a; transform: scale(1.35); }
+.sdz-gallery__dot:focus-visible { outline: 2px solid #e8357a; outline-offset: 2px; }
+
+/* Touch devices get no hover, so the arrows stay visible there. */
+@media (hover: none) {
+  .sdz-gallery__nav { opacity: 1; pointer-events: auto; }
+  .sdz-gallery__nav--prev { left: -6px; }
+  .sdz-gallery__nav--next { right: -6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sdz-gallery { animation: none; }
+  .sdz-gallery__slide { transition: none; }
+}
 
 .sdz-badge-brand {
   position: absolute; top: 18px; right: 18px; z-index: 10;
@@ -591,9 +664,15 @@
               </div>
             </div>
 
-            {% if section.settings.p1_image != blank %}
-              <img class="sdz-product-img" src="{{ section.settings.p1_image | img_url: '800x' }}" alt="Mystic Candy Swirl" draggable="false" style="filter:drop-shadow(0 24px 36px rgba(180,30,80,0.22));">
-            {% endif %}
+            {% render 'sdz-product-gallery',
+              image: section.settings.p1_image,
+              image_2: section.settings.p1_image_2,
+              image_3: section.settings.p1_image_3,
+              flower_asset: 'sundaze-flower-mystic-candy-swirl.png',
+              alt: 'Mystic Candy Swirl',
+              shadow: '0 24px 36px rgba(180,30,80,0.22)',
+              autoplay: section.settings.gallery_autoplay
+            %}
 
             <div class="sdz-badge-thca">
               <div class="sdz-badge-thca-icon" style="background:linear-gradient(135deg,#fce4ec,#f48fb1);">🌿</div>
@@ -695,9 +774,15 @@
                 <span class="sdz-badge-brand-sub">Premium THCA Hemp</span>
               </div>
             </div>
-            {% if section.settings.p2_image != blank %}
-              <img class="sdz-product-img" src="{{ section.settings.p2_image | img_url: '800x' }}" alt="Maple Soaked Pancakes" draggable="false" style="filter:drop-shadow(0 24px 36px rgba(160,100,10,0.20));">
-            {% endif %}
+            {% render 'sdz-product-gallery',
+              image: section.settings.p2_image,
+              image_2: section.settings.p2_image_2,
+              image_3: section.settings.p2_image_3,
+              flower_asset: 'sundaze-flower-maple-soaked-pancakes.png',
+              alt: 'Maple Soaked Pancakes',
+              shadow: '0 24px 36px rgba(160,100,10,0.20)',
+              autoplay: section.settings.gallery_autoplay
+            %}
             <div class="sdz-badge-thca">
               <div class="sdz-badge-thca-icon" style="background:linear-gradient(135deg,#fff8e1,#ffe082);">🌿</div>
               <div>
@@ -773,9 +858,15 @@
                 <span class="sdz-badge-brand-sub">Premium THCA Hemp</span>
               </div>
             </div>
-            {% if section.settings.p3_image != blank %}
-              <img class="sdz-product-img" src="{{ section.settings.p3_image | img_url: '800x' }}" alt="Frosty Shorty" draggable="false" style="filter:drop-shadow(0 24px 36px rgba(183,28,28,0.30));">
-            {% endif %}
+            {% render 'sdz-product-gallery',
+              image: section.settings.p3_image,
+              image_2: section.settings.p3_image_2,
+              image_3: section.settings.p3_image_3,
+              flower_asset: 'sundaze-flower-frosty-shorty.png',
+              alt: 'Frosty Shorty',
+              shadow: '0 24px 36px rgba(183,28,28,0.30)',
+              autoplay: section.settings.gallery_autoplay
+            %}
             <div class="sdz-badge-thca">
               <div class="sdz-badge-thca-icon" style="background:linear-gradient(135deg,#ffebee,#ef9a9a);">❄️</div>
               <div>
@@ -851,9 +942,15 @@
                 <span class="sdz-badge-brand-sub">Premium THCA Hemp</span>
               </div>
             </div>
-            {% if section.settings.p4_image != blank %}
-              <img class="sdz-product-img" src="{{ section.settings.p4_image | img_url: '800x' }}" alt="Dubai Drip" draggable="false" style="filter:drop-shadow(0 24px 36px rgba(27,94,32,0.30));">
-            {% endif %}
+            {% render 'sdz-product-gallery',
+              image: section.settings.p4_image,
+              image_2: section.settings.p4_image_2,
+              image_3: section.settings.p4_image_3,
+              flower_asset: 'sundaze-flower-dubai-drip.png',
+              alt: 'Dubai Drip',
+              shadow: '0 24px 36px rgba(27,94,32,0.30)',
+              autoplay: section.settings.gallery_autoplay
+            %}
             <div class="sdz-badge-thca">
               <div class="sdz-badge-thca-icon" style="background:linear-gradient(135deg,#f1f8e9,#a5d6a7);">🍫</div>
               <div>
@@ -1169,6 +1266,68 @@
   if (overlayEl) overlayEl.addEventListener('click', () => SdzWish.closeDrawer());
   document.addEventListener('keydown', e => { if (e.key === 'Escape') SdzWish.closeDrawer(); });
 
+  /* ── PRODUCT GALLERIES ──
+     Each panel crossfades its slides on a timer. Autoplay pauses while the
+     shopper is hovering (they're looking at it) and while the panel is
+     offscreen or the tab is hidden, so four galleries don't tick in the
+     background. Manual navigation restarts the timer rather than killing it. */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('[data-sdz-gallery]').forEach(gallery => {
+    const slides = Array.from(gallery.querySelectorAll('.sdz-gallery__slide'));
+    if (slides.length < 2) return;
+
+    const dots  = Array.from(gallery.querySelectorAll('.sdz-gallery__dot'));
+    const panel = gallery.closest('.sdz-center-inner') || gallery;
+    // Not `|| 2000` — a configured 0 means "off" and must survive the fallback.
+    const parsedDelay = parseInt(gallery.dataset.autoplay, 10);
+    const delay = Number.isFinite(parsedDelay) ? parsedDelay : 2000;
+
+    let index = 0;
+    let timer = null;
+    let hovered = false;
+    let onScreen = false;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+    }
+
+    function stop() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    function start() {
+      stop();
+      if (reduceMotion || delay <= 0 || hovered || !onScreen || document.hidden) return;
+      timer = setInterval(() => show(index + 1), delay);
+    }
+
+    const prev = gallery.querySelector('[data-sdz-prev]');
+    const next = gallery.querySelector('[data-sdz-next]');
+    if (prev) prev.addEventListener('click', () => { show(index - 1); start(); });
+    if (next) next.addEventListener('click', () => { show(index + 1); start(); });
+    dots.forEach(dot => dot.addEventListener('click', () => {
+      show(parseInt(dot.dataset.sdzDot, 10) || 0);
+      start();
+    }));
+
+    panel.addEventListener('mouseenter', () => { hovered = true; stop(); });
+    panel.addEventListener('mouseleave', () => { hovered = false; start(); });
+    document.addEventListener('visibilitychange', start);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        entries.forEach(e => { onScreen = e.isIntersecting; start(); });
+      }, { threshold: 0.25 }).observe(gallery);
+    } else {
+      onScreen = true;
+      start();
+    }
+  });
+
   /* ── INIT ── */
   CartBubble.init();
   SdzWish.initButtons();
@@ -1183,20 +1342,40 @@
   "tag": "div",
   "settings": [
     { "type": "url",    "id": "back_link", "label": "Back Button Link" },
+    { "type": "header", "content": "Image gallery" },
+    {
+      "type": "range",
+      "id": "gallery_autoplay",
+      "label": "Auto-advance speed",
+      "info": "Time each image stays on screen. Set to 0 to turn auto-advance off. Slide 2 falls back to the bundled flower photo when no second image is chosen.",
+      "min": 0,
+      "max": 9500,
+      "step": 500,
+      "unit": "ms",
+      "default": 2000
+    },
     { "type": "header", "content": "Product 1 — Mystic Candy Swirl" },
     { "type": "image_picker", "id": "p1_image",      "label": "Product Image" },
+    { "type": "image_picker", "id": "p1_image_2",    "label": "Image 2 (flower)", "info": "Leave empty to use the bundled flower photo." },
+    { "type": "image_picker", "id": "p1_image_3",    "label": "Image 3" },
     { "type": "text",         "id": "p1_price",      "label": "Price",              "default": "$45.00" },
     { "type": "text",         "id": "p1_variant_id", "label": "Shopify Variant ID" },
     { "type": "header", "content": "Product 2 — Maple Soaked Pancakes" },
     { "type": "image_picker", "id": "p2_image",      "label": "Product Image" },
+    { "type": "image_picker", "id": "p2_image_2",    "label": "Image 2 (flower)", "info": "Leave empty to use the bundled flower photo." },
+    { "type": "image_picker", "id": "p2_image_3",    "label": "Image 3" },
     { "type": "text",         "id": "p2_price",      "label": "Price",              "default": "$45.00" },
     { "type": "text",         "id": "p2_variant_id", "label": "Shopify Variant ID" },
     { "type": "header", "content": "Product 3 — Frosty Shorty" },
     { "type": "image_picker", "id": "p3_image",      "label": "Product Image" },
+    { "type": "image_picker", "id": "p3_image_2",    "label": "Image 2 (flower)", "info": "Leave empty to use the bundled flower photo." },
+    { "type": "image_picker", "id": "p3_image_3",    "label": "Image 3" },
     { "type": "text",         "id": "p3_price",      "label": "Price",              "default": "$45.00" },
     { "type": "text",         "id": "p3_variant_id", "label": "Shopify Variant ID" },
     { "type": "header", "content": "Product 4 — Dubai Drip" },
     { "type": "image_picker", "id": "p4_image",      "label": "Product Image" },
+    { "type": "image_picker", "id": "p4_image_2",    "label": "Image 2 (flower)", "info": "Leave empty to use the bundled flower photo." },
+    { "type": "image_picker", "id": "p4_image_3",    "label": "Image 3" },
     { "type": "text",         "id": "p4_price",      "label": "Price",              "default": "$45.00" },
     { "type": "text",         "id": "p4_variant_id", "label": "Shopify Variant ID" }
   ],

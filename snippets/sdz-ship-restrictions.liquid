@@ -1,0 +1,267 @@
+{%- comment -%}
+  ── SUNDAZE SHIPPING RESTRICTIONS ─────────────────────────────────────
+  THCA products can't ship to AR, ID, MN, OR, RI, TX or VT. This adds a
+  "Ship to state" gate in front of every checkout control in the theme so a
+  shopper in a restricted state is stopped before they reach checkout,
+  rather than after they've filled in an address.
+
+  ⚠️  THIS IS A FRONT-OF-FUNNEL LAYER, NOT ENFORCEMENT. It runs in the
+  browser and can be bypassed. The authoritative block is Shopify's own
+  shipping zones — Settings → Shipping and delivery → the United States
+  zone must have these seven states removed. With that in place Shopify
+  refuses the address at checkout no matter what the browser does.
+
+  The restricted list lives in RESTRICTED below. Keep it in sync with both
+  the shipping zone and the footer disclaimer text (footer block setting
+  "THCA disclaimer").
+{%- endcomment -%}
+
+<style>
+  .sdz-ship-gate {
+    font-family: 'DM Sans', sans-serif;
+    text-align: left;
+    margin: 0 0 14px;
+  }
+  .sdz-ship-gate__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(30, 17, 24, 0.55);
+    margin: 0 0 6px;
+  }
+  .sdz-ship-gate__select {
+    width: 100%;
+    padding: 11px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #1e1118;
+    background: #fff;
+    border: 1px solid rgba(196, 96, 122, 0.32);
+    border-radius: 10px;
+    outline: none;
+  }
+  .sdz-ship-gate__select:focus {
+    border-color: rgba(196, 96, 122, 0.65);
+    box-shadow: 0 0 0 3px rgba(196, 96, 122, 0.12);
+  }
+  .sdz-ship-gate__select.is-blocked {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.10);
+  }
+  .sdz-ship-gate__msg {
+    display: none;
+    font-size: 12.5px;
+    line-height: 1.55;
+    margin: 8px 0 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .sdz-ship-gate__msg.is-visible { display: block; }
+  .sdz-ship-gate__msg--blocked {
+    color: #8f2c1f;
+    background: rgba(192, 57, 43, 0.08);
+    border: 1px solid rgba(192, 57, 43, 0.22);
+  }
+  .sdz-ship-gate__msg--prompt {
+    color: rgba(30, 17, 24, 0.62);
+    background: rgba(196, 96, 122, 0.07);
+    border: 1px solid rgba(196, 96, 122, 0.18);
+  }
+  .sdz-checkout-blocked {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+  }
+</style>
+
+<script>
+(function () {
+  /* Restricted states — keep in sync with the shipping zone and the footer
+     disclaimer. Key is the two-letter code, value the display name. */
+  var RESTRICTED = {
+    AR: 'Arkansas',
+    ID: 'Idaho',
+    MN: 'Minnesota',
+    OR: 'Oregon',
+    RI: 'Rhode Island',
+    TX: 'Texas',
+    VT: 'Vermont'
+  };
+
+  var STATES = [
+    ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],['CA','California'],
+    ['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],['DC','District of Columbia'],
+    ['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],['ID','Idaho'],['IL','Illinois'],
+    ['IN','Indiana'],['IA','Iowa'],['KS','Kansas'],['KY','Kentucky'],['LA','Louisiana'],
+    ['ME','Maine'],['MD','Maryland'],['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],
+    ['MS','Mississippi'],['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],['NV','Nevada'],
+    ['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],['NY','New York'],
+    ['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],['OK','Oklahoma'],['OR','Oregon'],
+    ['PA','Pennsylvania'],['RI','Rhode Island'],['SC','South Carolina'],['SD','South Dakota'],
+    ['TN','Tennessee'],['TX','Texas'],['UT','Utah'],['VT','Vermont'],['VA','Virginia'],
+    ['WA','Washington'],['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming']
+  ];
+
+  var KEY          = 'sundaze_ship_state';
+  var BLOCKED_COPY = 'We can’t ship THCA products to {state}. Orders to Arkansas, Idaho, ' +
+                     'Minnesota, Oregon, Rhode Island, Texas and Vermont can’t be accepted.';
+  var PROMPT_COPY  = 'Select the state you’re shipping to before checking out.';
+
+  /* Checkout controls across the cart page, drawer, notification and Dawn's
+     cart footer. Accelerated buttons are handled separately — see below. */
+  var CHECKOUT_SEL = '#checkout, button[name="checkout"], a[href^="/checkout"]';
+  var ACCEL_SEL    = '.shopify-payment-button__button, .shopify-payment-button';
+
+  function stored() {
+    try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; }
+  }
+  function store(code) {
+    try { localStorage.setItem(KEY, code); } catch (e) { /* private mode */ }
+  }
+  function isRestricted(code) {
+    return !!code && Object.prototype.hasOwnProperty.call(RESTRICTED, code);
+  }
+
+  /* ── Gate markup ── */
+  function buildGate() {
+    var wrap = document.createElement('div');
+    wrap.className = 'sdz-ship-gate';
+
+    var label = document.createElement('span');
+    label.className = 'sdz-ship-gate__label';
+    label.textContent = 'Ship to state';
+
+    var select = document.createElement('select');
+    select.className = 'sdz-ship-gate__select';
+    select.setAttribute('aria-label', 'Shipping state');
+
+    var blank = document.createElement('option');
+    blank.value = '';
+    blank.textContent = 'Select your state…';
+    select.appendChild(blank);
+
+    STATES.forEach(function (pair) {
+      var opt = document.createElement('option');
+      opt.value = pair[0];
+      opt.textContent = isRestricted(pair[0]) ? pair[1] + ' — not available' : pair[1];
+      select.appendChild(opt);
+    });
+
+    var msg = document.createElement('p');
+    msg.className = 'sdz-ship-gate__msg';
+
+    wrap.appendChild(label);
+    wrap.appendChild(select);
+    wrap.appendChild(msg);
+
+    select.addEventListener('change', function () {
+      store(select.value);
+      syncAll();
+    });
+
+    return wrap;
+  }
+
+  function gates() {
+    return Array.prototype.slice.call(document.querySelectorAll('.sdz-ship-gate'));
+  }
+
+  /* ── Reflect current state into every mounted gate + checkout control ── */
+  function syncAll(showPrompt) {
+    var code    = stored();
+    var blocked = isRestricted(code);
+
+    gates().forEach(function (gate) {
+      var select = gate.querySelector('.sdz-ship-gate__select');
+      var msg    = gate.querySelector('.sdz-ship-gate__msg');
+      if (select && select.value !== code) select.value = code;
+      if (select) select.classList.toggle('is-blocked', blocked);
+      if (!msg) return;
+
+      msg.className = 'sdz-ship-gate__msg';
+      if (blocked) {
+        msg.textContent = BLOCKED_COPY.replace('{state}', RESTRICTED[code]);
+        msg.classList.add('sdz-ship-gate__msg--blocked', 'is-visible');
+      } else if (showPrompt && !code) {
+        msg.textContent = PROMPT_COPY;
+        msg.classList.add('sdz-ship-gate__msg--prompt', 'is-visible');
+      }
+    });
+
+    document.querySelectorAll(CHECKOUT_SEL).forEach(function (ctl) {
+      ctl.classList.toggle('sdz-checkout-blocked', blocked);
+      if (blocked) { ctl.setAttribute('aria-disabled', 'true'); }
+      else { ctl.removeAttribute('aria-disabled'); }
+    });
+  }
+
+  /* ── Mount a gate in front of each checkout control ── */
+  function mount() {
+    document.querySelectorAll(CHECKOUT_SEL).forEach(function (ctl) {
+      if (ctl.dataset.sdzGated === '1') return;
+      ctl.dataset.sdzGated = '1';
+      var host = ctl.closest('.cart-checkout-btn') || ctl.parentElement;
+      if (!host || host.previousElementSibling && host.previousElementSibling.classList.contains('sdz-ship-gate')) return;
+      host.parentElement.insertBefore(buildGate(), host);
+    });
+    syncAll();
+  }
+
+  /* ── Enforcement ──
+     Capture phase so this runs before Alpine / Dawn / the payment button's
+     own handlers and can cancel the navigation outright. */
+  document.addEventListener('click', function (e) {
+    var target = e.target;
+    if (!target || !target.closest) return;
+
+    var checkoutCtl = target.closest(CHECKOUT_SEL);
+    var accelCtl    = target.closest(ACCEL_SEL);
+    if (!checkoutCtl && !accelCtl) return;
+
+    var code = stored();
+
+    /* Accelerated buttons (Buy it now, wallets) skip the cart entirely, so
+       there's no gate to fill in — only block a state we already know is
+       restricted rather than adding friction on the product page. */
+    if (accelCtl && !checkoutCtl) {
+      if (!isRestricted(code)) return;
+    } else if (code && !isRestricted(code)) {
+      return;
+    }
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    syncAll(true);
+    var gate = (checkoutCtl || accelCtl).closest('form, .cart-checkout-btn, body');
+    var msg  = (gate && gate.querySelector('.sdz-ship-gate__msg')) || document.querySelector('.sdz-ship-gate__msg');
+    if (msg && msg.scrollIntoView) msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, true);
+
+  /* The cart page renders through Alpine templates and the drawer re-renders
+     on every cart change, so re-mount whenever the DOM shifts. */
+  function watch() {
+    mount();
+    var pending = null;
+    new MutationObserver(function () {
+      clearTimeout(pending);
+      pending = setTimeout(mount, 80);
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', watch);
+  } else {
+    watch();
+  }
+
+  window.SdzShipping = {
+    restricted: RESTRICTED,
+    state: stored,
+    isBlocked: function () { return isRestricted(stored()); },
+    refresh: syncAll
+  };
+})();
+</script>

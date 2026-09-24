@@ -1,0 +1,118 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "hash_rosin_product": {
+      "type": "hash-rosin-product",
+      "name": "Sorbetto Hash Rosin Page",
+      "settings": {
+        "bg_color": "#f7ece2",
+        "hide_until_cta": false,
+        "title_top": "Sorbetto",
+        "title_gradient": "Master Case",
+        "flavor_line": "Strawberry • Banana Lemon Headz • Peaches & Cream • Frootie Scoops",
+        "choose_label": "Choose Your Case",
+        "description": "A premium assortment of solventless THCA hash rosin featuring all four Sorbetto flavors. Crafted for connoisseurs who appreciate exceptional terpene preservation, rich flavor, and small-batch quality.",
+        "flavor_notes": "Bright strawberry, citrus-forward banana lemon, velvety peaches and cream, and a fruity dessert swirl — all in one case.",
+        "collection_note": "Part of the Sundaze Sorbetto hash rosin collection.",
+        "feature_title": "Solventless Rosin",
+        "feature_sub": "Cold Cure Live Rosin",
+        "feature_note": "2G Jar • 90–120µ • Small Batch",
+        "mix_label": "Choose your 4 jars",
+        "mix_max": 4,
+        "mixed_product": "sorbetto-master-case",
+        "mixed_variant_id": "",
+        "price_fallback": "$360.00",
+        "mixed_acc_desc": "The Sorbetto Master Case brings all four Sundaze hash rosin flavors together in one premium, small-batch collection.",
+        "mixed_acc_flavor": "Sweet strawberry, bright banana lemon, velvety peaches and cream, and a fruity dessert swirl.",
+        "mixed_acc_specs": "<ul><li>4 Flavor Sorbetto Master Case</li><li>2G Cold Cure Live Rosin Per Jar</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>",
+        "mixed_acc_highlight": "🍨 All Four Sorbetto Flavors Inside",
+        "strawberry_product": "melted-strawberries-hash-rosin",
+        "strawberry_variant_id": "",
+        "strawberry_price": "$95.00",
+        "strawberry_desc": "A single 2G jar of Melted Strawberries cold cure live rosin — sweet, jammy, and velvety smooth.",
+        "strawberry_acc_desc": "Melted Strawberries is a berry-forward solventless rosin with a soft, creamy body and true-to-plant strawberry flavor.",
+        "strawberry_acc_flavor": "Sweet strawberry, whipped cream, sugared berry, and a smooth rosin finish.",
+        "strawberry_acc_specs": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>",
+        "strawberry_acc_highlight": "🍓 Part of the Sorbetto Collection",
+        "banana_product": "banana-lemon-headz-hash-rosin",
+        "banana_variant_id": "",
+        "banana_price": "$95.00",
+        "banana_desc": "A single 2G jar of Banana Lemon Headz cold cure live rosin — bright citrus over creamy tropical banana.",
+        "banana_acc_desc": "Banana Lemon Headz pairs citrus lift with a soft tropical body for one of the most aromatic pressings in the Sorbetto lineup.",
+        "banana_acc_flavor": "Lemon zest, ripe banana, sweet citrus peel, and a bright rosin finish.",
+        "banana_acc_specs": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>",
+        "banana_acc_highlight": "🍌 Part of the Sorbetto Collection",
+        "peaches_product": "peaches-cream-hash-rosin",
+        "peaches_variant_id": "",
+        "peaches_price": "$95.00",
+        "peaches_desc": "A single 2G jar of Peaches & Cream cold cure live rosin — juicy stone fruit with a silky, sweet finish.",
+        "peaches_acc_desc": "Peaches & Cream delivers a mellow stone-fruit profile wrapped in the creamy texture cold cure rosin is known for.",
+        "peaches_acc_flavor": "Ripe peach, sweet cream, vanilla sugar, and a velvety rosin finish.",
+        "peaches_acc_specs": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>",
+        "peaches_acc_highlight": "🍑 Part of the Sorbetto Collection",
+        "frootie_product": "frootie-scoops-hash-rosin",
+        "frootie_variant_id": "",
+        "frootie_price": "$95.00",
+        "frootie_desc": "A single 2G jar of Frootie Scoops cold cure live rosin — a fruity, dessert-inspired swirl.",
+        "frootie_acc_desc": "Frootie Scoops is the dessert centerpiece of the Sorbetto collection — playful, fruit-forward, and finished with a creamy sweetness.",
+        "frootie_acc_flavor": "Mixed berry, cereal milk, sweet cream, and a smooth rosin finish.",
+        "frootie_acc_specs": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>",
+        "frootie_acc_highlight": "🍨 Part of the Sorbetto Collection",
+        "product_accent_word": "Hash Rosin",
+        "single_specs": "<ul><li>2G Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li><li>Dessert-Inspired Flavor Profile</li></ul>",
+        "s1_image": "shopify://shop_images/processed_2_70570d03-8630-4aeb-951f-b835f20f7453.png",
+        "s1_name": "Melted Strawberries",
+        "s1_flavors": "Sweet • Berry • Creamy",
+        "s1_price": "$95.00",
+        "s1_desc": "Ripe, jammy strawberry pressed into velvety cold cure rosin — sweet, smooth, and full of berry character from the first dab to the last.",
+        "s1_variant_id": "",
+        "s1_accordion_desc": "Melted Strawberries is a berry-forward solventless rosin with a soft, creamy body and true-to-plant strawberry flavor.",
+        "s1_accordion_flavor": "Sweet strawberry, whipped cream, sugared berry, and a smooth rosin finish.",
+        "s2_image": "shopify://shop_images/processed_3_2c6ecdf4-4146-4d52-9d9f-48d7b0d6971a.png",
+        "s2_name": "Banana Lemon Headz",
+        "s2_flavors": "Citrus • Tropical • Bright",
+        "s2_price": "$95.00",
+        "s2_desc": "Bright lemon zest layered over ripe, creamy banana — a lively cold cure rosin that finishes clean and tropical.",
+        "s2_variant_id": "",
+        "s2_accordion_desc": "Banana Lemon Headz pairs citrus lift with a soft tropical body for one of the most aromatic pressings in the Sorbetto lineup.",
+        "s2_accordion_flavor": "Lemon zest, ripe banana, sweet citrus peel, and a bright rosin finish.",
+        "s3_image": "shopify://shop_images/processed_5_c5b75d6b-738b-4ddc-824b-c88ca410257c.png",
+        "s3_name": "Peaches & Cream",
+        "s3_flavors": "Peach • Velvety • Sweet",
+        "s3_price": "$95.00",
+        "s3_desc": "Juicy orchard peach folded into sweet cream — a soft, dessert-forward rosin with a silky, full-bodied finish.",
+        "s3_variant_id": "",
+        "s3_accordion_desc": "Peaches & Cream delivers a mellow stone-fruit profile wrapped in the creamy texture cold cure rosin is known for.",
+        "s3_accordion_flavor": "Ripe peach, sweet cream, vanilla sugar, and a velvety rosin finish.",
+        "s4_image": "shopify://shop_images/processed_4_a05f3c29-6b45-4af1-847d-da3f6a8e5b20.png",
+        "s4_name": "Frootie Scoops",
+        "s4_flavors": "Fruity • Sweet • Creamy",
+        "s4_price": "$95.00",
+        "s4_desc": "A scoop-shop swirl of mixed berries and sweet cereal milk, pressed small batch for rich flavor in every dab.",
+        "s4_variant_id": "",
+        "s4_accordion_desc": "Frootie Scoops is the dessert centerpiece of the Sorbetto collection — playful, fruit-forward, and finished with a creamy sweetness.",
+        "s4_accordion_flavor": "Mixed berry, cereal milk, sweet cream, and a smooth rosin finish."
+      }
+    }
+  },
+  "order": [
+    "main",
+    "hash_rosin_product"
+  ]
+}

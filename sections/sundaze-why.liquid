@@ -1,0 +1,385 @@
+{% comment %}
+  Sundaze — Why Sundaze
+  Blueprint 3B. Live HTML text (never baked into an image), single H2, CTA into the Knowledge Hub.
+{% endcomment %}
+
+<section class="sz-why" id="sz-why-{{ section.id }}">
+  <div class="sz-why__inner {% if section.settings.image != blank %}sz-why__inner--split{% endif %}">
+    <div class="sz-why__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="sz-why__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      <h2 class="sz-why__title">
+        {{- section.settings.heading -}}
+        {%- if section.settings.heading_accent != blank %} <em>{{ section.settings.heading_accent }}</em>{% endif -%}
+      </h2>
+
+      {%- if section.settings.body != blank -%}
+        <div class="sz-why__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="sz-why__pillars">
+          {%- for block in section.blocks -%}
+            <li class="sz-why__pillar" {{ block.shopify_attributes }}>
+              <span class="sz-why__pillar-dot" aria-hidden="true"></span>
+              <span class="sz-why__pillar-text">
+                <strong>{{ block.settings.title }}</strong>
+                {%- if block.settings.text != blank -%}
+                  <span>{{ block.settings.text }}</span>
+                {%- endif -%}
+              </span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a class="sz-why__cta" href="{{ section.settings.button_link | default: '/blogs/knowledge-hub' }}">
+          {{ section.settings.button_label }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.image != blank -%}
+      <div class="sz-why__media">
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-why-{{ section.id }} {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-blush: #e8a0b4;
+    --sun-peach: #d4926e;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-muted: rgba(30,17,24,0.48);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    color: var(--sun-ink);
+    font-family: 'DM Sans', sans-serif;
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  #sz-why-{{ section.id }} * { box-sizing: border-box; }
+
+  #sz-why-{{ section.id }} .sz-why__inner {
+    max-width: 820px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__inner--split {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(32px, 5vw, 48px);
+  }
+
+  #sz-why-{{ section.id }} .sz-why__copy {
+    width: 100%;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin: 0 0 16px;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: #111111;
+    margin: 0 0 22px;
+  }
+
+  /* Accent words — same gradient italic as "Collections" in Lineup Cards. */
+  #sz-why-{{ section.id }} .sz-why__title em {
+    font-style: italic;
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__body p {
+    font-size: clamp(15px, 1.5vw, 17px);
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--sun-text);
+    margin: 0 auto 18px;
+    max-width: 68ch;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__body a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── Pillars ── */
+  #sz-why-{{ section.id }} .sz-why__pillars {
+    list-style: none;
+    margin: 28px auto 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__pillar {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__pillar-dot {
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sun-blush), var(--sun-rose));
+  }
+
+  #sz-why-{{ section.id }} .sz-why__pillar-text {
+    display: block;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__pillar-text strong {
+    font-weight: 700;
+    color: var(--sun-ink);
+  }
+
+  #sz-why-{{ section.id }} .sz-why__pillar-text span {
+    color: var(--sun-muted);
+    font-weight: 300;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__pillar-text strong + span::before {
+    content: ' — ';
+    color: var(--sun-muted);
+  }
+
+  /* ── CTA ── */
+  #sz-why-{{ section.id }} a.sz-why__cta,
+  #sz-why-{{ section.id }} a.sz-why__cta:link,
+  #sz-why-{{ section.id }} a.sz-why__cta:visited {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding: 15px 32px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      transform 0.34s cubic-bezier(0.22, 0.68, 0.28, 1),
+      box-shadow 0.34s cubic-bezier(0.22, 0.68, 0.28, 1);
+    box-shadow: 0 8px 24px rgba(196,96,122,0.28);
+    transform: translateY(0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  #sz-why-{{ section.id }} a.sz-why__cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(196,96,122,0.4);
+  }
+
+  #sz-why-{{ section.id }} .sz-why__cta svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ── Media ── */
+  #sz-why-{{ section.id }} .sz-why__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    object-fit: cover;
+  }
+
+  #sz-why-{{ section.id }} .sz-why__media {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-why-{{ section.id }} a.sz-why__cta { transition: none; }
+    #sz-why-{{ section.id }} a.sz-why__cta:hover { transform: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Why",
+  "tag": "section",
+  "class": "sundaze-why-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Built On Transparency"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (H2)",
+      "default": "Why"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent",
+      "info": "Rendered italic in the brand gradient, after the heading.",
+      "default": "Sundaze?"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy",
+      "default": "<p>Sundaze is built around premium hemp, distinctive flavor profiles and transparent product information. Our collections are selected to make shopping easier — from flower to solventless concentrates — with third-party lab reports available so customers can review cannabinoid results before choosing a product.</p><p>We pair product quality with education. The Sundaze Knowledge Hub explains THCA, cannabinoids, terpenes, lab reports, storage and product formats in straightforward language, so customers can understand what they are buying instead of relying on hype.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (optional)",
+      "info": "Adds a second column. Copy stays as live text either way."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Explore The Knowledge Hub"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Point this at the Knowledge Hub blog (/blogs/knowledge-hub)."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFF8E8"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Premium hemp"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Supporting text",
+          "default": "Selected for quality and consistency."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Sundaze Why",
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "Premium hemp",
+            "text": "Selected for quality and consistency."
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "Distinctive flavor profiles",
+            "text": "Aroma and taste you can actually tell apart."
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "title": "Transparent product information",
+            "text": "Third-party lab reports available before you choose."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

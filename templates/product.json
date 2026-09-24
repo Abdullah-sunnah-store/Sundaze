@@ -54,6 +54,15 @@
           "settings": {
             "share_label": "Share"
           }
+        },
+        "flavor_mix_sorbetto": {
+          "type": "flavor_mix",
+          "settings": {
+            "limit_product": "sorbetto-master-case",
+            "heading": "Choose your 4 jars",
+            "flavors": "Strawberry, Banana Lemon Headz, Peaches & Cream, Frootie Scoops",
+            "max_jars": 4
+          }
         }
       },
       "block_order": [
@@ -62,6 +71,7 @@
         "price",
         "variant_picker",
         "quantity_selector",
+        "flavor_mix_sorbetto",
         "buy_buttons",
         "description",
         "share"
@@ -99,10 +109,85 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "breadcrumbs": {
+      "type": "sundaze-breadcrumbs",
+      "settings": {
+        "home_label": "Home",
+        "bg_color": "#FFFFFF",
+        "padding_top": 20,
+        "padding_bottom": 8
+      }
+    },
+    "education": {
+      "type": "sundaze-product-education",
+      "blocks": {
+        "faq_potency": {
+          "type": "faq",
+          "settings": {
+            "question": "Where should I verify product-specific potency?",
+            "answer": "<p>Use the COA tied to the specific product or batch when available.</p>"
+          }
+        },
+        "faq_advice": {
+          "type": "faq",
+          "settings": {
+            "question": "Should this replace legal or medical advice?",
+            "answer": "<p>No. It is general product education.</p>"
+          }
+        },
+        "link_thca": {
+          "type": "link",
+          "settings": {
+            "title": "What Is THCA?",
+            "link": "/blogs/knowledge-hub/what-is-thca"
+          }
+        },
+        "link_coa": {
+          "type": "link",
+          "settings": {
+            "title": "How to Read a COA",
+            "link": "/blogs/knowledge-hub/how-to-read-a-coa"
+          }
+        },
+        "link_storage": {
+          "type": "link",
+          "settings": {
+            "title": "How to Store THCA Products",
+            "link": "/blogs/knowledge-hub/how-to-store-thca"
+          }
+        }
+      },
+      "block_order": [
+        "faq_potency",
+        "faq_advice",
+        "link_thca",
+        "link_coa",
+        "link_storage"
+      ],
+      "settings": {
+        "heading": "Product Details",
+        "flavor_title": "Flavor + Aroma",
+        "show_lab": true,
+        "lab_title": "Lab Results",
+        "lab_body": "<p>Review the available third-party laboratory report for cannabinoid results and testing information associated with this product/batch.</p>",
+        "lab_link_label": "View COA",
+        "lab_link": "/pages/coa",
+        "storage_title": "Storage",
+        "storage_default": "<p>Store sealed in a cool, dark place and follow any product-specific storage instructions. Keep all products secured, clearly labeled and inaccessible to children and pets.</p>",
+        "faq_title": "Product FAQ",
+        "learn_title": "Learn More",
+        "disclaimer": "This information is general product education and is not legal or medical advice. For product-specific potency, use the COA tied to that product or batch.",
+        "bg_color": "#FFFFFF",
+        "padding_top": 56,
+        "padding_bottom": 64
+      }
     }
   },
   "order": [
+    "breadcrumbs",
     "main",
+    "education",
     "related-products"
   ]
 }

@@ -1,0 +1,303 @@
+{% comment %}
+  Sundaze Trust Bar
+  Slim, seamless right-to-left marquee of trust statements.
+{% endcomment %}
+
+{%- liquid
+  assign sep = section.settings.separator
+  case sep
+    when 'dot'
+      assign sep_glyph = '&bull;'
+    when 'diamond'
+      assign sep_glyph = '&#9670;'
+    when 'star'
+      assign sep_glyph = '&#10022;'
+    when 'slash'
+      assign sep_glyph = '/'
+    else
+      assign sep_glyph = '&bull;'
+  endcase
+-%}
+
+{%- capture trust_group -%}
+  {%- for block in section.blocks -%}
+    {%- if block.settings.text != blank -%}
+      <span class="sz-trust__item" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+      <span class="sz-trust__sep" aria-hidden="true">{{ sep_glyph }}</span>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<section
+  class="sz-trust"
+  id="sz-trust-{{ section.id }}"
+  aria-label="{{ section.settings.aria_label | default: 'Store highlights' | escape }}"
+>
+  <div class="sz-trust__viewport">
+    <div class="sz-trust__track">
+      {%- comment -%} Repeated so the strip stays filled on ultra-wide screens {%- endcomment -%}
+      {%- for i in (1..8) -%}
+        <div class="sz-trust__group" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
+          {{ trust_group }}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700;800&display=swap');
+
+  #sz-trust-{{ section.id }} {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    background: {{ section.settings.bg_color }};
+    {% if section.settings.show_borders %}
+      border-top: 1px solid {{ section.settings.border_color }};
+      border-bottom: 1px solid {{ section.settings.border_color }};
+    {% endif %}
+    padding: {{ section.settings.padding_vertical }}px 0;
+    box-sizing: border-box;
+  }
+
+  #sz-trust-{{ section.id }} .sz-trust__viewport {
+    width: 100%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  }
+
+  #sz-trust-{{ section.id }} .sz-trust__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    animation: sz-trust-scroll-{{ section.id }} {{ section.settings.speed }}s linear infinite;
+    {% if section.settings.direction == 'right' %}animation-direction: reverse;{% endif %}
+  }
+
+  {% if section.settings.pause_on_hover %}
+    #sz-trust-{{ section.id }}:hover .sz-trust__track {
+      animation-play-state: paused;
+    }
+  {% endif %}
+
+  #sz-trust-{{ section.id }} .sz-trust__group {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  #sz-trust-{{ section.id }} .sz-trust__item,
+  #sz-trust-{{ section.id }} .sz-trust__sep {
+    font-family: 'DM Sans', sans-serif;
+    font-size: {{ section.settings.font_size }}px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+  }
+
+  #sz-trust-{{ section.id }} .sz-trust__item {
+    color: {{ section.settings.text_color }};
+    padding: 0 {{ section.settings.item_gap }}px;
+  }
+
+  #sz-trust-{{ section.id }} .sz-trust__sep {
+    color: {{ section.settings.separator_color }};
+    font-weight: 500;
+    opacity: 0.75;
+  }
+
+  @keyframes sz-trust-scroll-{{ section.id }} {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+  }
+
+  @media (max-width: 749px) {
+    #sz-trust-{{ section.id }} .sz-trust__item,
+    #sz-trust-{{ section.id }} .sz-trust__sep {
+      font-size: {{ section.settings.font_size | minus: 2 }}px;
+    }
+    #sz-trust-{{ section.id }} .sz-trust__item {
+      padding: 0 {{ section.settings.item_gap | times: 0.7 | round }}px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-trust-{{ section.id }} .sz-trust__track {
+      animation: none;
+      transform: none;
+    }
+    #sz-trust-{{ section.id }} .sz-trust__viewport {
+      overflow-x: auto;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Trust Bar",
+  "tag": "section",
+  "class": "sundaze-trust-bar-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#E8326A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color",
+      "default": "#FFF8E8"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_borders",
+      "label": "Show top & bottom border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Type & spacing"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "min": 10,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 6,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Space around each item (px)",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Bar height / vertical padding (px)",
+      "min": 6,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "separator",
+      "label": "Separator",
+      "options": [
+        { "value": "dot", "label": "Dot •" },
+        { "value": "diamond", "label": "Diamond ◆" },
+        { "value": "star", "label": "Star ✦" },
+        { "value": "slash", "label": "Slash /" }
+      ],
+      "default": "dot"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Loop duration (lower = faster)",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "default": 45
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Scroll direction",
+      "options": [
+        { "value": "left", "label": "Right to left" },
+        { "value": "right", "label": "Left to right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Screen reader label",
+      "default": "Store highlights"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "21+ Only"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Sundaze Trust Bar",
+      "blocks": [
+        { "type": "item", "settings": { "text": "21+ Only" } },
+        { "type": "item", "settings": { "text": "Third-Party Lab Tested" } },
+        { "type": "item", "settings": { "text": "Secure Checkout" } },
+        { "type": "item", "settings": { "text": "Quality-Focused Hemp Products" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

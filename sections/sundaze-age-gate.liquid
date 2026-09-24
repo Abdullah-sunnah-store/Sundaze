@@ -5,10 +5,11 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: linear-gradient(to bottom, #fff5de, #ffe5dd);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 99999;
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
@@ -47,40 +48,91 @@
 .age-gate__content {
   position: relative; z-index: 10; display: flex; flex-direction: column;
   align-items: center; text-align: center; gap: 0;
-  padding: 0 20px; max-width: 800px; margin-top: -40px;
+  padding: 24px 20px; max-width: 720px; width: 100%;
+  margin: auto 0;
 }
 
 .age-gate__logo { width: 440px; max-width: 80vw; display: block; filter: drop-shadow(0px 3px 10px rgba(0,0,0,0.12)); margin-bottom: 0px; pointer-events: none; }
 .age-gate__tagline { font-family: Georgia, serif; font-style: normal; font-weight: 400; font-size: 17px; color: #5a3a2a; letter-spacing: 0.3px; margin-top: -80px; padding: 0; margin-bottom: 16px; pointer-events: none; }
-.age-gate__row { display: flex; flex-direction: row; align-items: center; gap: 10px; width: auto; justify-content: center; position: relative; z-index: 20; }
-
-.age-gate__select {
-  width: 200px; padding: 12px 18px; border-radius: 50px;
-  border: 1px solid #e8d5be; background: #ffffff; font-size: 14px;
-  color: #5a3a2a; outline: none; cursor: pointer; appearance: none;
-  font-family: Georgia, serif; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  transition: all 0.3s ease;
+.age-gate__row {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  width: 100%; justify-content: center; position: relative; z-index: 20;
 }
-.age-gate__select.state-selected { outline: none; box-shadow: 0 0 0 2px #5a3a2a; }
+
+/* ── Terms & Conditions card ── */
+.age-gate__terms {
+  width: 100%;
+  max-width: 640px;
+  text-align: left;
+  background: rgba(255, 252, 244, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #f0ddc2;
+  border-radius: 22px;
+  box-shadow: 0 14px 40px rgba(93, 58, 34, 0.12);
+  padding: 20px 8px 20px 24px;
+}
+.age-gate__terms-scroll {
+  max-height: clamp(180px, 34vh, 340px);
+  overflow-y: auto;
+  padding-right: 16px;
+  overscroll-behavior: contain;
+}
+.age-gate__terms-scroll::-webkit-scrollbar { width: 6px; }
+.age-gate__terms-scroll::-webkit-scrollbar-track { background: rgba(232, 213, 190, 0.35); border-radius: 50px; }
+.age-gate__terms-scroll::-webkit-scrollbar-thumb { background: #d8b48c; border-radius: 50px; }
+.age-gate__terms-scroll::-webkit-scrollbar-thumb:hover { background: #c39a6d; }
+.age-gate__terms-scroll { scrollbar-width: thin; scrollbar-color: #d8b48c rgba(232, 213, 190, 0.35); }
+
+.age-gate__terms-title {
+  font-family: Georgia, serif; font-weight: 700; font-size: 20px;
+  color: #3d2314; letter-spacing: 0.2px; text-align: center;
+  margin: 0 16px 4px 0; padding: 0;
+}
+.age-gate__terms-intro {
+  font-family: Georgia, serif; font-size: 13px; line-height: 1.6;
+  color: #6b4a35; text-align: center; margin: 0 16px 16px 0; padding: 0;
+}
+.age-gate__terms-rule {
+  height: 1px; border: 0; margin: 0 16px 16px 0;
+  background: linear-gradient(90deg, transparent, #e8d5be 20%, #e8d5be 80%, transparent);
+}
+.age-gate__terms h4 {
+  font-family: Georgia, serif; font-size: 11.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: #cf4d8a; margin: 0 0 6px; padding: 0;
+}
+.age-gate__terms p {
+  font-family: Georgia, serif; font-size: 13px; line-height: 1.65;
+  color: #5a3a2a; margin: 0 0 16px; padding: 0;
+}
+.age-gate__terms p:last-child { margin-bottom: 0; }
+.age-gate__terms-states {
+  display: block; margin-top: 6px;
+  font-weight: 700; color: #a8452c; letter-spacing: 0.2px;
+}
 
 .age-gate__btn {
-  padding: 12px 24px; background: #3d2314; color: #ffffff; border: none;
+  padding: 14px 30px; background: #3d2314; color: #ffffff; border: none;
   border-radius: 50px; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
-  cursor: pointer; transition: opacity 0.2s ease; font-family: Georgia, serif;
+  cursor: pointer; transition: opacity 0.2s ease, transform 0.15s ease; font-family: Georgia, serif;
   white-space: nowrap; display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 14px rgba(61, 35, 20, 0.22);
 }
-.age-gate__btn:hover { opacity: 0.85; }
-.age-gate__btn::after { content: '›'; font-size: 18px; line-height: 1; }
-.age-gate__error { color: #cc0000; font-size: 13px; font-family: Georgia, serif; margin: 0; padding: 0; margin-top: 6px; display: none; }
-.age-gate__error.show { display: block; }
+.age-gate__btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.age-gate__btn:active { transform: translateY(0); }
+.age-gate__btn::after { content: '\2192'; font-size: 18px; line-height: 1; }
 
 @media (max-width: 768px) {
   .falling-tube { width: 120px; height: 300px; }
   .age-gate__logo { width: 280px; margin-bottom: 34px; }
   .age-gate__tagline { font-size: 14px; margin-bottom: 12px; }
-  .age-gate__row { flex-direction: column; gap: 8px; }
-  .age-gate__select, .age-gate__btn { width: 220px; justify-content: center; }
+  .age-gate__row { gap: 14px; }
+  .age-gate__terms { padding: 16px 6px 16px 18px; border-radius: 18px; }
+  .age-gate__terms-scroll { max-height: clamp(160px, 32vh, 300px); padding-right: 12px; }
+  .age-gate__terms-title { font-size: 17px; }
+  .age-gate__terms-intro, .age-gate__terms p { font-size: 12.5px; }
+  .age-gate__btn { width: 100%; max-width: 320px; justify-content: center; }
 }
 </style>
 
@@ -104,65 +156,67 @@
     {% if section.settings.logo != blank %}<img class="age-gate__logo" src="{{ section.settings.logo | img_url: '1000x' }}" alt="Sundaze">{% endif %}
     <p class="age-gate__tagline">{{ section.settings.tagline }}</p>
     <div class="age-gate__row">
-      <select class="age-gate__select" id="stateSelect">
-        <option value="" disabled selected>Select Your State</option>
-        <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option>
-        <option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option>
-        <option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option>
-        <option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option>
-        <option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option>
-        <option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option>
-        <option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option>
-        <option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option>
-        <option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option>
-        <option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
-        <option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option>
-        <option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option>
-        <option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option>
-        <option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option>
-        <option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option>
-        <option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option>
-        <option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
-      </select>
-      <button class="age-gate__btn" id="enterSiteBtn">{{ section.settings.button_text }}</button>
+      <div class="age-gate__terms">
+        <div class="age-gate__terms-scroll" tabindex="0" role="region" aria-label="Terms and Conditions">
+          <h3 class="age-gate__terms-title">{{ section.settings.terms_title | default: 'Terms &amp; Conditions' }}</h3>
+          <p class="age-gate__terms-intro">By entering this website, you acknowledge and agree to the following:</p>
+          <hr class="age-gate__terms-rule">
+
+          <h4>21+ Only</h4>
+          <p>You must be 21 years of age or older to access, browse, or purchase products from SUNDAZE. By entering the store, you confirm that you are at least 21 years old.</p>
+
+          <h4>Age Verification</h4>
+          <p>SUNDAZE reserves the right to verify your age and identity before processing or fulfilling an order. Orders that cannot be successfully age-verified may be canceled.</p>
+
+          <h4>Shipping Restrictions</h4>
+          <p>SUNDAZE does not ship to the following states:
+            <span class="age-gate__terms-states">Arkansas, Idaho, Minnesota, Oregon, Rhode Island, Texas, and Vermont.</span>
+          </p>
+          <p>Orders with shipping addresses in these states will not be accepted or fulfilled.</p>
+
+          <h4>Customer Responsibility</h4>
+          <p>Laws and regulations regarding hemp-derived products vary by state and locality and may change over time. By entering this website or purchasing from SUNDAZE, you acknowledge that you are responsible for understanding and complying with all laws applicable to you and your location.</p>
+
+          <h4>Agreement</h4>
+          <p>By clicking the button below, you confirm that you are 21 years of age or older, that the information you provide is accurate, and that you agree to these Terms &amp; Conditions and SUNDAZE&rsquo;s applicable policies.</p>
+        </div>
+      </div>
+
+      <button class="age-gate__btn" id="enterSiteBtn">{{ section.settings.button_text | default: 'Accept Terms &amp; Shop Now' }}</button>
     </div>
-    <p class="age-gate__error" id="ageGateError">Please select your state to continue.</p>
   </div>
 </div>
 
 <script>
-  if (sessionStorage.getItem('sundaze_verified')) {
-    document.getElementById('sundazeAgeGate').classList.add('hidden');
-  }
+  (function () {
+    var ageGate = document.getElementById('sundazeAgeGate');
+    if (!ageGate) return;
 
-  const stateSelect = document.getElementById('stateSelect');
-  const enterBtn = document.getElementById('enterSiteBtn');
-  const ageGate = document.getElementById('sundazeAgeGate');
-
-  stateSelect.addEventListener('change', function() {
-    this.value !== "" ? this.classList.add('state-selected') : this.classList.remove('state-selected');
-  });
-
-  enterBtn.addEventListener('click', function() {
-    const state = stateSelect.value;
-    const error = document.getElementById('ageGateError');
-
-    if (!state) {
-      error.classList.add('show');
-    } else {
-      error.classList.remove('show');
-      sessionStorage.setItem('sundaze_verified', 'true');
-      sessionStorage.setItem('sundaze_state', state);
-      
-      /* Add smooth fade out class */
-      ageGate.classList.add('fade-out');
-      
-      /* Wait for animation, then redirect to the new page */
-      setTimeout(() => {
-        window.location.href = '{{ section.settings.redirect_url }}';
-      }, 600); 
+    if (sessionStorage.getItem('sundaze_verified')) {
+      ageGate.classList.add('hidden');
+      return;
     }
-  });
+
+    var enterBtn = document.getElementById('enterSiteBtn');
+    var redirectUrl = {{ section.settings.redirect_url | default: '' | json }};
+
+    enterBtn.addEventListener('click', function () {
+      sessionStorage.setItem('sundaze_verified', 'true');
+      sessionStorage.setItem('sundaze_terms_accepted', new Date().toISOString());
+
+      ageGate.classList.add('fade-out');
+
+      setTimeout(function () {
+        /* No redirect configured: the gate is an overlay on the page the
+           shopper already asked for, so just get out of the way. */
+        if (!redirectUrl) {
+          ageGate.classList.add('hidden');
+          return;
+        }
+        window.location.href = redirectUrl;
+      }, 600);
+    });
+  })();
 </script>
 
 {% schema %}
@@ -172,7 +226,8 @@
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Sundaze Logo" },
     { "type": "text", "id": "tagline", "label": "Tagline Text", "default": "Dont You Just Love Sundaze?" },
-    { "type": "text", "id": "button_text", "label": "Button Text", "default": "21+ to Explore" },
+    { "type": "text", "id": "button_text", "label": "Button Text", "default": "Accept Terms & Shop Now" },
+    { "type": "text", "id": "terms_title", "label": "Terms Box Heading", "default": "Terms & Conditions" },
     { "type": "url", "id": "redirect_url", "label": "Redirect URL after verification" },
     { "type": "image_picker", "id": "tube_1", "label": "Falling Product Image 1" },
     { "type": "image_picker", "id": "tube_2", "label": "Falling Product Image 2" },

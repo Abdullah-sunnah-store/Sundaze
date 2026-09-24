@@ -1,0 +1,641 @@
+{% comment %}
+  Sundaze Video Section
+  Rounded video card (matches Lineup Cards radius) with an overlay heading.
+  Autoplays muted + looped, with a tap-to-unmute toggle.
+{% endcomment %}
+
+{%- liquid
+  assign video = section.settings.video
+  assign has_video = false
+  if video != blank or section.settings.video_url != blank
+    assign has_video = true
+  endif
+
+  comment
+    Shopify transcodes an uploaded video into several MP4 renditions. A browser plays the
+    FIRST source it supports, not the best one, so pick a single rendition ourselves:
+    the tallest one at or below the chosen cap. Falls back to the smallest available.
+  endcomment
+  assign max_h = section.settings.max_height | plus: 0
+  assign src_url = ''
+  assign src_type = ''
+  assign src_h = 0
+  assign fallback_url = ''
+  assign fallback_type = ''
+  assign fallback_h = 999999
+
+  if video != blank
+    for s in video.sources
+      if s.format != 'mp4'
+        continue
+      endif
+      if s.height <= max_h and s.height > src_h
+        assign src_url = s.url
+        assign src_type = s.mime_type
+        assign src_h = s.height
+      endif
+      if s.height < fallback_h
+        assign fallback_url = s.url
+        assign fallback_type = s.mime_type
+        assign fallback_h = s.height
+      endif
+    endfor
+
+    if src_url == blank
+      assign src_url = fallback_url
+      assign src_type = fallback_type
+    endif
+  endif
+-%}
+
+<section class="sv-section" id="sv-{{ section.id }}">
+  <div class="sv-inner">
+
+    {% comment %} ── Heading — above the video card ── {% endcomment %}
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="sv-head">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="sv-eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="sv-heading">
+            {{- section.settings.heading -}}
+            {%- if section.settings.heading_accent != blank %} <em>{{ section.settings.heading_accent }}</em>{% endif -%}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="sv-subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="sv-card">
+
+      {%- if video != blank -%}
+        <video
+          class="sv-video"
+          id="sv-video-{{ section.id }}"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          {% if video.preview_image %}poster="{{ video.preview_image | image_url: width: 1600 }}"{% endif %}
+          aria-label="{{ section.settings.heading | escape }}"
+        >
+          {%- if src_url != blank -%}
+            <source src="{{ src_url }}" type="{{ src_type | default: 'video/mp4' }}">
+          {%- endif -%}
+        </video>
+
+      {%- elsif section.settings.video_url != blank -%}
+        <video
+          class="sv-video"
+          id="sv-video-{{ section.id }}"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          {% if section.settings.poster_image != blank %}poster="{{ section.settings.poster_image | image_url: width: 1600 }}"{% endif %}
+          aria-label="{{ section.settings.heading | escape }}"
+        >
+          {%- comment -%}
+            Only declare a type we know browsers accept. A .mov gets no type attribute so the
+            browser sniffs the real MIME instead of skipping the source (Chrome reports
+            video/quicktime as unplayable and would never fetch it).
+          {%- endcomment -%}
+          {%- assign url_path = section.settings.video_url | split: '?' | first | downcase -%}
+          {%- if url_path contains '.webm' -%}
+            <source src="{{ section.settings.video_url }}" type="video/webm">
+          {%- elsif url_path contains '.mp4' -%}
+            <source src="{{ section.settings.video_url }}" type="video/mp4">
+          {%- else -%}
+            <source src="{{ section.settings.video_url }}">
+          {%- endif -%}
+        </video>
+
+      {%- else -%}
+        <div class="sv-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="3"/>
+            <polygon points="10 9 16 12 10 15" fill="currentColor" stroke="none"/>
+          </svg>
+          {%- if request.design_mode -%}
+            <span>Select a video in this section's settings</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {% comment %} ── Sound toggle ── {% endcomment %}
+      {%- if has_video -%}
+        <button
+          type="button"
+          class="sv-sound"
+          id="sv-sound-{{ section.id }}"
+          data-muted="true"
+          aria-pressed="false"
+          aria-label="Unmute video"
+        >
+          <svg class="sv-icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+          <svg class="sv-icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
+            <path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+          </svg>
+          <span class="sv-sound-label">Sound</span>
+        </button>
+      {%- endif -%}
+
+    </div>
+
+    {% comment %} ── CTA — below the video card ── {% endcomment %}
+    {%- if section.settings.cta_label != blank -%}
+      <div class="sv-cta-row">
+        <a class="sv-cta" href="{{ section.settings.cta_link | default: '/collections/all' }}">
+          <span>{{ section.settings.cta_label }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  #sv-{{ section.id }},
+  #sv-{{ section.id }} * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  #sv-{{ section.id }} {
+    width: 100%;
+    background: {{ section.settings.section_bg }};
+    padding: {{ section.settings.padding_top }}px clamp(16px, 4vw, 60px) {{ section.settings.padding_bottom }}px;
+  }
+
+  #sv-{{ section.id }} .sv-inner {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  #sv-{{ section.id }} .sv-card {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: {{ section.settings.card_radius }}px !important;
+    aspect-ratio: {{ section.settings.video_ratio }} !important;
+    background: #1a1014 !important;
+    isolation: isolate;
+  }
+
+  #sv-{{ section.id }} .sv-video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: {{ section.settings.video_fit }} !important;
+    object-position: center center !important;
+    display: block !important;
+    border-radius: inherit !important;
+  }
+
+  #sv-{{ section.id }} .sv-placeholder {
+    position: absolute !important;
+    inset: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    color: rgba(255,255,255,0.35) !important;
+    font-size: 14px !important;
+    letter-spacing: 0.04em !important;
+    text-align: center !important;
+    padding: 20px !important;
+  }
+  #sv-{{ section.id }} .sv-placeholder svg {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  /* ── Heading block (above the card) ── */
+  #sv-{{ section.id }} .sv-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 10px !important;
+    margin-bottom: {{ section.settings.heading_gap }}px !important;
+  }
+
+  #sv-{{ section.id }} .sv-eyebrow {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.38em !important;
+    text-transform: uppercase !important;
+    color: #c4607a !important;
+  }
+
+  #sv-{{ section.id }} .sv-heading {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-size: clamp(32px, 4.6vw, 56px) !important;
+    font-weight: 900 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.01em !important;
+    color: {{ section.settings.heading_color }} !important;
+    -webkit-text-fill-color: {{ section.settings.heading_color }} !important;
+    background: none !important;
+    text-transform: none !important;
+  }
+
+  /* Accent word — same gradient-clipped italic as "Collections" in Lineup Cards. */
+  #sv-{{ section.id }} .sv-heading em {
+    font-style: italic !important;
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+  }
+
+  #sv-{{ section.id }} .sv-subheading {
+    max-width: 62ch !important;
+    font-size: clamp(13px, 1.3vw, 16px) !important;
+    line-height: 1.6 !important;
+    color: rgba(30,17,24,0.82) !important;
+  }
+
+  /* ── CTA (below the video card) ── */
+  #sv-{{ section.id }} .sv-cta-row {
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: {{ section.settings.cta_gap }}px !important;
+  }
+
+  #sv-{{ section.id }} a.sv-cta,
+  #sv-{{ section.id }} a.sv-cta:link,
+  #sv-{{ section.id }} a.sv-cta:visited {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 15px 30px !important;
+    border-radius: 50px !important;
+    border: none !important;
+    /* Brand CTA gradient — matches sundaze-why, lab-block, hub-preview and home-faq. */
+    background: linear-gradient(135deg, #d4926e 0%, #c4607a 55%, #a84f6a 100%) !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    line-height: 1 !important;
+    box-shadow: 0 8px 24px rgba(196,96,122,0.28) !important;
+    /* Animate transform/shadow only — never gap or width, which reflow layout and
+       make the button resize under the cursor. The arrow moves on its own transform. */
+    transition:
+      transform 0.34s cubic-bezier(0.22, 0.68, 0.28, 1),
+      box-shadow 0.34s cubic-bezier(0.22, 0.68, 0.28, 1) !important;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateY(0) !important;
+  }
+
+  #sv-{{ section.id }} a.sv-cta:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 14px 32px rgba(196,96,122,0.4) !important;
+  }
+
+  #sv-{{ section.id }} a.sv-cta:focus-visible {
+    outline: 2px solid #a84f6a !important;
+    outline-offset: 3px !important;
+  }
+
+  #sv-{{ section.id }} .sv-cta svg {
+    width: 17px !important;
+    height: 17px !important;
+    flex-shrink: 0 !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sv-{{ section.id }} a.sv-cta { transition: none !important; }
+    #sv-{{ section.id }} a.sv-cta:hover { transform: none !important; }
+  }
+
+  /* ── Sound toggle ── */
+  #sv-{{ section.id }} .sv-sound {
+    position: absolute !important;
+    z-index: 4 !important;
+    top: clamp(12px, 2vw, 20px) !important;
+    right: clamp(12px, 2vw, 20px) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 14px !important;
+    border: 1px solid rgba(255,255,255,0.35) !important;
+    border-radius: 999px !important;
+    background: rgba(0,0,0,0.42) !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #fff !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    line-height: 1 !important;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease !important;
+  }
+
+  #sv-{{ section.id }} .sv-sound:hover {
+    background: rgba(0,0,0,0.62) !important;
+    border-color: rgba(255,255,255,0.6) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  #sv-{{ section.id }} .sv-sound:focus-visible {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px !important;
+  }
+
+  #sv-{{ section.id }} .sv-sound svg {
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0 !important;
+  }
+
+  #sv-{{ section.id }} .sv-sound[data-muted='true'] .sv-icon-unmuted,
+  #sv-{{ section.id }} .sv-sound[data-muted='false'] .sv-icon-muted {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    #sv-{{ section.id }} .sv-sound .sv-sound-label { display: none !important; }
+    #sv-{{ section.id }} .sv-sound { padding: 10px !important; }
+    #sv-{{ section.id }} .sv-card {
+      aspect-ratio: {{ section.settings.video_ratio_mobile }} !important;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var video = document.getElementById('sv-video-{{ section.id }}');
+    var button = document.getElementById('sv-sound-{{ section.id }}');
+    if (!video) return;
+
+    // Keep autoplay policies happy.
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+
+    function tryPlay() {
+      var attempt = video.play();
+      if (attempt && typeof attempt.catch === 'function') attempt.catch(function () {});
+    }
+
+    tryPlay();
+    video.addEventListener('canplay', tryPlay, { once: true });
+
+    // Pause when fully offscreen to save bandwidth.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              tryPlay();
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.15 }
+      ).observe(video);
+    }
+
+    if (!button) return;
+
+    function sync() {
+      var muted = video.muted;
+      button.setAttribute('data-muted', muted ? 'true' : 'false');
+      button.setAttribute('aria-pressed', muted ? 'false' : 'true');
+      button.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+      var label = button.querySelector('.sv-sound-label');
+      if (label) label.textContent = muted ? 'Sound' : 'Mute';
+    }
+
+    button.addEventListener('click', function () {
+      video.muted = !video.muted;
+      if (!video.muted) {
+        video.volume = 1;
+        tryPlay();
+      }
+      sync();
+    });
+
+    video.addEventListener('volumechange', sync);
+    sync();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sundaze Video",
+  "tag": "section",
+  "class": "sundaze-video-section",
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video (Shopify-hosted)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Or external MP4 URL",
+      "info": "Used only if no Shopify video is selected. Must be a direct .mp4 link."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster_image",
+      "label": "Poster image (external MP4 only)"
+    },
+    {
+      "type": "select",
+      "id": "max_height",
+      "label": "Max playback quality",
+      "info": "Shopify-hosted videos only. Caps the rendition served so a 4K master doesn't stream at full size.",
+      "options": [
+        { "value": "480", "label": "480p" },
+        { "value": "720", "label": "720p" },
+        { "value": "1080", "label": "1080p (recommended)" },
+        { "value": "1440", "label": "1440p" },
+        { "value": "2160", "label": "2160p / 4K" }
+      ],
+      "default": "1080"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Small Batch"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent word",
+      "info": "Rendered italic in the brand gradient, after the heading.",
+      "default": "Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "heading_gap",
+      "label": "Space between heading and video",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "info": "Leave blank to hide the button.",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "range",
+      "id": "cta_gap",
+      "label": "Space between video and button",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section background color",
+      "default": "#fde8f0"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width (px)",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Corner radius (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "video_ratio",
+      "label": "Aspect ratio — desktop (e.g. 16/9, 21/9)",
+      "default": "16/9"
+    },
+    {
+      "type": "text",
+      "id": "video_ratio_mobile",
+      "label": "Aspect ratio — mobile (e.g. 16/9, 4/5, 1/1)",
+      "default": "16/9"
+    },
+    {
+      "type": "select",
+      "id": "video_fit",
+      "label": "Video fit",
+      "options": [
+        { "value": "cover", "label": "Cover (fills, may crop)" },
+        { "value": "contain", "label": "Contain (no crop)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sundaze Video",
+      "settings": {
+        "heading": "Small Batch",
+        "heading_accent": "Quality",
+        "cta_label": "Shop Now",
+        "cta_link": "/collections/all"
+      }
+    }
+  ]
+}
+{% endschema %}

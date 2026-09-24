@@ -1,0 +1,2545 @@
+{% comment %}
+  Combined Hash Rosin Product Page
+  ─ TOP:    Sorbetto Master Case hero card (case selector, jars, live viewers, feature card, bottom pills)
+  ─ BELOW:  Individual Hash Rosin product sections (Donutte template)
+  ─ FONTS:  Playfair Display (headings) + DM Sans (body) — matches the rest of the site
+{% endcomment %}
+
+{%- comment -%} Images: the theme-editor picker wins, the packaged asset is the fallback. {%- endcomment -%}
+{%- assign img_case_mixed = 'sundaze-sorbetto-master-case.png' | asset_url -%}
+{%- if section.settings.case_image_mixed != blank -%}{%- assign img_case_mixed = section.settings.case_image_mixed | image_url: width: 1000 -%}{%- endif -%}
+
+{%- assign img_jar_strawberry = 'sundaze-rosin-strawberry.png' | asset_url -%}
+{%- if section.settings.case_image_strawberry != blank -%}{%- assign img_jar_strawberry = section.settings.case_image_strawberry | image_url: width: 900 -%}{%- endif -%}
+
+{%- assign img_jar_banana = 'sundaze-rosin-banana-lemon-headz.png' | asset_url -%}
+{%- if section.settings.case_image_banana != blank -%}{%- assign img_jar_banana = section.settings.case_image_banana | image_url: width: 900 -%}{%- endif -%}
+
+{%- assign img_jar_peaches = 'sundaze-rosin-peaches-and-cream.png' | asset_url -%}
+{%- if section.settings.case_image_peaches != blank -%}{%- assign img_jar_peaches = section.settings.case_image_peaches | image_url: width: 900 -%}{%- endif -%}
+
+{%- assign img_jar_frootie = 'sundaze-rosin-frootie-scoops.png' | asset_url -%}
+{%- if section.settings.case_image_frootie != blank -%}{%- assign img_jar_frootie = section.settings.case_image_frootie | image_url: width: 900 -%}{%- endif -%}
+
+{%- assign img_rosin = 'sundaze-rosin-inside.jpg' | asset_url -%}
+{%- if section.settings.rosin_image != blank -%}{%- assign img_rosin = section.settings.rosin_image | image_url: width: 160 -%}{%- endif -%}
+
+{%- assign img_lid = 'sundaze-rosin-lid-strawberry.jpg' | asset_url -%}
+{%- if section.settings.lid_icon != blank -%}{%- assign img_lid = section.settings.lid_icon | image_url: width: 140 -%}{%- endif -%}
+
+{%- assign img_lid_strawberry = 'sundaze-rosin-lid-strawberry.jpg' | asset_url -%}
+{%- if section.settings.lid_icon_strawberry != blank -%}{%- assign img_lid_strawberry = section.settings.lid_icon_strawberry | image_url: width: 140 -%}{%- endif -%}
+
+{%- assign img_lid_banana = 'sundaze-rosin-lid-banana.jpg' | asset_url -%}
+{%- if section.settings.lid_icon_banana != blank -%}{%- assign img_lid_banana = section.settings.lid_icon_banana | image_url: width: 140 -%}{%- endif -%}
+
+{%- assign img_lid_peaches = 'sundaze-rosin-lid-peaches.jpg' | asset_url -%}
+{%- if section.settings.lid_icon_peaches != blank -%}{%- assign img_lid_peaches = section.settings.lid_icon_peaches | image_url: width: 140 -%}{%- endif -%}
+
+{%- assign img_lid_frootie = 'sundaze-rosin-lid-frootie.jpg' | asset_url -%}
+{%- if section.settings.lid_icon_frootie != blank -%}{%- assign img_lid_frootie = section.settings.lid_icon_frootie | image_url: width: 140 -%}{%- endif -%}
+
+{%- assign img_s1 = 'sundaze-rosin-strawberry.png' | asset_url -%}
+{%- if section.settings.s1_image != blank -%}{%- assign img_s1 = section.settings.s1_image | image_url: width: 800 -%}{%- endif -%}
+
+{%- assign img_s2 = 'sundaze-rosin-banana-lemon-headz.png' | asset_url -%}
+{%- if section.settings.s2_image != blank -%}{%- assign img_s2 = section.settings.s2_image | image_url: width: 800 -%}{%- endif -%}
+
+{%- assign img_s3 = 'sundaze-rosin-peaches-and-cream.png' | asset_url -%}
+{%- if section.settings.s3_image != blank -%}{%- assign img_s3 = section.settings.s3_image | image_url: width: 800 -%}{%- endif -%}
+
+{%- assign img_s4 = 'sundaze-rosin-frootie-scoops.png' | asset_url -%}
+{%- if section.settings.s4_image != blank -%}{%- assign img_s4 = section.settings.s4_image | image_url: width: 800 -%}{%- endif -%}
+
+<!-- ════════════════════════════════════════════════════════════
+     SHARED STYLES (Playfair Display + DM Sans fonts + variant pill bar)
+════════════════════════════════════════════════════════════ -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  /* ── BUCKET HERO CARD ── */
+  /* Width/radius/shadow are kept in step with the flavor .hro-card below so the
+     master case reads as the first card in one stack, not a separate banner.
+     isolation: isolate keeps the card's inner z-indexes (hero top 3, live
+     badge 4, jars 2) local — without it they land in the root stacking
+     context and paint over the sticky header's dropdown, which sits at 4. */
+  .hrp-shell {
+    background: #fff;
+    border-radius: 24px;
+    max-width: 1232px;
+    margin: 0 auto;
+    width: 100%;
+    box-shadow: 0 25px 50px rgba(0,0,0,.05);
+    overflow: hidden;
+    isolation: isolate;
+    font-family: 'DM Sans', sans-serif;
+    color: #111;
+  }
+
+  .hrp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    align-items: stretch;
+  }
+
+  /* LEFT */
+  .hrp-left { padding: 40px 0 40px 40px; display: flex; flex-direction: column; justify-content: center; }
+
+  /* word-break: normal overrides the global h1–h5 break-word from base.css, so a
+     long title wraps between words instead of splitting one. */
+  .hrp-title { margin: 0 0 14px; line-height:1; letter-spacing: -.03em; word-break: normal; overflow-wrap: normal; hyphens: none; }
+  .hrp-title__top {
+    display: block;
+    font-size: clamp(32px,2.9vw,46px);
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    color: #111;
+  }
+  .hrp-title__gradient {
+    display: block;
+    font-size: clamp(32px,2.9vw,46px);
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    background: linear-gradient(90deg,#ec4f9a 0%,#f099bd 30%,#b57938 72%,#2a1b14 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hrp-flavor-sub {
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: #e8357a;
+    margin: 0 0 18px;
+    letter-spacing: 0.04em;
+  }
+  .hrp-price {
+    font-size: 30px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -.03em;
+    background: linear-gradient(90deg,#ec4f9a 0%,#f099bd 30%,#b57938 72%,#2a1b14 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 14px;
+  }
+  .hrp-desc {
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: #444;
+    line-height: 1.65;
+    margin-bottom: 18px;
+    max-width: 100%;
+  }
+  .hrp-choose-label {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(107,66,38,0.6);
+    margin-bottom: 12px;
+  }
+
+  .hrp-options { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 20px; }
+  .hrp-opt {
+    border: 1.5px solid #d8d8d8;
+    background: #fff;
+    color: #111;
+    border-radius: 999px;
+    padding: 9px 15px;
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s, box-shadow .15s;
+    line-height: 1.25;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: normal;
+    max-width: 100%;
+  }
+  .hrp-opt:hover { border-color: #999; }
+  .hrp-opt.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+  }
+
+  /* Master-case CTA row — kept identical in size to the flavor sections' .hro-actions row */
+  .hrp-actions { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .hrp-actions form { flex: 1; display: flex; min-width: 0; }
+  /* ── Mixed case flavor picker ── */
+  .hrp-mix {
+    display: none;
+    margin: 0 0 18px;
+    padding: 13px 15px 11px;
+    border: 1.5px solid #f0d3e0;
+    border-radius: 18px;
+    background: #fffafc;
+  }
+  .hrp-mix.is-visible { display: block; }
+
+  .hrp-mix__label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+  .hrp-mix__meter { color: #ec4f9a; white-space: nowrap; }
+
+  .hrp-mix__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 0;
+    border-top: 1px solid #f6e6ee;
+  }
+  .hrp-mix__row:first-of-type { border-top: none; }
+
+  .hrp-mix__name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #111;
+    line-height: 1.3;
+  }
+
+  .hrp-mix__stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .hrp-mix__btn {
+    width: 26px; height: 26px;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0;
+    border: 1.5px solid #e6c8d8;
+    border-radius: 50%;
+    background: #fff;
+    color: #b8426e;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s, opacity .15s;
+  }
+  .hrp-mix__btn:hover:not(:disabled) { border-color: #ec4f9a; background: #fff0f6; }
+  .hrp-mix__btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .hrp-mix__btn:focus-visible { outline: 2px solid #ec4f9a; outline-offset: 2px; }
+
+  .hrp-mix__qty {
+    min-width: 26px;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+  }
+
+  .hrp-mix__hint {
+    margin: 8px 0 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #b8426e;
+    min-height: 0;
+  }
+
+  .hrp-atc:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .hrp-atc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+    background: #1a1a1a;
+    color: #fff;
+    border: 2px solid #1a1a1a;
+    border-radius: 50px;
+    padding: 12px 24px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s ease, transform .1s ease, box-shadow .2s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    white-space: nowrap;
+  }
+  .hrp-atc:hover { background: #333; border-color: #333; transform: scale(1.03); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .hrp-atc:active { transform: scale(0.97); }
+  .hrp-atc__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .hrp-wish {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #e8e0d8;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color .2s ease, background .2s ease, transform .15s ease, color .2s ease;
+    color: rgba(107,66,38,0.4);
+    flex-shrink: 0;
+  }
+  .hrp-wish:hover { border-color: #e8a0bf; background: #fef0f5; color: #e8a0bf; transform: scale(1.1); }
+  .hrp-wish:active { transform: scale(0.9); }
+  .hrp-wish.wished { border-color: #e8a0bf; background: #fef0f5; color: #e8a0bf; }
+
+  .hrp-mini-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1.5px solid #f5c8d8;
+    border-radius: 20px;
+    padding: 11px 14px;
+    background: #fff8fa;
+    max-width: 100%;
+    margin-top: auto;
+  }
+  .hrp-mini-card__img { width: 58px; height: 58px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
+  .hrp-mini-card__text { flex: 1; min-width: 0; }
+  .hrp-mini-card__text strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #7c431b;
+    font-size: 15px;
+    letter-spacing: -.01em;
+    line-height: 1.1;
+  }
+  .hrp-mini-card__text b {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #cf4d8a;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .hrp-mini-card__text small {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: #6b5a50;
+    font-size: 11.5px;
+    margin-top: 4px;
+  }
+
+  .hrp-dot-grid {
+    background: radial-gradient(circle, #ead4a9 0%, #c69959 100%);
+    border-radius: 50%;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    flex-shrink: 0;
+  }
+  .hrp-dot-grid span { background: #ee9abe; border-radius: 50%; display: block; aspect-ratio: 1; }
+  .hrp-dot-grid--sm { width: 66px; height: 66px; gap: 4px; padding: 9px; border: 5px solid #f4e3c4; }
+  .hrp-dot-grid--lg { width: 80px; height: 80px; gap: 4px; padding: 10px; border: 5px solid #f4e3c4; }
+
+  /* CENTER */
+  .hrp-center { padding: 20px; display: flex; flex-direction: column; }
+  .hrp-hero-card {
+    flex: 1;
+    border-radius: 24px;
+    padding: 24px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    min-height: 380px;
+    background:
+      radial-gradient(circle at 10% 14%, rgba(255,213,166,.92), transparent 32%),
+      radial-gradient(circle at 76% 16%, rgba(255,177,215,.88), transparent 36%),
+      radial-gradient(circle at 52% 90%, rgba(255,237,179,.92), transparent 40%),
+      linear-gradient(135deg, #ffe9c9 0%, #ffc7dc 48%, #fff0bf 100%);
+  }
+
+  .hrp-hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+  }
+  .hrp-selected-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(255,255,255,.86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 13px 20px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.04em;
+    color: #111;
+    white-space: nowrap;
+  }
+  .hrp-selected-pill__check {
+    width: 24px;
+    height: 24px;
+    background: #ddaa61;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .hrp-live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50px;
+    padding: 8px 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: #1a1a1a;
+    width: fit-content;
+    margin-top: 12px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    position: relative;
+    z-index: 4;
+  }
+  .hrp-live-badge.hrp-live-visible { opacity: 1; transform: translateY(0); }
+  .hrp-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+    animation: hrp-pulse-dot 1.5s infinite ease-in-out;
+  }
+  @keyframes hrp-pulse-dot {
+    0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+    70%  { transform: scale(1);    box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+  }
+
+  .hrp-jars {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    padding-top: 4px;
+    padding-bottom: 8px;
+    min-height: 200px;
+  }
+  .hrp-jar { height: auto; object-fit: contain; filter: drop-shadow(0 20px 18px rgba(81,45,22,.18)); transition: opacity .3s, transform .3s; }
+  .hrp-jar--l { height: clamp(180px,22vw,280px); }
+  .hrp-jar--c { z-index: 2; height: clamp(200px,24vw,300px); position: relative; transform: translateY(-16px); }
+  .hrp-jar--r { height: clamp(180px,22vw,280px); }
+  .hrp-jar--single { width: 100%; max-width: 100%; height: 100%; max-height: 320px; object-fit: contain; transform: translateY(-8px); }
+
+  .hrp-feat-card {
+    background: rgba(255,248,236,.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.07);
+    border: 1px solid rgba(255,220,180,.5);
+    max-width: 380px;
+    margin: 14px auto;
+    position: relative;
+    z-index: 3;
+  }
+  .hrp-feat-card__img { width: 68px; height: 68px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
+  .hrp-feat-card__text { flex: 1; min-width: 0; }
+  .hrp-feat-card__text strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #7c431b;
+    font-size: 15px;
+    letter-spacing: -.01em;
+    line-height: 1.1;
+  }
+  .hrp-feat-card__text b {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #cf4d8a;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .hrp-feat-card__text small {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: #6b5244;
+    font-size: 11px;
+    margin-top: 3px;
+  }
+  .hrp-feat-card__divider { width: 1px; height: 48px; background: rgba(160,100,50,.25); flex-shrink: 0; display: block !important; }
+  .hrp-feat-card__bucket { display: flex !important; align-items: center; justify-content: center; flex-shrink: 0; color: #9d6638; }
+  .hrp-feat-card__bucket-img { width: 54px; height: 54px; object-fit: contain; }
+  .hrp-bucket-svg { width: 54px; height: 54px; }
+
+  .hrp-bottom-pills {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 18px;
+    position: relative;
+    z-index: 3;
+    flex-wrap: nowrap;
+  }
+  .hrp-pill {
+    background: rgba(255,255,255,.86);
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.08em;
+    box-shadow: 0 12px 28px rgba(0,0,0,.07);
+    color: #111;
+    white-space: nowrap;
+  }
+
+  /* RIGHT */
+  .hrp-right { padding: 40px 40px 40px 0; display: flex; flex-direction: column; justify-content: center; }
+  .hrp-acc { border-bottom: 1px solid #e8e8e8; }
+  .hrp-acc__btn {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    cursor: pointer;
+    color: #3f2417;
+    letter-spacing: -.01em;
+    text-align: left;
+    transition: color .15s;
+  }
+  .hrp-acc__btn:hover { color: #6b4226; }
+  .hrp-acc__icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: #999;
+  }
+  .hrp-acc__icon--open { transform: rotate(180deg); }
+  /* Smooth slide — replaces display:none/block */
+  .hrp-acc__panel {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.3s ease;
+    padding: 0;
+  }
+  .hrp-acc--open .hrp-acc__panel {
+    max-height: 600px;
+    opacity: 1;
+    padding: 0 0 22px;
+  }
+  .hrp-acc__panel p {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.82;
+    color: rgba(107,66,38,0.8);
+  }
+  .hrp-acc__panel ul { list-style: none; padding: 0; margin: 0; }
+  .hrp-acc__panel li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 300;
+    font-family: 'DM Sans', sans-serif;
+    color: rgba(63,36,23,0.8);
+    line-height: 1.6;
+  }
+  .hrp-acc__panel li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #d39a59;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 7px;
+  }
+  .hrp-acc__highlight {
+    font-family: 'DM Sans', sans-serif;
+    color: #d94e8f;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+
+  /* RESPONSIVE */
+  @media screen and (max-width: 1200px) {
+    .hrp-left  { padding: 32px 20px 32px 28px; }
+    .hrp-right { padding: 32px 28px 32px 20px; }
+  }
+  @media screen and (max-width: 1023px) {
+    .hrp-grid { grid-template-columns: 1fr; }
+    .hrp-center { order: 1; }
+    .hrp-left  { order: 2; border-bottom: 1px solid #f0ebe4; }
+    .hrp-right { order: 3; border-top: 1px solid #f0ebe4; }
+    .hrp-desc  { max-width: 100%; }
+    .hrp-mini-card { max-width: 100%; }
+  }
+  @media screen and (max-width: 639px) {
+    #sorbetto { padding: 24px 16px 32px !important; }
+  }
+  @media screen and (max-width: 600px) {
+    .hrp-jar--l, .hrp-jar--r { height: 130px; }
+    .hrp-jar--c { height: 150px; transform: translateY(-12px); }
+    .hrp-jar--single { max-height: 200px; max-width: 100%; width: 100%; }
+    .hrp-hero-card { border-radius: 28px; padding: 20px 18px; min-height: auto; }
+    .hrp-jars    { min-height: 200px; padding-top: 8px; }
+    .hrp-bottom-pills { flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .hrp-pill { padding: 12px 16px; font-size: 11px; }
+    .hrp-live-badge { font-size: 11px; padding: 7px 12px; }
+  }
+</style>
+
+
+{%- assign hide_until_cta = section.settings.hide_until_cta -%}
+
+<style>
+  /* Hidden until the "Sorbetto Collection" CTA card is clicked */
+  .hro-gated { display: none; }
+</style>
+
+<!-- ════════════════════════════════════════════════════════════
+     SECTION WRAPPER (wraps master case hero + product sections)
+════════════════════════════════════════════════════════════ -->
+<section id="hro-combined-{{ section.id }}"{% if hide_until_cta %} class="hro-gated"{% endif %}>
+
+  <!-- ════════════════════════════════
+       PART 1 — SORBETTO MASTER CASE HERO CARD
+  ════════════════════════════════ -->
+
+  {%- comment -%} Variant ids / prices: product picker wins, plain text is the fallback. {%- endcomment -%}
+  {%- assign mixed_vid = section.settings.mixed_variant_id -%}
+  {%- assign mixed_price = section.settings.price_fallback -%}
+  {%- if section.settings.mixed_product != blank -%}
+    {%- assign mixed_vid = section.settings.mixed_product.selected_or_first_available_variant.id -%}
+    {%- assign mixed_price = section.settings.mixed_product.price | money -%}
+  {%- endif -%}
+
+  {%- assign strawberry_vid = section.settings.strawberry_variant_id -%}
+  {%- assign strawberry_price = section.settings.strawberry_price -%}
+  {%- if section.settings.strawberry_product != blank -%}
+    {%- assign strawberry_vid = section.settings.strawberry_product.selected_or_first_available_variant.id -%}
+    {%- assign strawberry_price = section.settings.strawberry_product.price | money -%}
+  {%- endif -%}
+
+  {%- assign banana_vid = section.settings.banana_variant_id -%}
+  {%- assign banana_price = section.settings.banana_price -%}
+  {%- if section.settings.banana_product != blank -%}
+    {%- assign banana_vid = section.settings.banana_product.selected_or_first_available_variant.id -%}
+    {%- assign banana_price = section.settings.banana_product.price | money -%}
+  {%- endif -%}
+
+  {%- assign peaches_vid = section.settings.peaches_variant_id -%}
+  {%- assign peaches_price = section.settings.peaches_price -%}
+  {%- if section.settings.peaches_product != blank -%}
+    {%- assign peaches_vid = section.settings.peaches_product.selected_or_first_available_variant.id -%}
+    {%- assign peaches_price = section.settings.peaches_product.price | money -%}
+  {%- endif -%}
+
+  {%- assign frootie_vid = section.settings.frootie_variant_id -%}
+  {%- assign frootie_price = section.settings.frootie_price -%}
+  {%- if section.settings.frootie_product != blank -%}
+    {%- assign frootie_vid = section.settings.frootie_product.selected_or_first_available_variant.id -%}
+    {%- assign frootie_price = section.settings.frootie_product.price | money -%}
+  {%- endif -%}
+
+  {%- comment -%} Product sections below reuse the variant ids resolved above; their own text field wins when filled. {%- endcomment -%}
+  {%- assign s1_vid = strawberry_vid -%}
+  {%- if section.settings.s1_variant_id != blank -%}{%- assign s1_vid = section.settings.s1_variant_id -%}{%- endif -%}
+
+  {%- assign s2_vid = banana_vid -%}
+  {%- if section.settings.s2_variant_id != blank -%}{%- assign s2_vid = section.settings.s2_variant_id -%}{%- endif -%}
+
+  {%- assign s3_vid = peaches_vid -%}
+  {%- if section.settings.s3_variant_id != blank -%}{%- assign s3_vid = section.settings.s3_variant_id -%}{%- endif -%}
+
+  {%- assign s4_vid = frootie_vid -%}
+  {%- if section.settings.s4_variant_id != blank -%}{%- assign s4_vid = section.settings.s4_variant_id -%}{%- endif -%}
+
+  <div id="sorbetto" style="background: {{ section.settings.bg_color | default: '#f7ece2' }}; padding: 40px 24px 32px; scroll-margin-top: 120px;">
+
+    <div class="hrp-shell">
+      <div class="hrp-grid">
+
+        <!-- LEFT -->
+        <div class="hrp-left">
+
+          <h1 class="hrp-title">
+            <span class="hrp-title__top">{{ section.settings.title_top | default: 'Sorbetto' }}</span>
+            <span class="hrp-title__gradient">{{ section.settings.title_gradient | default: 'Master Case' }}</span>
+          </h1>
+
+          <p class="hrp-flavor-sub" id="hrp-sub-{{ section.id }}">
+            {{ section.settings.flavor_line | default: 'Strawberry • Banana Lemon Headz • Peaches & Cream • Frootie Scoops' }}
+          </p>
+
+          <div class="hrp-price" id="hrp-price-{{ section.id }}">
+            {{ mixed_price }}
+          </div>
+
+          <p class="hrp-desc" id="hrp-desc-{{ section.id }}">
+            {{ section.settings.description }}
+          </p>
+
+          <p class="hrp-choose-label">{{ section.settings.choose_label | default: 'Choose Your Case' }}</p>
+
+          <div class="hrp-options">
+
+            <button type="button" class="hrp-opt active" data-hrp-opt
+              data-variant="{{ mixed_vid }}"
+              data-price="{{ mixed_price }}"
+              data-sub="{{ section.settings.flavor_line | default: 'Strawberry • Banana Lemon Headz • Peaches & Cream • Frootie Scoops' }}"
+              data-desc="{{ section.settings.description | escape }}"
+              data-label="Mixed Master Case Selected"
+              data-pill="🍨 Sorbetto Collection"
+              data-pill2="⬡ 4 Flavor Master Case"
+              data-acc-desc="{{ section.settings.mixed_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.mixed_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.mixed_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.mixed_acc_highlight | escape }}"
+              data-image="{{ img_case_mixed }}"
+              data-mode="mixed"
+              data-rosin-img="{{ img_rosin }}"
+              data-lid-img="{{ img_lid }}">
+              Mixed Master Case
+            </button>
+
+            <button type="button" class="hrp-opt" data-hrp-opt
+              data-variant="{{ strawberry_vid }}"
+              data-price="{{ strawberry_price }}"
+              data-sub="{{ section.settings.s1_flavors | default: 'Sweet • Berry • Creamy' }}"
+              data-desc="{{ section.settings.strawberry_desc | default: section.settings.description | escape }}"
+              data-label="{{ section.settings.s1_name | default: 'Strawberry' }} Selected"
+              data-pill="🍓 {{ section.settings.s1_name | default: 'Strawberry' }}"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.strawberry_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.strawberry_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.strawberry_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.strawberry_acc_highlight | escape }}"
+              data-image="{{ img_jar_strawberry }}"
+              data-mode="single"
+              data-rosin-img="{{ img_rosin }}"
+              data-lid-img="{{ img_lid_strawberry }}">
+              {{ section.settings.s1_name | default: 'Strawberry' }}
+            </button>
+
+            <button type="button" class="hrp-opt" data-hrp-opt
+              data-variant="{{ banana_vid }}"
+              data-price="{{ banana_price }}"
+              data-sub="{{ section.settings.s2_flavors | default: 'Citrus • Tropical • Bright' }}"
+              data-desc="{{ section.settings.banana_desc | default: section.settings.description | escape }}"
+              data-label="{{ section.settings.s2_name | default: 'Banana Lemon Headz' }} Selected"
+              data-pill="🍌 {{ section.settings.s2_name | default: 'Banana Lemon Headz' }}"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.banana_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.banana_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.banana_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.banana_acc_highlight | escape }}"
+              data-image="{{ img_jar_banana }}"
+              data-mode="single"
+              data-rosin-img="{{ img_rosin }}"
+              data-lid-img="{{ img_lid_banana }}">
+              {{ section.settings.s2_name | default: 'Banana Lemon Headz' }}
+            </button>
+
+            <button type="button" class="hrp-opt" data-hrp-opt
+              data-variant="{{ peaches_vid }}"
+              data-price="{{ peaches_price }}"
+              data-sub="{{ section.settings.s3_flavors | default: 'Peach • Velvety • Sweet' }}"
+              data-desc="{{ section.settings.peaches_desc | default: section.settings.description | escape }}"
+              data-label="{{ section.settings.s3_name | default: 'Peaches & Cream' }} Selected"
+              data-pill="🍑 {{ section.settings.s3_name | default: 'Peaches & Cream' }}"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.peaches_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.peaches_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.peaches_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.peaches_acc_highlight | escape }}"
+              data-image="{{ img_jar_peaches }}"
+              data-mode="single"
+              data-rosin-img="{{ img_rosin }}"
+              data-lid-img="{{ img_lid_peaches }}">
+              {{ section.settings.s3_name | default: 'Peaches & Cream' }}
+            </button>
+
+            <button type="button" class="hrp-opt" data-hrp-opt
+              data-variant="{{ frootie_vid }}"
+              data-price="{{ frootie_price }}"
+              data-sub="{{ section.settings.s4_flavors | default: 'Fruity • Sweet • Creamy' }}"
+              data-desc="{{ section.settings.frootie_desc | default: section.settings.description | escape }}"
+              data-label="{{ section.settings.s4_name | default: 'Frootie Scoops' }} Selected"
+              data-pill="🍨 {{ section.settings.s4_name | default: 'Frootie Scoops' }}"
+              data-pill2="⬡ Single Flavor"
+              data-acc-desc="{{ section.settings.frootie_acc_desc | escape }}"
+              data-acc-flavor="{{ section.settings.frootie_acc_flavor | escape }}"
+              data-acc-specs="{{ section.settings.frootie_acc_specs | escape }}"
+              data-acc-highlight="{{ section.settings.frootie_acc_highlight | escape }}"
+              data-image="{{ img_jar_frootie }}"
+              data-mode="single"
+              data-rosin-img="{{ img_rosin }}"
+              data-lid-img="{{ img_lid_frootie }}">
+              {{ section.settings.s4_name | default: 'Frootie Scoops' }}
+            </button>
+
+          </div>
+
+          {%- comment -%}
+            ── Mixed case flavor picker ──
+            Only shown for the Mixed Master Case. Four steppers sharing one cap,
+            so a shopper can take one of each, doubles, or four of a single
+            flavor. Each flavor's count rides along as a line item property; the
+            hidden inputs live inside the form so FormData picks them up, and JS
+            disables the ones at 0 so unchosen flavors never reach the order.
+          {%- endcomment -%}
+          {%- assign mix_max = section.settings.mix_max | default: 4 -%}
+          {%- assign s1 = section.settings.s1_name | default: 'Strawberry' -%}
+          {%- assign s2 = section.settings.s2_name | default: 'Banana Lemon Headz' -%}
+          {%- assign s3 = section.settings.s3_name | default: 'Peaches & Cream' -%}
+          {%- assign s4 = section.settings.s4_name | default: 'Frootie Scoops' -%}
+
+          <div class="hrp-mix" id="hrp-mix-{{ section.id }}" data-hrp-mix data-max="{{ mix_max }}">
+            <p class="hrp-mix__label">
+              <span>{{ section.settings.mix_label | default: 'Choose your 4 jars' }}</span>
+              <span class="hrp-mix__meter" data-hrp-mix-meter>{{ mix_max }} of {{ mix_max }} selected</span>
+            </p>
+
+            {%- assign mix_flavors = s1 | append: '||' | append: s2 | append: '||' | append: s3 | append: '||' | append: s4 | split: '||' -%}
+            {%- for flavor in mix_flavors -%}
+              <div class="hrp-mix__row">
+                <span class="hrp-mix__name">{{ flavor }}</span>
+                <div class="hrp-mix__stepper">
+                  <button type="button" class="hrp-mix__btn" data-hrp-mix-step="-1" data-hrp-mix-index="{{ forloop.index0 }}" aria-label="Remove one {{ flavor | escape }}">&minus;</button>
+                  <span class="hrp-mix__qty" data-hrp-mix-qty="{{ forloop.index0 }}" aria-live="polite">1</span>
+                  <button type="button" class="hrp-mix__btn" data-hrp-mix-step="1" data-hrp-mix-index="{{ forloop.index0 }}" aria-label="Add one {{ flavor | escape }}">+</button>
+                </div>
+              </div>
+            {%- endfor -%}
+
+            <p class="hrp-mix__hint" data-hrp-mix-hint></p>
+          </div>
+
+          <div class="hrp-actions">
+            <form method="post" action="/cart/add" data-hrp-form>
+              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="id" id="hrp-vid-{{ section.id }}" value="{{ mixed_vid }}">
+              {%- for flavor in mix_flavors -%}
+                <input type="hidden" name="properties[{{ flavor | escape }}]" data-hrp-mix-prop="{{ forloop.index0 }}" value="">
+              {%- endfor -%}
+              <button type="submit" class="hrp-atc">
+                <span class="hrp-atc__check">✓</span> Add to cart
+              </button>
+            </form>
+            <button type="button" class="hrp-wish hro-wish-btn" id="hrp-wish-{{ section.id }}" aria-label="Add to wishlist"
+              data-variant-id="{{ mixed_vid }}"
+              data-product-name="Mixed Master Case"
+              data-product-price="{{ mixed_price }}"
+              data-product-image="{{ img_case_mixed }}"
+              data-product-emoji="🍨"
+              onclick="HroWish.toggle(this)">
+              ♡
+            </button>
+          </div>
+
+          <!-- Mini rosin card -->
+          <div class="hrp-mini-card">
+            <img src="{{ img_rosin }}"
+                 alt="{{ section.settings.feature_title | default: 'Solventless Rosin' }}" class="hrp-mini-card__img"
+                 id="hrp-rosin-mini-{{ section.id }}">
+            <div class="hrp-mini-card__text">
+              <strong>{{ section.settings.feature_title | default: 'Solventless Rosin' }}</strong>
+              <b>{{ section.settings.feature_sub | default: 'Cold Cure Live Rosin' }}</b>
+              <small>{{ section.settings.feature_note | default: '2G Jar • 90–120µ • Small Batch' }}</small>
+            </div>
+          </div>
+
+
+        </div><!-- /.hrp-left -->
+
+
+        <!-- CENTER — HERO CARD -->
+        <div class="hrp-center">
+          <div class="hrp-hero-card">
+
+            <div class="hrp-hero-top">
+              <div class="hrp-selected-pill">
+                <span class="hrp-selected-pill__check" aria-hidden="true">✓</span>
+                <span id="hrp-label-{{ section.id }}">Mixed Master Case Selected</span>
+              </div>
+            </div>
+
+            <div class="hrp-live-badge" id="hrpCaseLiveBadge">
+              <span class="hrp-live-dot"></span>
+              <span id="hrpCaseLiveCount">0</span> viewing now
+            </div>
+
+            <div class="hrp-jars" id="hrp-jars-{{ section.id }}">
+              <img src="{{ img_case_mixed }}"
+                   alt="{{ section.settings.title_top | default: 'Sorbetto' }} {{ section.settings.title_gradient | default: 'Master Case' }}"
+                   class="hrp-jar hrp-jar--single" loading="lazy">
+            </div>
+
+            <div class="hrp-feat-card">
+              <img src="{{ img_rosin }}"
+                   alt="{{ section.settings.feature_title | default: 'Solventless Rosin' }}" class="hrp-feat-card__img"
+                   id="hrp-rosin-feat-{{ section.id }}">
+              <div class="hrp-feat-card__text">
+                <strong>{{ section.settings.feature_title | default: 'Solventless Rosin' }}</strong>
+                <b>{{ section.settings.feature_sub | default: 'Cold Cure Live Rosin' }}</b>
+                <small>{{ section.settings.feature_note | default: '2G Jar • 90–120µ • Small Batch' }}</small>
+              </div>
+              <div class="hrp-feat-card__divider" aria-hidden="true"></div>
+              <div class="hrp-feat-card__bucket" aria-hidden="true">
+                <img src="{{ img_lid }}"
+                     alt="" class="hrp-feat-card__bucket-img"
+                     id="hrp-lid-icon-{{ section.id }}">
+              </div>
+            </div>
+
+            <div class="hrp-bottom-pills">
+              <div class="hrp-pill" id="hrp-pill1-{{ section.id }}">🍨 Sorbetto Collection</div>
+              <div class="hrp-pill" id="hrp-pill2-{{ section.id }}">⬡ 4 Flavor Master Case</div>
+            </div>
+
+          </div>
+        </div><!-- /.hrp-center -->
+
+
+        <!-- RIGHT — ACCORDIONS -->
+        <div class="hrp-right">
+
+          <div class="hrp-acc">
+            <button type="button" class="hrp-acc__btn" data-hrp-acc>
+              Description <svg class="hrp-acc__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="hrp-acc__panel">
+              <p id="hrp-acc-desc-{{ section.id }}">{{ section.settings.mixed_acc_desc | default: section.settings.description }}</p>
+            </div>
+          </div>
+
+          <div class="hrp-acc">
+            <button type="button" class="hrp-acc__btn" data-hrp-acc>
+              Flavor Notes <svg class="hrp-acc__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="hrp-acc__panel">
+              <p id="hrp-acc-flavor-{{ section.id }}">{{ section.settings.flavor_notes }}</p>
+            </div>
+          </div>
+
+          <div class="hrp-acc hrp-acc--open">
+            <button type="button" class="hrp-acc__btn" data-hrp-acc>
+              Product Specs <svg class="hrp-acc__icon hrp-acc__icon--open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="hrp-acc__panel" id="hrp-acc-specs-panel-{{ section.id }}">
+              <div id="hrp-acc-specs-{{ section.id }}" class="hrp-acc__panel-content">
+                {{ section.settings.mixed_acc_specs }}
+              </div>
+              <p class="hrp-acc__highlight" id="hrp-acc-highlight-{{ section.id }}">
+                {{ section.settings.mixed_acc_highlight | default: '🍨 All Four Sorbetto Flavors Inside' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="hrp-acc">
+            <button type="button" class="hrp-acc__btn" data-hrp-acc>
+              Collection <svg class="hrp-acc__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="hrp-acc__panel">
+              <p>{{ section.settings.collection_note | default: 'Part of the Sundaze Sorbetto hash rosin collection.' }}</p>
+            </div>
+          </div>
+
+        </div><!-- /.hrp-right -->
+
+
+      </div><!-- /.hrp-grid -->
+    </div><!-- /.hrp-shell -->
+
+  </div><!-- /master case wrapper -->
+
+
+  <!-- ════════════════════════════════
+       PART 2 — INDIVIDUAL HASH ROSIN PRODUCTS
+  ════════════════════════════════ -->
+
+  <style>
+    #hro-combined-{{ section.id }} .hro-page {
+      min-height: unset;
+      width: 100%;
+      background: linear-gradient(135deg, #f9f7f4 0%, #f5f2ee 60%, #fef0f5 100%);
+      font-family: 'DM Sans', sans-serif;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    #hro-combined-{{ section.id }} .hro-glow {
+      pointer-events: none;
+      position: absolute;
+      right: 0; top: 0;
+      height: 500px; width: 500px;
+      opacity: 0.4;
+      background: radial-gradient(circle at 80% 20%, #fce4ec 0%, #fff9c4 30%, #e0f7fa 60%, transparent 80%);
+      z-index: 0;
+    }
+
+    /* No top padding: the master case wrapper above already ends with the
+       same 32px the flavor cards keep between themselves, so one gap
+       rather than two runs the whole stack. */
+    #hro-combined-{{ section.id }} .hro-container {
+      position: relative;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 16px 24px;
+      z-index: 1;
+    }
+    @media (min-width: 640px) {
+      #hro-combined-{{ section.id }} .hro-container { padding: 0 24px 40px; }
+    }
+
+    #hro-combined-{{ section.id }} .hro-card {
+      position: relative; overflow: hidden; border-radius: 24px;
+      background: #ffffff; box-shadow: 0 25px 50px rgba(0,0,0,0.05);
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    #hro-combined-{{ section.id }} .hro-card.visible { opacity: 1; transform: translateY(0); }
+
+    #hro-combined-{{ section.id }} .hro-grid {
+      display: grid; grid-template-columns: 1fr; gap: 0;
+    }
+    @media (min-width: 1024px) {
+      #hro-combined-{{ section.id }} .hro-grid { grid-template-columns: 1fr 1.2fr 1fr; }
+    }
+
+    #hro-combined-{{ section.id }} .hro-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 32px 24px; order: 2;
+      opacity: 0; transform: translateX(-20px);
+      transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+    }
+    #hro-combined-{{ section.id }} .hro-left.visible { opacity: 1; transform: translateX(0); }
+    @media (min-width: 640px) { #hro-combined-{{ section.id }} .hro-left { padding: 32px 40px; } }
+    @media (min-width: 1024px) { #hro-combined-{{ section.id }} .hro-left { padding: 64px 40px; order: 1; } }
+
+    #hro-combined-{{ section.id }} .hro-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: #1a1a1a;
+      margin: 0 0 8px;
+      /* base.css gives every h1–h5 word-break: break-word, which splits a long
+         flavor name mid-word ("Strawberrie / s") once the desktop grid narrows
+         this column. Wrap between words only. */
+      word-break: normal;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+    @media (min-width: 640px)  { #hro-combined-{{ section.id }} .hro-title { font-size: 48px; } }
+    /* Desktop drops this column to 1fr of 1fr/1.2fr/1fr, so the type scales with
+       the viewport to keep the longest single word on one line. */
+    @media (min-width: 1024px) { #hro-combined-{{ section.id }} .hro-title { font-size: clamp(30px, 3vw, 44px); } }
+
+    #hro-combined-{{ section.id }} .hro-title-accent {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+    #hro-combined-{{ section.id }} .hro-flavors {
+      margin: 16px 0 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(107,66,38,0.6);
+    }
+    #hro-combined-{{ section.id }} .hro-price {
+      margin: 24px 0 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg,#ec4f9a 0%,#f099bd 30%,#b57938 72%,#2a1b14 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      letter-spacing: -.02em;
+    }
+    #hro-combined-{{ section.id }} .hro-desc {
+      margin: 16px 0 0;
+      max-width: 280px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.82;
+      color: rgba(107,66,38,0.7);
+    }
+    #hro-combined-{{ section.id }} .hro-actions { margin-top: 32px; display: flex; align-items: center; gap: 12px; }
+
+    #hro-combined-{{ section.id }} .hro-add-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: #1a1a1a; color: #ffffff; border: 2px solid #1a1a1a; border-radius: 50px;
+      padding: 14px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      position: relative; overflow: hidden; flex: 1;
+    }
+    #hro-combined-{{ section.id }} .hro-add-btn:hover:not(:disabled) { background: #333333; border-color: #333333; transform: scale(1.03); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    #hro-combined-{{ section.id }} .hro-add-btn:active:not(:disabled) { transform: scale(0.97); }
+    #hro-combined-{{ section.id }} .hro-add-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+    #hro-combined-{{ section.id }} .hro-add-btn.loading { background: #555; border-color: #555; }
+    #hro-combined-{{ section.id }} .hro-add-btn.added   { background: #2d7a2d; border-color: #2d7a2d; }
+
+    #hro-combined-{{ section.id }} .hro-spinner {
+      display: none; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; animation: hro-spin 0.7s linear infinite;
+    }
+    #hro-combined-{{ section.id }} .hro-add-btn.loading .hro-spinner { display: block; }
+    #hro-combined-{{ section.id }} .hro-add-btn.loading .hro-btn-icon,
+    #hro-combined-{{ section.id }} .hro-add-btn.loading .hro-btn-text { display: none; }
+    @keyframes hro-spin { to { transform: rotate(360deg); } }
+
+    #hro-combined-{{ section.id }} .hro-wish-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1px solid #e8e0d8; background: transparent;
+      cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease; flex-shrink: 0;
+    }
+    #hro-combined-{{ section.id }} .hro-wish-btn:hover { border-color: #e8a0bf; background: #fef0f5; transform: scale(1.1); }
+    #hro-combined-{{ section.id }} .hro-wish-btn:active { transform: scale(0.9); }
+    #hro-combined-{{ section.id }} .hro-wish-btn svg { width: 20px; height: 20px; color: rgba(107,66,38,0.4); transition: fill 0.25s ease, color 0.25s ease, transform 0.2s ease; }
+    #hro-combined-{{ section.id }} .hro-wish-btn.wished { border-color: #e8a0bf; background: #fef0f5; }
+    #hro-combined-{{ section.id }} .hro-wish-btn.wished svg { fill: #e8a0bf; color: #e8a0bf; }
+    #hro-combined-{{ section.id }} .hro-wish-btn.wish-pop svg { transform: scale(1.4); }
+
+    #hro-combined-{{ section.id }} .hro-wishlist-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: rgba(107,66,38,0.5);
+      text-decoration: none;
+      cursor: pointer; background: none; border: none; padding: 0;
+      transition: color 0.2s ease;
+    }
+    #hro-combined-{{ section.id }} .hro-wishlist-link:hover { color: #e8a0bf; }
+
+    #hro-combined-{{ section.id }} .hro-center {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      min-height: 420px; order: 1; padding: 20px; box-sizing: border-box;
+    }
+    #hro-combined-{{ section.id }} .hro-center::before {
+      content: ''; position: absolute; top: 20px; right: 20px; bottom: 20px; left: 20px;
+      border-radius: 24px; background: var(--arch-bg, transparent);
+      z-index: 0; pointer-events: none;
+    }
+
+    @media (min-width: 1024px) { #hro-combined-{{ section.id }} .hro-center { order: 2; } }
+    #hro-combined-{{ section.id }} .hro-orb-2 { position: absolute; bottom: 128px; right: 64px; width: 8px; height: 8px; border-radius: 50%; opacity: 0.4; z-index: 3; }
+
+    #hro-combined-{{ section.id }} .hro-product-img {
+      position: relative; z-index: 2; width: 100%; max-width: 90%; height: auto;
+      object-fit: contain; filter: drop-shadow(0 25px 25px rgba(0,0,0,0.15));
+      animation: hro-floatImg 4s ease-in-out infinite;
+      user-select: none; -webkit-user-drag: none;
+ 
+    }
+    @media (min-width: 640px)  { #hro-combined-{{ section.id }} .hro-product-img { max-width: 85%; } }
+    @media (min-width: 1024px) { #hro-combined-{{ section.id }} .hro-product-img { max-width: 95%; } }
+    @keyframes hro-floatImg { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+    #hro-combined-{{ section.id }} .hro-arrow-down {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid #e8ddd4; background: rgba(255,255,255,0.8);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); backdrop-filter: blur(4px);
+    }
+    #hro-combined-{{ section.id }} .hro-arrow-down svg { width: 16px; height: 16px; color: rgba(63,36,23,0.6); }
+
+    #hro-combined-{{ section.id }} .hro-live-badge-prod {
+      position: absolute; top: 32px; right: 32px; z-index: 10;
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(8px);
+      border-radius: 50px; padding: 8px 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 500; color: #1a1a1a;
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    #hro-combined-{{ section.id }} .hro-live-badge-prod.visible { opacity: 1; transform: translateY(0); }
+
+    #hro-combined-{{ section.id }} .hro-right {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 32px 24px; order: 3;
+      opacity: 0; transform: translateX(20px);
+      transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+    }
+    #hro-combined-{{ section.id }} .hro-right.visible { opacity: 1; transform: translateX(0); }
+    @media (min-width: 640px) { #hro-combined-{{ section.id }} .hro-right { padding: 32px 40px; } }
+    @media (min-width: 1024px) { #hro-combined-{{ section.id }} .hro-right { padding: 64px 40px; } }
+
+    #hro-combined-{{ section.id }} .hro-accordion-item { border-bottom: 1px solid #e8e0d8; }
+    #hro-combined-{{ section.id }} .hro-accordion-btn {
+      display: flex; width: 100%; align-items: center; justify-content: space-between;
+      padding: 16px 0; background: none; border: none; text-align: left;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #3f2417;
+      letter-spacing: -.01em;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    #hro-combined-{{ section.id }} .hro-accordion-btn:hover { color: #6b4226; }
+    #hro-combined-{{ section.id }} .hro-accordion-btn svg { width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.3s ease; }
+    #hro-combined-{{ section.id }} .hro-accordion-btn.open svg { transform: rotate(180deg); }
+    #hro-combined-{{ section.id }} .hro-accordion-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease, opacity 0.35s ease; opacity: 0; }
+    #hro-combined-{{ section.id }} .hro-accordion-body.open { max-height: 500px; opacity: 1; }
+    #hro-combined-{{ section.id }} .hro-accordion-content {
+      padding-bottom: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.82;
+      color: rgba(107,66,38,0.8);
+    }
+    #hro-combined-{{ section.id }} .hro-accordion-content ul { list-style: none; margin: 0; padding: 0; }
+    #hro-combined-{{ section.id }} .hro-accordion-content ul li {
+      padding: 3px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+    }
+    #hro-combined-{{ section.id }} .hro-accordion-content ul li::before { content: '— '; color: rgba(107,66,38,0.4); }
+
+    /* isolate: don't leave the reveal transform as the only thing keeping the
+       card's z-indexes (live badge 10) out of the root stacking context. */
+    #hro-combined-{{ section.id }} .hro-section {
+      margin-top: 32px; border-radius: 24px;
+      background: #ffffff; box-shadow: 0 25px 50px rgba(0,0,0,0.05);
+      overflow: hidden; isolation: isolate; opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #hro-combined-{{ section.id }} .hro-section.visible { opacity: 1; transform: translateY(0); }
+    /* The master case wrapper's bottom padding already supplies this gap. */
+    #hro-combined-{{ section.id }} .hro-section:first-of-type { margin-top: 0; }
+
+    #hro-combined-{{ section.id }} .hro-compliance {
+      margin-top: 32px;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(107,66,38,0.4);
+    }
+    #hro-combined-{{ section.id }} .hro-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    #hro-combined-{{ section.id }} .hro-animate.visible { opacity: 1; transform: translateY(0); }
+  </style>
+
+  <!-- TOAST -->
+  <div class="hro-toast" id="hroToast" role="status" aria-live="polite">
+    <span class="hro-toast-icon" id="hroToastIcon"></span>
+    <span id="hroToastMsg"></span>
+  </div>
+
+  <!-- WISHLIST OVERLAY + DRAWER -->
+  <div class="hro-wishlist-overlay" id="hroWishOverlay"></div>
+  <div class="hro-wishlist-drawer" id="hroWishDrawer" role="dialog" aria-modal="true" aria-label="Wishlist">
+    <div class="hro-drawer-header">
+      <p class="hro-drawer-title">💗 Wishlist</p>
+      <button class="hro-drawer-close" id="hroDrawerClose" aria-label="Close wishlist">✕</button>
+    </div>
+    <div id="hroWishList"></div>
+  </div>
+
+  <div class="hro-page">
+    <div class="hro-container">
+
+      <!-- ══ STRAWBERRY ══ -->
+      <div class="hro-section" id="hroSection1">
+        <div class="hro-grid">
+
+          <div class="hro-left hro-animate">
+            <h2 class="hro-title">
+              {{ section.settings.s1_name }}
+              <span class="hro-title-accent" style="background-image: linear-gradient(to right, #ec4f9a, #f9c8d8);">{{ section.settings.product_accent_word | default: 'Hash Rosin' }}</span>
+            </h2>
+            <p class="hro-flavors">{{ section.settings.s1_flavors }}</p>
+            <p class="hro-price" style="background-image: linear-gradient(to right, #ec4f9a, #f9c8d8);">{{ section.settings.s1_price }}</p>
+            <p class="hro-desc">{{ section.settings.s1_desc }}</p>
+            <div class="hro-actions">
+              <button class="hro-add-btn"
+                data-variant-id="{{ s1_vid }}"
+                data-product-name="{{ section.settings.s1_name }} Hash Rosin"
+                onclick="HroCart.add(this)">
+                <div class="hro-spinner"></div>
+                <svg class="hro-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="hro-btn-text">Add to cart</span>
+              </button>
+              <button class="hro-wish-btn" aria-label="Add to wishlist"
+                data-variant-id="{{ s1_vid }}"
+                data-product-name="{{ section.settings.s1_name }} Hash Rosin"
+                data-product-price="{{ section.settings.s1_price }}"
+                data-product-image="{{ img_s1 }}"
+                data-product-emoji="🍓"
+                onclick="HroWish.toggle(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+            </div>
+            <button class="hro-wishlist-link" onclick="HroWish.openDrawer()">♡ View wishlist</button>
+          </div>
+
+          <div class="hro-center" style="--arch-bg: radial-gradient(ellipse 80% 60% at 50% 20%, #FFFFFF 0%, #F9C8D8 30%, #F0A0BC 60%, #E87FA8 100%);">
+            <div class="hro-orb-1"></div>
+            <div class="hro-orb-2" style="background: #e8a0bf;"></div>
+            <img class="hro-product-img" src="{{ img_s1 }}" alt="{{ section.settings.s1_name }} Hash Rosin" draggable="false">
+          </div>
+
+          <div class="hro-right hro-animate">
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Description <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s1_accordion_desc }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Flavor Notes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s1_accordion_flavor }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Product Specs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.single_specs }}</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ BANANA LEMON HEADZ ══ -->
+      <div class="hro-section" id="hroSection2">
+        <div class="hro-grid">
+
+          <div class="hro-left hro-animate">
+            <h2 class="hro-title">
+              {{ section.settings.s2_name }}
+              <span class="hro-title-accent" style="background-image: linear-gradient(to right, #e0a11f, #f7e08a);">{{ section.settings.product_accent_word | default: 'Hash Rosin' }}</span>
+            </h2>
+            <p class="hro-flavors">{{ section.settings.s2_flavors }}</p>
+            <p class="hro-price" style="background-image: linear-gradient(to right, #e0a11f, #f7e08a);">{{ section.settings.s2_price }}</p>
+            <p class="hro-desc">{{ section.settings.s2_desc }}</p>
+            <div class="hro-actions">
+              <button class="hro-add-btn"
+                data-variant-id="{{ s2_vid }}"
+                data-product-name="{{ section.settings.s2_name }} Hash Rosin"
+                onclick="HroCart.add(this)">
+                <div class="hro-spinner"></div>
+                <svg class="hro-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="hro-btn-text">Add to cart</span>
+              </button>
+              <button class="hro-wish-btn" aria-label="Add to wishlist"
+                data-variant-id="{{ s2_vid }}"
+                data-product-name="{{ section.settings.s2_name }} Hash Rosin"
+                data-product-price="{{ section.settings.s2_price }}"
+                data-product-image="{{ img_s2 }}"
+                data-product-emoji="🍌"
+                onclick="HroWish.toggle(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+            </div>
+            <button class="hro-wishlist-link" onclick="HroWish.openDrawer()">♡ View wishlist</button>
+          </div>
+
+          <div class="hro-center" style="--arch-bg: radial-gradient(ellipse 80% 60% at 50% 20%, #FFFDF2 0%, #FBEFA8 30%, #F7DE6A 60%, #F0C93C 100%);">
+            <div class="hro-orb-1"></div>
+            <div class="hro-orb-2" style="background: #e0a11f;"></div>
+            <img class="hro-product-img" src="{{ img_s2 }}" alt="{{ section.settings.s2_name }} Hash Rosin" draggable="false">
+          </div>
+
+          <div class="hro-right hro-animate">
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Description <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s2_accordion_desc }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Flavor Notes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s2_accordion_flavor }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Product Specs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.single_specs }}</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ PEACHES & CREAM ══ -->
+      <div class="hro-section" id="hroSection3">
+        <div class="hro-grid">
+
+          <div class="hro-left hro-animate">
+            <h2 class="hro-title">
+              {{ section.settings.s3_name }}
+              <span class="hro-title-accent" style="background-image: linear-gradient(to right, #ef8354, #f9d6bd);">{{ section.settings.product_accent_word | default: 'Hash Rosin' }}</span>
+            </h2>
+            <p class="hro-flavors">{{ section.settings.s3_flavors }}</p>
+            <p class="hro-price" style="background-image: linear-gradient(to right, #ef8354, #f9d6bd);">{{ section.settings.s3_price }}</p>
+            <p class="hro-desc">{{ section.settings.s3_desc }}</p>
+            <div class="hro-actions">
+              <button class="hro-add-btn"
+                data-variant-id="{{ s3_vid }}"
+                data-product-name="{{ section.settings.s3_name }} Hash Rosin"
+                onclick="HroCart.add(this)">
+                <div class="hro-spinner"></div>
+                <svg class="hro-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="hro-btn-text">Add to cart</span>
+              </button>
+              <button class="hro-wish-btn" aria-label="Add to wishlist"
+                data-variant-id="{{ s3_vid }}"
+                data-product-name="{{ section.settings.s3_name }} Hash Rosin"
+                data-product-price="{{ section.settings.s3_price }}"
+                data-product-image="{{ img_s3 }}"
+                data-product-emoji="🍑"
+                onclick="HroWish.toggle(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+            </div>
+            <button class="hro-wishlist-link" onclick="HroWish.openDrawer()">♡ View wishlist</button>
+          </div>
+
+          <div class="hro-center" style="--arch-bg: radial-gradient(ellipse 90% 70% at 10% 5%, #FFF6F0 0%, #FBD9C4 25%, #F7BFA0 60%, #F2A882 100%);">
+            <div class="hro-orb-1"></div>
+            <div class="hro-orb-2" style="background: #ef8354;"></div>
+            <img class="hro-product-img" src="{{ img_s3 }}" alt="{{ section.settings.s3_name }} Hash Rosin" draggable="false">
+          </div>
+
+          <div class="hro-right hro-animate">
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Description <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s3_accordion_desc }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Flavor Notes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s3_accordion_flavor }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Product Specs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.single_specs }}</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ FROOTIE SCOOPS ══ -->
+      <div class="hro-section" id="hroSection4">
+        <div class="hro-grid">
+
+          <div class="hro-left hro-animate">
+            <h2 class="hro-title">
+              {{ section.settings.s4_name }}
+              <span class="hro-title-accent" style="background-image: linear-gradient(to right, #d94e8f, #c79ada);">{{ section.settings.product_accent_word | default: 'Hash Rosin' }}</span>
+            </h2>
+            <p class="hro-flavors">{{ section.settings.s4_flavors }}</p>
+            <p class="hro-price" style="background-image: linear-gradient(to right, #d94e8f, #c79ada);">{{ section.settings.s4_price }}</p>
+            <p class="hro-desc">{{ section.settings.s4_desc }}</p>
+            <div class="hro-actions">
+              <button class="hro-add-btn"
+                data-variant-id="{{ s4_vid }}"
+                data-product-name="{{ section.settings.s4_name }} Hash Rosin"
+                onclick="HroCart.add(this)">
+                <div class="hro-spinner"></div>
+                <svg class="hro-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="hro-btn-text">Add to cart</span>
+              </button>
+              <button class="hro-wish-btn" aria-label="Add to wishlist"
+                data-variant-id="{{ s4_vid }}"
+                data-product-name="{{ section.settings.s4_name }} Hash Rosin"
+                data-product-price="{{ section.settings.s4_price }}"
+                data-product-image="{{ img_s4 }}"
+                data-product-emoji="🍨"
+                onclick="HroWish.toggle(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+            </div>
+            <button class="hro-wishlist-link" onclick="HroWish.openDrawer()">♡ View wishlist</button>
+          </div>
+
+          <div class="hro-center" style="--arch-bg: radial-gradient(ellipse 80% 60% at 50% 20%, #FFF6FA 0%, #F6D8E8 30%, #E0B6DE 65%, #C79ADA 100%);">
+            <div class="hro-orb-1"></div>
+            <div class="hro-orb-2" style="background: #c79ada;"></div>
+            <img class="hro-product-img" src="{{ img_s4 }}" alt="{{ section.settings.s4_name }} Hash Rosin" draggable="false">
+          </div>
+
+          <div class="hro-right hro-animate">
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Description <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s4_accordion_desc }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Flavor Notes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.s4_accordion_flavor }}</div></div>
+            </div>
+            <div class="hro-accordion-item">
+              <button class="hro-accordion-btn open" onclick="hroToggleAccordion(this)">Product Specs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="hro-accordion-body open"><div class="hro-accordion-content">{{ section.settings.single_specs }}</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <p class="hro-compliance">21+ only. Follow all local laws and regulations.</p>
+
+    </div>
+  </div>
+
+</section><!-- /#hro-combined -->
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SHARED FLOATING UI STYLES
+════════════════════════════════════════════════════════════ -->
+<style>
+  .hro-toast {
+    position: fixed; bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    z-index: 9999; display: flex; align-items: center; gap: 10px;
+    background: #1a1a1a; color: #fff; border-radius: 50px; padding: 12px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+    opacity: 0; white-space: nowrap; pointer-events: none;
+  }
+  .hro-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .hro-toast.error { background: #c0392b; }
+  .hro-toast.wish  { background: linear-gradient(135deg, #e8a0bf, #c77dff); }
+  .hro-toast-icon  { font-size: 16px; line-height: 1; }
+
+  .hro-cart-bubble {
+    position: fixed; top: 118px; right: 24px; z-index: 9998;
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border-radius: 50px; padding: 10px 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; color: #1a1a1a;
+    cursor: pointer; opacity: 0; transform: translateY(-16px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    border: 1px solid #e8e0d8; text-decoration: none;
+  }
+  .hro-cart-bubble.show { opacity: 1; transform: translateY(0); }
+  .hro-cart-bubble:hover { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+  .hro-cart-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #1a1a1a; color: #fff; font-size: 10px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .hro-cart-bubble:hover .hro-cart-count { background: #e8a0bf; color: #1a1a1a; }
+
+  .hro-wish-bubble {
+    position: fixed; top: 166px; right: 24px; z-index: 9997;
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border-radius: 50px; padding: 10px 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; color: #1a1a1a;
+    cursor: pointer; border: 1px solid #f0d6e8;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .hro-wish-bubble:hover { background: #fef0f5; border-color: #e8a0bf; }
+  .hro-wish-bubble-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 20px; border-radius: 50px;
+    background: linear-gradient(135deg, #e8a0bf, #c77dff);
+    color: #fff; font-size: 10px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0 5px;
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .hro-wish-bubble-count.bump { transform: scale(1.4); }
+
+  @media (max-width: 640px) {
+    .hro-wish-bubble { top: 105px; right: 2px; }
+    .hro-cart-bubble { top: 62px;  right: 2px; }
+  }
+
+  .hro-wishlist-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+    z-index: 10000; opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease; backdrop-filter: blur(4px);
+  }
+  .hro-wishlist-overlay.open { opacity: 1; pointer-events: all; }
+  .hro-wishlist-drawer {
+    position: fixed; top: 0; right: 0; height: 100%;
+    width: min(400px,100vw); background: #fff; z-index: 10001;
+    padding: 32px 24px; box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    overflow-y: auto; display: flex; flex-direction: column;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .hro-wishlist-drawer.open { transform: translateX(0); }
+  .hro-drawer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .hro-drawer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: #1a1a1a;
+    letter-spacing: -.01em; margin: 0;
+  }
+  .hro-drawer-close {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid #e8e0d8; background: transparent;
+    cursor: pointer; font-size: 18px; color: rgba(63,36,23,0.5);
+    transition: border-color 0.2s, color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .hro-drawer-close:hover { border-color: #c0392b; color: #c0392b; }
+  .hro-drawer-empty {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: rgba(107,66,38,0.4); font-size: 14px; text-align: center;
+  }
+  .hro-drawer-empty-icon { font-size: 48px; }
+  .hro-wish-item { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid #f0ebe4; }
+  .hro-wish-item-img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: #f5f2ee; flex-shrink: 0; }
+  .hro-wish-item-img-placeholder { width: 64px; height: 64px; border-radius: 12px; background: linear-gradient(135deg,#fce4ec,#f5e6d3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .hro-wish-item-info { flex: 1; }
+  .hro-wish-item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0 0 2px;
+  }
+  .hro-wish-item-price {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 300;
+    color: rgba(107,66,38,0.6); margin: 0 0 8px;
+  }
+  .hro-wish-item-actions { display: flex; gap: 8px; }
+  .hro-wish-add-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 50px; border: none;
+    background: #1a1a1a; color: #fff; cursor: pointer;
+  }
+  .hro-wish-add-btn:hover { background: #333; }
+  .hro-wish-remove-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 6px 10px; border-radius: 50px;
+    border: 1px solid #e8e0d8; background: transparent;
+    color: rgba(107,66,38,0.6); cursor: pointer;
+  }
+  .hro-wish-remove-btn:hover { border-color: #c0392b; color: #c0392b; }
+</style>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ALL JAVASCRIPT (unified — master case hero + product sections)
+════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+
+  /* ── TOAST ── */
+  var Toast = {
+    _t: null,
+    show: function (msg, icon, type) {
+      var el  = document.getElementById('hroToast');
+      var txt = document.getElementById('hroToastMsg');
+      var ico = document.getElementById('hroToastIcon');
+      if (!el || !txt || !ico) return;
+      el.className    = 'hro-toast ' + (type || '');
+      txt.textContent = msg;
+      ico.textContent = icon || '';
+      el.classList.add('show');
+      clearTimeout(this._t);
+      this._t = setTimeout(function () { el.classList.remove('show'); }, 3000);
+    }
+  };
+
+  /* ── CART BUBBLE ── */
+  var CartBubble = {
+    bubble: document.getElementById('hroCartBubble'),
+    count:  document.getElementById('hroCartCount'),
+    init: function () {
+      if (!this.bubble) return;
+      fetch('/cart.js').then(function (r) { return r.json(); }).then(function (d) { CartBubble.update(d.item_count); }).catch(function () {});
+    },
+    update: function (n) {
+      /* update theme header cart count if it exists */
+      fetch('/?section_id=cart-icon-bubble')
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          var newContent = doc.getElementById('cart-icon-bubble') || doc.querySelector('.shopify-section') || doc.body;
+          var oldBubble = document.getElementById('cart-icon-bubble');
+          if (newContent && oldBubble) {
+            oldBubble.innerHTML = newContent.innerHTML;
+          }
+        })
+        .catch(function () {});
+
+      if (!this.count || !this.bubble) return;
+      this.count.textContent = n;
+      if (n > 0) this.bubble.classList.add('show');
+    }
+  };
+
+  /* ── WISHLIST BUBBLE ── */
+  var WishBubble = {
+    el:    document.getElementById('hroWishBubble'),
+    count: document.getElementById('hroWishBubbleCount'),
+    update: function (n) {
+      if (!this.el || !this.count) return;
+      this.count.textContent = n;
+      this.count.classList.remove('bump');
+      void this.count.offsetWidth;
+      this.count.classList.add('bump');
+      setTimeout(function () { if (WishBubble.count) WishBubble.count.classList.remove('bump'); }, 300);
+    }
+  };
+
+  /* ── CART ADD (product page buttons) ── */
+  var HroCart = {
+    add: function (btn) {
+      var variantId   = btn.dataset.variantId;
+      var productName = btn.dataset.productName || 'Product';
+      if (!variantId || variantId === '') {
+        Toast.show('Variant not configured yet', '⚠️', 'error');
+        return;
+      }
+      btn.disabled = true;
+      btn.classList.add('loading');
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(variantId, 10), quantity: 1 })
+      })
+      .then(function (res) {
+        if (!res.ok) return res.json().then(function (e) { throw new Error(e.description || 'Error'); });
+        return res.json();
+      })
+      .then(function () {
+        btn.classList.remove('loading');
+        btn.classList.add('added');
+        btn.querySelector('.hro-btn-text').textContent = 'Added!';
+        Toast.show(productName + ' added to cart', '🛒', '');
+        fetch('/cart.js').then(function (r) { return r.json(); }).then(function (d) { CartBubble.update(d.item_count); });
+        document.dispatchEvent(new CustomEvent('cart:refresh'));
+        setTimeout(function () {
+          btn.disabled = false;
+          btn.classList.remove('added');
+          btn.querySelector('.hro-btn-text').textContent = btn.dataset.originalText || 'Add to cart';
+        }, 2500);
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        Toast.show(err.message || 'Could not add to cart', '❌', 'error');
+      });
+    }
+  };
+  window.HroCart = HroCart;
+
+  /* ── WISHLIST ── */
+  var WISH_KEY = 'sundaze_wishlist_v1';
+  var HroWish = {
+    _load: function () { try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; } },
+    _save: function (list) { localStorage.setItem(WISH_KEY, JSON.stringify(list)); },
+    _has:  function (id) { return this._load().some(function (i) { return i.id === id; }); },
+    toggle: function (btn) {
+      var id    = btn.dataset.variantId;
+      var name  = btn.dataset.productName  || 'Product';
+      var price = btn.dataset.productPrice || '';
+      var img   = btn.dataset.productImage || '';
+      var emoji = btn.dataset.productEmoji || '🍩';
+      if (!id || id === '') { Toast.show('Variant not configured yet', '⚠️', 'error'); return; }
+      var list = this._load();
+      var idx  = list.findIndex(function (i) { return i.id === id; });
+      if (idx === -1) {
+        list.push({ id: id, name: name, price: price, img: img, emoji: emoji });
+        this._save(list);
+        this._setWished(btn, true);
+        Toast.show(name + ' wishlisted', '💗', 'wish');
+      } else {
+        list.splice(idx, 1);
+        this._save(list);
+        this._setWished(btn, false);
+        Toast.show('Removed from wishlist', '🤍', '');
+      }
+      WishBubble.update(this._load().length);
+      this._renderDrawer();
+    },
+    _setWished: function (btn, wished) {
+      if (wished) btn.classList.add('wished'); else btn.classList.remove('wished');
+      btn.classList.add('wish-pop');
+      setTimeout(function () { btn.classList.remove('wish-pop'); }, 250);
+    },
+    initButtons: function () {
+      var self = this;
+      document.querySelectorAll('.hro-wish-btn').forEach(function (btn) {
+        if (btn.dataset.variantId && self._has(btn.dataset.variantId)) btn.classList.add('wished');
+      });
+    },
+    openDrawer: function () {
+      var overlay = document.getElementById('hroWishOverlay');
+      var drawer = document.getElementById('hroWishDrawer');
+      if (!overlay || !drawer) return;
+      this._renderDrawer();
+      overlay.classList.add('open');
+      drawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    },
+    closeDrawer: function () {
+      var overlay = document.getElementById('hroWishOverlay');
+      var drawer = document.getElementById('hroWishDrawer');
+      if (!overlay || !drawer) return;
+      overlay.classList.remove('open');
+      drawer.classList.remove('open');
+      document.body.style.overflow = '';
+    },
+    _renderDrawer: function () {
+      var list      = this._load();
+      var container = document.getElementById('hroWishList');
+      if (!container) return;
+      if (list.length === 0) {
+        container.innerHTML = '<div class="hro-drawer-empty"><div class="hro-drawer-empty-icon">🤍</div><p>Your wishlist is empty</p><p style="font-size:12px;opacity:.6">Tap the heart on any product to save it here</p></div>';
+        return;
+      }
+      container.innerHTML = list.map(function (item) {
+        return (
+          '<div class="hro-wish-item" data-wish-id="' + item.id + '">' +
+            (item.img
+              ? '<img class="hro-wish-item-img" src="' + item.img + '" alt="' + item.name + '">'
+              : '<div class="hro-wish-item-img-placeholder">' + item.emoji + '</div>') +
+            '<div class="hro-wish-item-info">' +
+              '<p class="hro-wish-item-name">' + item.name + '</p>' +
+              '<p class="hro-wish-item-price">' + item.price + '</p>' +
+              '<div class="hro-wish-item-actions">' +
+                '<button class="hro-wish-add-btn" onclick="HroWish._addFromDrawer(\'' + item.id + '\',\'' + item.name + '\',this)">Add to cart</button>' +
+                '<button class="hro-wish-remove-btn" onclick="HroWish._removeFromDrawer(\'' + item.id + '\')">Remove</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    },
+    _addFromDrawer: function (id, name, btn) {
+      if (!id) return;
+      btn.textContent = 'Adding…'; btn.disabled = true;
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10), quantity: 1 })
+      })
+      .then(function (res) { if (!res.ok) throw new Error(); return res.json(); })
+      .then(function () {
+        btn.textContent = '✓ Added!';
+        Toast.show(name + ' added to cart', '🛒', '');
+        fetch('/cart.js').then(function (r) { return r.json(); }).then(function (d) { CartBubble.update(d.item_count); });
+        document.dispatchEvent(new CustomEvent('cart:refresh'));
+        setTimeout(function () { btn.textContent = 'Add to cart'; btn.disabled = false; }, 2000);
+      })
+      .catch(function () { btn.textContent = 'Error'; btn.disabled = false; });
+    },
+    _removeFromDrawer: function (id) {
+      var list = this._load().filter(function (i) { return i.id !== id; });
+      this._save(list);
+      document.querySelectorAll('.hro-wish-btn[data-variant-id="' + id + '"]').forEach(function (b) { b.classList.remove('wished'); });
+      WishBubble.update(list.length);
+      this._renderDrawer();
+    }
+  };
+  window.HroWish = HroWish;
+
+  /* ── ACCORDION (product page) ── */
+  function hroToggleAccordion(btn) {
+    var body   = btn.nextElementSibling;
+    var isOpen = btn.classList.contains('open');
+    if (isOpen) { btn.classList.remove('open'); body.classList.remove('open'); }
+    else         { btn.classList.add('open');    body.classList.add('open');    }
+  }
+  window.hroToggleAccordion = hroToggleAccordion;
+
+  /* ── ACCORDION (master case hero right column) ── */
+  document.querySelectorAll('#hro-combined-{{ section.id }} [data-hrp-acc]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var acc    = btn.closest('.hrp-acc');
+      var isOpen = acc.classList.contains('hrp-acc--open');
+      var icon   = btn.querySelector('.hrp-acc__icon');
+      /* toggle only this accordion — others stay as they are */
+      if (isOpen) {
+        acc.classList.remove('hrp-acc--open');
+        if (icon) icon.classList.remove('hrp-acc__icon--open');
+      } else {
+        acc.classList.add('hrp-acc--open');
+        if (icon) icon.classList.add('hrp-acc__icon--open');
+      }
+    });
+  });
+
+  /* ── MASTER CASE HERO — FLAVOR SELECTOR ── */
+  var sid         = '{{ section.id }}';
+  var vidInput    = document.getElementById('hrp-vid-'    + sid);
+  var priceEl     = document.getElementById('hrp-price-'  + sid);
+  var subEl       = document.getElementById('hrp-sub-'    + sid);
+  var descEl      = document.getElementById('hrp-desc-'   + sid);
+  var labelEl     = document.getElementById('hrp-label-'  + sid);
+  var pill1El     = document.getElementById('hrp-pill1-'  + sid);
+  var pill2El     = document.getElementById('hrp-pill2-'  + sid);
+  var jarsEl      = document.getElementById('hrp-jars-'   + sid);
+  var accDescEl   = document.getElementById('hrp-acc-desc-'   + sid);
+  var accFlavorEl = document.getElementById('hrp-acc-flavor-' + sid);
+  var accSpecsEl  = document.getElementById('hrp-acc-specs-'  + sid);
+  var accHighlightEl = document.getElementById('hrp-acc-highlight-' + sid);
+  var optBtns     = document.querySelectorAll('#hro-combined-' + sid + ' [data-hrp-opt]');
+
+  var caseImageMixed = '{{ img_case_mixed }}';
+
+  function makeImg(src, alt, cls) {
+    if (!src) return '';
+    return '<img src="' + src + '" alt="' + (alt || '') + '" class="' + cls + '" loading="lazy">';
+  }
+
+  function renderJars(btn) {
+    var imgSrc = btn.dataset.image || (btn.dataset.mode === 'mixed' ? caseImageMixed : '');
+    if (!jarsEl) return;
+    jarsEl.innerHTML = '';
+    if (imgSrc) jarsEl.innerHTML = makeImg(imgSrc, btn.dataset.label, 'hrp-jar hrp-jar--single');
+  }
+
+  optBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      optBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (vidInput    && btn.dataset.variant)    vidInput.value          = btn.dataset.variant;
+      if (priceEl     && btn.dataset.price)       priceEl.textContent     = btn.dataset.price;
+      if (subEl       && btn.dataset.sub)         subEl.textContent       = btn.dataset.sub;
+      if (descEl      && btn.dataset.desc)        descEl.textContent      = btn.dataset.desc;
+      if (labelEl     && btn.dataset.label)       labelEl.textContent     = btn.dataset.label;
+      if (pill1El     && btn.dataset.pill)        pill1El.textContent     = btn.dataset.pill;
+      if (pill2El     && btn.dataset.pill2)       pill2El.textContent     = btn.dataset.pill2;
+      
+      if (accDescEl)   accDescEl.textContent   = btn.dataset.accDesc   || '';
+      if (accFlavorEl) accFlavorEl.textContent = btn.dataset.accFlavor || '';
+
+      if (accSpecsEl) {
+        accSpecsEl.innerHTML = btn.dataset.accSpecs || '';
+      }
+      if (accHighlightEl) {
+        accHighlightEl.textContent = btn.dataset.accHighlight || '';
+      }
+
+      /* ── SWAP ROSIN CLOSE-UP IMAGES ── */
+      var newRosin = btn.dataset.rosinImg;
+      if (newRosin) {
+        var miniImg = document.getElementById('hrp-rosin-mini-' + sid);
+        var featImg = document.getElementById('hrp-rosin-feat-' + sid);
+        if (miniImg && miniImg.tagName === 'IMG') miniImg.src = newRosin;
+        if (featImg && featImg.tagName === 'IMG') featImg.src = newRosin;
+      }
+
+      /* ── SWAP LID ICON ── */
+      var newLid = btn.dataset.lidImg;
+      if (newLid) {
+        var lidImg = document.getElementById('hrp-lid-icon-' + sid);
+        if (lidImg && lidImg.tagName === 'IMG') lidImg.src = newLid;
+      }
+
+      /* ── SWAP WISHLIST DATA ── */
+      var mainWish = document.getElementById('hrp-wish-' + sid);
+      if (mainWish) {
+        mainWish.dataset.variantId    = btn.dataset.variant || '';
+        mainWish.dataset.productName  = btn.dataset.pill || '';
+        mainWish.dataset.productPrice = btn.dataset.price || '';
+        mainWish.dataset.productImage = btn.dataset.image || '';
+        
+        if (HroWish._has(mainWish.dataset.variantId)) {
+          mainWish.classList.add('wished');
+          mainWish.textContent = '♥';
+          mainWish.style.color = '#ec4f9a';
+          mainWish.style.borderColor = '#ec4f9a';
+        } else {
+          mainWish.classList.remove('wished');
+          mainWish.textContent = '♡';
+          mainWish.style.color = '';
+          mainWish.style.borderColor = '';
+        }
+      }
+
+      renderJars(btn);
+    });
+  });
+
+  /* ── MASTER CASE HERO — ASYNC ATC ── */
+  var heroForm = document.querySelector('#hro-combined-' + sid + ' [data-hrp-form]');
+
+  /* ── MIXED CASE FLAVOR PICKER ──
+     Four steppers sharing one cap. The counts are mirrored into hidden
+     properties[<flavor>] inputs on the cart form; a flavor at 0 is written as
+     an empty string, which Shopify drops, so only chosen flavors reach the
+     order. The whole block only applies to the mixed case — picking a single
+     flavor clears every property. */
+  var MixPicker = {
+    el:     document.getElementById('hrp-mix-' + sid),
+    active: false,
+    qty:    [],
+    max:    4,
+
+    init: function () {
+      if (!this.el || !heroForm) return;
+      var self = this;
+
+      this.max   = parseInt(this.el.dataset.max, 10) || 4;
+      this.props = heroForm.querySelectorAll('[data-hrp-mix-prop]');
+      this.qtyEls   = this.el.querySelectorAll('[data-hrp-mix-qty]');
+      this.meterEl  = this.el.querySelector('[data-hrp-mix-meter]');
+      this.hintEl   = this.el.querySelector('[data-hrp-mix-hint]');
+      this.atcBtn   = heroForm.querySelector('[type="submit"]');
+      this.atcLabel = this.atcBtn ? this.atcBtn.innerHTML : '';
+
+      // Default to one of each — the standard four-flavor case.
+      this.qty = [];
+      for (var i = 0; i < this.qtyEls.length; i++) {
+        this.qty.push(i < this.max ? 1 : 0);
+      }
+
+      this.el.querySelectorAll('[data-hrp-mix-step]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          self.step(
+            parseInt(btn.dataset.hrpMixIndex, 10),
+            parseInt(btn.dataset.hrpMixStep, 10)
+          );
+        });
+      });
+
+      // The starting option is the mixed case, so open with the picker on.
+      var current = document.querySelector('#hro-combined-' + sid + ' [data-hrp-opt].active');
+      this.setActive(!current || current.dataset.mode === 'mixed');
+    },
+
+    total: function () {
+      return this.qty.reduce(function (a, b) { return a + b; }, 0);
+    },
+
+    step: function (index, delta) {
+      if (isNaN(index) || isNaN(delta)) return;
+      var next = this.qty[index] + delta;
+      if (next < 0 || (delta > 0 && this.total() >= this.max)) return;
+      this.qty[index] = next;
+      this.render();
+    },
+
+    setActive: function (on) {
+      if (!this.el || !this.props) return;
+      this.active = !!on;
+      this.el.classList.toggle('is-visible', this.active);
+      this.render();
+    },
+
+    render: function () {
+      if (!this.el || !this.props) return;
+      var self  = this;
+      var total = this.total();
+      var left  = this.max - total;
+
+      this.qtyEls.forEach(function (span, i) { span.textContent = self.qty[i]; });
+
+      this.el.querySelectorAll('[data-hrp-mix-step]').forEach(function (btn) {
+        var i = parseInt(btn.dataset.hrpMixIndex, 10);
+        var d = parseInt(btn.dataset.hrpMixStep, 10);
+        btn.disabled = d > 0 ? left <= 0 : self.qty[i] <= 0;
+      });
+
+      if (this.meterEl) this.meterEl.textContent = total + ' of ' + this.max + ' selected';
+      if (this.hintEl) {
+        this.hintEl.textContent = this.active && left > 0
+          ? 'Add ' + left + ' more jar' + (left === 1 ? '' : 's') + ' to complete the case.'
+          : '';
+      }
+
+      // Only the mixed case carries flavor properties. Disabled inputs are left
+      // out of FormData entirely, so a flavor at 0 can't reach the order even if
+      // blank-value properties were ever accepted.
+      this.props.forEach(function (input, i) {
+        var chosen = self.active && self.qty[i] > 0;
+        input.value    = chosen ? String(self.qty[i]) : '';
+        input.disabled = !chosen;
+      });
+
+      if (this.atcBtn) {
+        var blocked = this.active && total !== this.max;
+        this.atcBtn.disabled = blocked;
+        this.atcBtn.innerHTML = blocked
+          ? 'Choose ' + this.max + ' jars'
+          : this.atcLabel;
+      }
+    }
+  };
+  MixPicker.init();
+
+  // Show the picker only while the mixed case is the selected option.
+  optBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      MixPicker.setActive(btn.dataset.mode === 'mixed');
+    });
+  });
+
+  if (heroForm) {
+    heroForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (MixPicker.active && MixPicker.total() !== MixPicker.max) return;
+      var btn  = heroForm.querySelector('[type="submit"]');
+      var orig = btn.innerHTML;
+      btn.textContent = 'Adding…';
+      btn.disabled    = true;
+      fetch('/cart/add.js', { method: 'POST', body: new FormData(heroForm) })
+        .then(function (r) {
+          if (!r.ok) throw new Error('cart error');
+          btn.innerHTML = '<span class="hrp-atc__check">✓</span> Added!';
+          btn.style.background = '#2a7a4b';
+          Toast.show('Added to cart', '🛒', '');
+          fetch('/cart.js').then(function (r2) { return r2.json(); }).then(function (d) { CartBubble.update(d.item_count); });
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+          setTimeout(function () {
+            btn.innerHTML        = orig;
+            btn.style.background = '';
+            btn.disabled         = false;
+          }, 1800);
+        })
+        .catch(function () {
+          HTMLFormElement.prototype.submit.call(heroForm);
+        });
+    });
+  }
+
+  /* ── MASTER CASE HERO — WISH BUTTON (plain heart toggle) ── */
+  document.querySelectorAll('#hro-combined-' + sid + ' .hrp-wish').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var wished          = btn.dataset.wished === '1';
+      btn.dataset.wished  = wished ? '0' : '1';
+      btn.textContent     = wished ? '♡' : '♥';
+      btn.style.color     = wished ? '' : '#ec4f9a';
+      btn.style.borderColor = wished ? '' : '#ec4f9a';
+    });
+  });
+
+  /* ── LIVE VIEWERS — MASTER CASE HERO ── */
+  var CaseLive = {
+    badge:   document.getElementById('hrpCaseLiveBadge'),
+    countEl: document.getElementById('hrpCaseLiveCount'),
+    wsUrl:   'wss://sundaze-live-viewers.mamunhossain-services.workers.dev',
+    _fallbackTimer: null,
+    init: function () {
+      if (!this.badge) return;
+      this.connectWebSocket();
+    },
+    connectWebSocket: function () {
+      var self = this;
+      try {
+        var ws = new WebSocket(this.wsUrl);
+        ws.onopen    = function () { self.badge.classList.add('hrp-live-visible'); clearInterval(self._fallbackTimer); };
+        ws.onmessage = function (event) {
+          try { var d = JSON.parse(event.data); if (d.type === 'count') self.updateCount(d.count); } catch (ex) {}
+        };
+        ws.onerror = function () { self.fallbackSimulation(); };
+        ws.onclose = function () { self.fallbackSimulation(); };
+      } catch (ex) { this.fallbackSimulation(); }
+    },
+    updateCount: function (count) {
+      if (count > 0 && this.countEl) { this.countEl.textContent = count; this.badge.classList.add('hrp-live-visible'); }
+    },
+    fallbackSimulation: function () {
+      if (this._fallbackTimer) return;
+      var self = this;
+      this.badge.classList.add('hrp-live-visible');
+      var v = Math.floor(Math.random() * 24) + 14;
+      this.updateCount(v);
+      this._fallbackTimer = setInterval(function () {
+        v = Math.max(8, v + Math.floor(Math.random() * 5) - 2);
+        self.updateCount(v);
+      }, 3500);
+    }
+  };
+
+  /* ── SCROLL REVEAL ── */
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll(
+    '#hro-combined-' + sid + ' .hro-card, ' +
+    '#hro-combined-' + sid + ' .hro-section, ' +
+    '#hro-combined-' + sid + ' .hro-animate, ' +
+    '#hro-combined-' + sid + ' .hro-left, ' +
+    '#hro-combined-' + sid + ' .hro-right'
+  ).forEach(function (el) { observer.observe(el); });
+
+  /* ── WISHLIST DRAWER EVENTS ── */
+  var closeBtn = document.getElementById('hroDrawerClose');
+  if (closeBtn) closeBtn.addEventListener('click', function () { HroWish.closeDrawer(); });
+  var overlayEl = document.getElementById('hroWishOverlay');
+  if (overlayEl) overlayEl.addEventListener('click', function () { HroWish.closeDrawer(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') HroWish.closeDrawer(); });
+
+  /* ── CART REFRESH LISTENER ── */
+  document.addEventListener('cart:refresh', function () {
+    /* intentionally empty — cart count updated directly after each ATC call */
+  });
+
+  /* ── INIT ── */
+  document.querySelectorAll('.hro-add-btn').forEach(function (btn) {
+    var textEl = btn.querySelector('.hro-btn-text');
+    if (textEl) btn.dataset.originalText = textEl.textContent;
+  });
+
+  CartBubble.init();
+  HroWish.initButtons();
+  if (WishBubble.el) WishBubble.update(HroWish._load().length);
+  CaseLive.init();
+
+})();
+</script>
+
+{%- if hide_until_cta -%}
+<script>
+/* ── REVEAL ON "SORBETTO COLLECTION" CTA CLICK ──
+   The whole product block stays hidden until a link pointing at #sorbetto
+   is clicked (the collection card), or the page is opened with that hash. */
+(function () {
+  var ANCHOR = 'sorbetto';
+  var wrap = document.getElementById('hro-combined-{{ section.id }}');
+  if (!wrap) return;
+
+  /* Always visible inside the theme editor so it stays editable. */
+  if (window.Shopify && window.Shopify.designMode) {
+    wrap.classList.remove('hro-gated');
+    return;
+  }
+
+  function currentHash() {
+    return (window.location.hash || '').replace('#', '');
+  }
+
+  function scrollToAnchor() {
+    var target = document.getElementById(ANCHOR) || wrap;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function reveal(doScroll) {
+    var wasHidden = wrap.classList.contains('hro-gated');
+    wrap.classList.remove('hro-gated');
+    if (wasHidden) window.dispatchEvent(new Event('resize'));
+    if (doScroll) {
+      requestAnimationFrame(function () { requestAnimationFrame(scrollToAnchor); });
+    }
+  }
+
+  /* Landed on the page with #sorbetto already in the URL. */
+  if (currentHash() === ANCHOR) reveal(true);
+
+  window.addEventListener('hashchange', function () {
+    if (currentHash() === ANCHOR) reveal(true);
+  });
+
+  document.addEventListener('click', function (e) {
+    var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!link) return;
+
+    var href = link.getAttribute('href') || '';
+    var hashAt = href.indexOf('#');
+    if (hashAt === -1 || href.slice(hashAt + 1) !== ANCHOR) return;
+
+    /* Links to another page keep their normal navigation — the hash check
+       above will reveal the block once that page loads. */
+    var path = href.slice(0, hashAt).replace(/\/$/, '');
+    var here = window.location.pathname.replace(/\/$/, '');
+    if (path && path !== here) return;
+
+    e.preventDefault();
+    if (currentHash() !== ANCHOR) {
+      history.pushState(null, '', '#' + ANCHOR);
+    }
+    reveal(true);
+  });
+})();
+</script>
+{%- endif -%}
+
+
+{% schema %}
+{
+  "name": "Hash Rosin Combined Page",
+  "settings": [
+
+    { "type": "header", "content": "Page Background" },
+    { "type": "color",    "id": "bg_color", "label": "Background colour", "default": "#f7ece2" },
+
+    { "type": "header", "content": "Visibility" },
+    { "type": "checkbox", "id": "hide_until_cta", "label": "Hide until the collection card is clicked", "default": false, "info": "Keeps this whole block hidden until a link to #sorbetto (the Sorbetto Collection card) is clicked. Always visible in the theme editor." },
+
+    { "type": "header", "content": "Master Case — Title" },
+    { "type": "text",     "id": "title_top",       "label": "Title — top word",       "default": "Sorbetto" },
+    { "type": "text",     "id": "title_gradient",  "label": "Title — gradient word",  "default": "Master Case" },
+    { "type": "text",     "id": "flavor_line",     "label": "Flavor subtitle (Mixed default)", "default": "Strawberry • Banana Lemon Headz • Peaches & Cream • Frootie Scoops" },
+    { "type": "text",     "id": "choose_label",    "label": "Selector label",         "default": "Choose Your Case" },
+    { "type": "textarea", "id": "description",     "label": "Description (default / Mixed)", "default": "A premium assortment of solventless THCA hash rosin featuring all four Sorbetto flavors. Crafted for connoisseurs who appreciate exceptional terpene preservation, rich flavor, and small-batch quality." },
+    { "type": "textarea", "id": "flavor_notes",    "label": "Flavor Notes (default / Mixed)", "default": "Bright strawberry, citrus-forward banana lemon, velvety peaches and cream, and a fruity dessert swirl — all in one case." },
+    { "type": "textarea", "id": "collection_note", "label": "Collection accordion text", "default": "Part of the Sundaze Sorbetto hash rosin collection." },
+
+    { "type": "header", "content": "Master Case — Feature Card" },
+    { "type": "text",         "id": "feature_title", "label": "Feature card — title",    "default": "Solventless Rosin" },
+    { "type": "text",         "id": "feature_sub",   "label": "Feature card — subtitle", "default": "Cold Cure Live Rosin" },
+    { "type": "text",         "id": "feature_note",  "label": "Feature card — note",     "default": "2G Jar • 90–120µ • Small Batch" },
+    { "type": "image_picker", "id": "rosin_image",   "label": "Rosin close-up image (defaults to the packaged asset)" },
+    { "type": "image_picker", "id": "lid_icon",      "label": "Lid icon — default / Mixed (defaults to the packaged asset)" },
+
+    { "type": "header", "content": "Master Case — Flavor-Specific Lid Icons" },
+    { "type": "image_picker", "id": "lid_icon_strawberry", "label": "Lid icon — Strawberry" },
+    { "type": "image_picker", "id": "lid_icon_banana",     "label": "Lid icon — Banana Lemon Headz" },
+    { "type": "image_picker", "id": "lid_icon_peaches",    "label": "Lid icon — Peaches & Cream" },
+    { "type": "image_picker", "id": "lid_icon_frootie",    "label": "Lid icon — Frootie Scoops" },
+
+    { "type": "header", "content": "Mixed case — flavor picker" },
+    {
+      "type": "text",
+      "id": "mix_label",
+      "label": "Picker heading",
+      "default": "Choose your 4 jars"
+    },
+    {
+      "type": "range",
+      "id": "mix_max",
+      "label": "Jars per case",
+      "info": "How many jars the shopper picks. Their choice is saved on the order as one line item property per flavor.",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "unit": "jar",
+      "default": 4
+    },
+    { "type": "header", "content": "Master Case — Mixed Master Case" },
+    { "type": "product",      "id": "mixed_product",     "label": "Mixed Master Case product" },
+    { "type": "text",         "id": "mixed_variant_id",  "label": "Shopify Variant ID (used when no product is linked)" },
+    { "type": "text",         "id": "price_fallback",    "label": "Price (used when no product is linked)", "default": "$240.00" },
+    { "type": "image_picker", "id": "case_image_mixed",  "label": "Master Case hero image (defaults to the packaged asset)" },
+    { "type": "textarea",     "id": "mixed_acc_desc",    "label": "Description accordion", "default": "The Sorbetto Master Case brings all four Sundaze hash rosin flavors together in one premium, small-batch collection." },
+    { "type": "textarea",     "id": "mixed_acc_flavor",  "label": "Flavor Notes accordion", "default": "Sweet strawberry, bright banana lemon, velvety peaches and cream, and a fruity dessert swirl." },
+    {
+      "type": "richtext",
+      "id": "mixed_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>4 Flavor Sorbetto Master Case</li><li>2G Cold Cure Live Rosin Per Jar</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>"
+    },
+    { "type": "text", "id": "mixed_acc_highlight", "label": "Product Specs highlight text", "default": "🍨 All Four Sorbetto Flavors Inside" },
+
+    { "type": "header", "content": "Master Case — Strawberry" },
+    { "type": "product",      "id": "strawberry_product",    "label": "Strawberry product" },
+    { "type": "text",         "id": "strawberry_variant_id", "label": "Shopify Variant ID (used when no product is linked)" },
+    { "type": "text",         "id": "strawberry_price",      "label": "Price (used when no product is linked)", "default": "$65.00" },
+    { "type": "image_picker", "id": "case_image_strawberry", "label": "Strawberry jar image (defaults to the packaged asset)" },
+    { "type": "textarea",     "id": "strawberry_desc",       "label": "Description when selected", "default": "A single 2G jar of Melted Strawberries cold cure live rosin — sweet, jammy, and velvety smooth." },
+    { "type": "textarea",     "id": "strawberry_acc_desc",   "label": "Description accordion", "default": "Melted Strawberries is a berry-forward solventless rosin with a soft, creamy body and true-to-plant strawberry flavor." },
+    { "type": "textarea",     "id": "strawberry_acc_flavor", "label": "Flavor Notes accordion", "default": "Sweet strawberry, whipped cream, sugared berry, and a smooth rosin finish." },
+    {
+      "type": "richtext",
+      "id": "strawberry_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>"
+    },
+    { "type": "text", "id": "strawberry_acc_highlight", "label": "Product Specs highlight text", "default": "🍓 Part of the Sorbetto Collection" },
+
+    { "type": "header", "content": "Master Case — Banana Lemon Headz" },
+    { "type": "product",      "id": "banana_product",    "label": "Banana Lemon Headz product" },
+    { "type": "text",         "id": "banana_variant_id", "label": "Shopify Variant ID (used when no product is linked)" },
+    { "type": "text",         "id": "banana_price",      "label": "Price (used when no product is linked)", "default": "$65.00" },
+    { "type": "image_picker", "id": "case_image_banana", "label": "Banana Lemon Headz jar image (defaults to the packaged asset)" },
+    { "type": "textarea",     "id": "banana_desc",       "label": "Description when selected", "default": "A single 2G jar of Banana Lemon Headz cold cure live rosin — bright citrus over creamy tropical banana." },
+    { "type": "textarea",     "id": "banana_acc_desc",   "label": "Description accordion", "default": "Banana Lemon Headz pairs citrus lift with a soft tropical body for one of the most aromatic pressings in the Sorbetto lineup." },
+    { "type": "textarea",     "id": "banana_acc_flavor", "label": "Flavor Notes accordion", "default": "Lemon zest, ripe banana, sweet citrus peel, and a bright rosin finish." },
+    {
+      "type": "richtext",
+      "id": "banana_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>"
+    },
+    { "type": "text", "id": "banana_acc_highlight", "label": "Product Specs highlight text", "default": "🍌 Part of the Sorbetto Collection" },
+
+    { "type": "header", "content": "Master Case — Peaches & Cream" },
+    { "type": "product",      "id": "peaches_product",    "label": "Peaches & Cream product" },
+    { "type": "text",         "id": "peaches_variant_id", "label": "Shopify Variant ID (used when no product is linked)" },
+    { "type": "text",         "id": "peaches_price",      "label": "Price (used when no product is linked)", "default": "$65.00" },
+    { "type": "image_picker", "id": "case_image_peaches", "label": "Peaches & Cream jar image (defaults to the packaged asset)" },
+    { "type": "textarea",     "id": "peaches_desc",       "label": "Description when selected", "default": "A single 2G jar of Peaches & Cream cold cure live rosin — juicy stone fruit with a silky, sweet finish." },
+    { "type": "textarea",     "id": "peaches_acc_desc",   "label": "Description accordion", "default": "Peaches & Cream delivers a mellow stone-fruit profile wrapped in the creamy texture cold cure rosin is known for." },
+    { "type": "textarea",     "id": "peaches_acc_flavor", "label": "Flavor Notes accordion", "default": "Ripe peach, sweet cream, vanilla sugar, and a velvety rosin finish." },
+    {
+      "type": "richtext",
+      "id": "peaches_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>"
+    },
+    { "type": "text", "id": "peaches_acc_highlight", "label": "Product Specs highlight text", "default": "🍑 Part of the Sorbetto Collection" },
+
+    { "type": "header", "content": "Master Case — Frootie Scoops" },
+    { "type": "product",      "id": "frootie_product",    "label": "Frootie Scoops product" },
+    { "type": "text",         "id": "frootie_variant_id", "label": "Shopify Variant ID (used when no product is linked)" },
+    { "type": "text",         "id": "frootie_price",      "label": "Price (used when no product is linked)", "default": "$65.00" },
+    { "type": "image_picker", "id": "case_image_frootie", "label": "Frootie Scoops jar image (defaults to the packaged asset)" },
+    { "type": "textarea",     "id": "frootie_desc",       "label": "Description when selected", "default": "A single 2G jar of Frootie Scoops cold cure live rosin — a fruity, dessert-inspired swirl." },
+    { "type": "textarea",     "id": "frootie_acc_desc",   "label": "Description accordion", "default": "Frootie Scoops is the dessert centerpiece of the Sorbetto collection — playful, fruit-forward, and finished with a creamy sweetness." },
+    { "type": "textarea",     "id": "frootie_acc_flavor", "label": "Flavor Notes accordion", "default": "Mixed berry, cereal milk, sweet cream, and a smooth rosin finish." },
+    {
+      "type": "richtext",
+      "id": "frootie_acc_specs",
+      "label": "Product Specs accordion",
+      "default": "<ul><li>Single Flavor 2G Jar</li><li>Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li></ul>"
+    },
+    { "type": "text", "id": "frootie_acc_highlight", "label": "Product Specs highlight text", "default": "🍨 Part of the Sorbetto Collection" },
+
+    { "type": "header", "content": "Individual Products — Shared" },
+    { "type": "text", "id": "product_accent_word", "label": "Title accent word", "default": "Hash Rosin" },
+    {
+      "type": "richtext",
+      "id": "single_specs",
+      "label": "Product Specs accordion (all four products)",
+      "default": "<ul><li>2G Cold Cure Live Rosin</li><li>90–120µ Solventless Extraction</li><li>Fresh Frozen Indoor Flower</li><li>Small Batch Pressed</li><li>Dessert-Inspired Flavor Profile</li></ul>"
+    },
+
+    { "type": "header", "content": "Individual Products — 1 (Strawberry)" },
+    { "type": "image_picker", "id": "s1_image",           "label": "Product Image (defaults to the packaged asset)" },
+    { "type": "text",         "id": "s1_name",            "label": "Product Name",  "default": "Strawberry" },
+    { "type": "text",         "id": "s1_flavors",         "label": "Flavor Line",   "default": "Sweet • Berry • Creamy" },
+    { "type": "text",         "id": "s1_price",           "label": "Price",         "default": "$65.00" },
+    { "type": "textarea",     "id": "s1_desc",            "label": "Description",   "default": "Ripe, jammy strawberry pressed into velvety cold cure rosin — sweet, smooth, and full of berry character from the first dab to the last." },
+    { "type": "text",         "id": "s1_variant_id",      "label": "Variant ID (optional — defaults to the linked flavor product)" },
+    { "type": "textarea",     "id": "s1_accordion_desc",  "label": "Accordion — Description", "default": "Melted Strawberries is a berry-forward solventless rosin with a soft, creamy body and true-to-plant strawberry flavor." },
+    { "type": "textarea",     "id": "s1_accordion_flavor","label": "Accordion — Flavor Notes", "default": "Sweet strawberry, whipped cream, sugared berry, and a smooth rosin finish." },
+
+    { "type": "header", "content": "Individual Products — 2 (Banana Lemon Headz)" },
+    { "type": "image_picker", "id": "s2_image",           "label": "Product Image (defaults to the packaged asset)" },
+    { "type": "text",         "id": "s2_name",            "label": "Product Name",  "default": "Banana Lemon Headz" },
+    { "type": "text",         "id": "s2_flavors",         "label": "Flavor Line",   "default": "Citrus • Tropical • Bright" },
+    { "type": "text",         "id": "s2_price",           "label": "Price",         "default": "$65.00" },
+    { "type": "textarea",     "id": "s2_desc",            "label": "Description",   "default": "Bright lemon zest layered over ripe, creamy banana — a lively cold cure rosin that finishes clean and tropical." },
+    { "type": "text",         "id": "s2_variant_id",      "label": "Variant ID (optional — defaults to the linked flavor product)" },
+    { "type": "textarea",     "id": "s2_accordion_desc",  "label": "Accordion — Description", "default": "Banana Lemon Headz pairs citrus lift with a soft tropical body for one of the most aromatic pressings in the Sorbetto lineup." },
+    { "type": "textarea",     "id": "s2_accordion_flavor","label": "Accordion — Flavor Notes", "default": "Lemon zest, ripe banana, sweet citrus peel, and a bright rosin finish." },
+
+    { "type": "header", "content": "Individual Products — 3 (Peaches & Cream)" },
+    { "type": "image_picker", "id": "s3_image",           "label": "Product Image (defaults to the packaged asset)" },
+    { "type": "text",         "id": "s3_name",            "label": "Product Name",  "default": "Peaches & Cream" },
+    { "type": "text",         "id": "s3_flavors",         "label": "Flavor Line",   "default": "Peach • Velvety • Sweet" },
+    { "type": "text",         "id": "s3_price",           "label": "Price",         "default": "$65.00" },
+    { "type": "textarea",     "id": "s3_desc",            "label": "Description",   "default": "Juicy orchard peach folded into sweet cream — a soft, dessert-forward rosin with a silky, full-bodied finish." },
+    { "type": "text",         "id": "s3_variant_id",      "label": "Variant ID (optional — defaults to the linked flavor product)" },
+    { "type": "textarea",     "id": "s3_accordion_desc",  "label": "Accordion — Description", "default": "Peaches & Cream delivers a mellow stone-fruit profile wrapped in the creamy texture cold cure rosin is known for." },
+    { "type": "textarea",     "id": "s3_accordion_flavor","label": "Accordion — Flavor Notes", "default": "Ripe peach, sweet cream, vanilla sugar, and a velvety rosin finish." },
+
+    { "type": "header", "content": "Individual Products — 4 (Frootie Scoops)" },
+    { "type": "image_picker", "id": "s4_image",           "label": "Product Image (defaults to the packaged asset)" },
+    { "type": "text",         "id": "s4_name",            "label": "Product Name",  "default": "Frootie Scoops" },
+    { "type": "text",         "id": "s4_flavors",         "label": "Flavor Line",   "default": "Fruity • Sweet • Creamy" },
+    { "type": "text",         "id": "s4_price",           "label": "Price",         "default": "$65.00" },
+    { "type": "textarea",     "id": "s4_desc",            "label": "Description",   "default": "A scoop-shop swirl of mixed berries and sweet cereal milk, pressed small batch for rich flavor in every dab." },
+    { "type": "text",         "id": "s4_variant_id",      "label": "Variant ID (optional — defaults to the linked flavor product)" },
+    { "type": "textarea",     "id": "s4_accordion_desc",  "label": "Accordion — Description", "default": "Frootie Scoops is the dessert centerpiece of the Sorbetto collection — playful, fruit-forward, and finished with a creamy sweetness." },
+    { "type": "textarea",     "id": "s4_accordion_flavor","label": "Accordion — Flavor Notes", "default": "Mixed berry, cereal milk, sweet cream, and a smooth rosin finish." }
+
+  ],
+  "presets": [
+    { "name": "Hash Rosin Combined Page" }
+  ]
+}
+{% endschema %}

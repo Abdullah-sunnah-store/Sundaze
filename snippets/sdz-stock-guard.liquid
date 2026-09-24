@@ -1,0 +1,257 @@
+{%- comment -%}
+  ── SUNDAZE STOCK GUARD ───────────────────────────────────────────────
+  The custom landing pages (buckets, flavors, neapolitan, sorbetto) build
+  their add-to-cart buttons from hardcoded variant ids or product pickers
+  and never looked at inventory, so a sold-out jar still rendered a live
+  "Add to cart". This renders one variant-availability map for the whole
+  storefront and disables every add-to-cart that points at a sold-out
+  variant, whichever section drew it.
+
+  Availability comes from `variant.available`, so "continue selling when
+  out of stock" variants stay purchasable exactly as Shopify intends.
+
+  Note: the map covers the first 50 products of the automatic `all`
+  collection (the store currently has 17). If the catalog grows past 50,
+  raise the limit below.
+{%- endcomment -%}
+
+<style>
+  .sdz-soldout,
+  .sdz-soldout:hover {
+    background: #d9d3cc !important;
+    border-color: #d9d3cc !important;
+    color: #7c736b !important;
+    cursor: not-allowed !important;
+    opacity: 1;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .sdz-soldout .sdz-btn-icon,
+  .sdz-soldout .neo-btn-icon,
+  .sdz-soldout .hro-btn-icon,
+  .sdz-soldout .sdz-btn-spinner,
+  .sdz-soldout .neo-spinner,
+  .sdz-soldout .hro-spinner,
+  .sdz-soldout .hrp-atc__check,
+  .sdz-soldout .nbp-atc__check,
+  .sdz-soldout .nbc-atc__check { display: none; }
+
+  .sdz-opt-soldout {
+    opacity: 0.45;
+    text-decoration: line-through;
+  }
+</style>
+
+<script>
+  window.SdzStock = {
+    variants: {
+      {%- for sdz_product in collections.all.products limit: 50 -%}
+        {%- for sdz_variant in sdz_product.variants -%}
+          "{{ sdz_variant.id }}": {{ sdz_variant.available | json }},
+        {%- endfor -%}
+      {%- endfor -%}
+    }
+  };
+</script>
+
+<script>
+(function () {
+  var MAP        = (window.SdzStock && window.SdzStock.variants) || {};
+  var SOLD_LABEL = 'Sold out';
+
+  /* Unknown ids fail open — a variant we can't see (unpublished, or past the
+     50-product window) is left alone rather than blocked by mistake. */
+  function isSoldOut(id) {
+    if (id === undefined || id === null) return false;
+    id = String(id).trim();
+    if (!id) return false;
+    return MAP[id] === false;
+  }
+  window.SdzStock.isSoldOut = isSoldOut;
+
+  /* ── Shared button state ── */
+  function markSoldOut(btn) {
+    if (btn.dataset.sdzSoldout === '1') return;
+    btn.dataset.sdzSoldout = '1';
+    if (btn.dataset.sdzLabel === undefined) btn.dataset.sdzLabel = btn.innerHTML;
+    if (btn.hasAttribute('onclick')) {
+      btn.dataset.sdzOnclick = btn.getAttribute('onclick');
+      btn.removeAttribute('onclick');
+    }
+    btn.classList.add('sdz-soldout');
+    btn.disabled = true;
+    btn.setAttribute('aria-disabled', 'true');
+    var label = btn.querySelector('.sdz-btn-text, .neo-btn-text, .hro-btn-text, .sf-btn-text');
+    if (label) { label.textContent = SOLD_LABEL; } else { btn.textContent = SOLD_LABEL; }
+  }
+
+  function clearSoldOut(btn) {
+    if (btn.dataset.sdzSoldout !== '1') return;
+    delete btn.dataset.sdzSoldout;
+    btn.classList.remove('sdz-soldout');
+    btn.disabled = false;
+    btn.removeAttribute('aria-disabled');
+    if (btn.dataset.sdzOnclick) {
+      btn.setAttribute('onclick', btn.dataset.sdzOnclick);
+      delete btn.dataset.sdzOnclick;
+    }
+    if (btn.dataset.sdzLabel !== undefined) btn.innerHTML = btn.dataset.sdzLabel;
+  }
+
+  function applyTo(btn, soldOut) {
+    if (!btn) return;
+    if (soldOut) markSoldOut(btn); else clearSoldOut(btn);
+  }
+
+  /* ── 1. Standalone add buttons ──
+     The `onclick*="Cart.add"` clause catches every inline-bound add button in
+     the theme (SdzCart / SfCart / HroCart / NeoCart) including any added
+     later; the class list covers the ones bound by delegated listeners.
+     Wishlist buttons also carry data-variant-id and are deliberately left
+     alone — saving a sold-out item is still valid. */
+  var SIMPLE_SELECTOR = [
+    'button[data-variant-id][onclick*="Cart.add"]',
+    '.sdz-add-btn[data-variant-id]',
+    '.sf-add-btn[data-variant-id]',
+    '.hro-add-btn[data-variant-id]',
+    '.neo-add-btn[data-variant-id]',
+    '[data-sdz-atc][data-variant-id]'
+  ].join(', ');
+
+  function guardSimpleButtons() {
+    document.querySelectorAll(SIMPLE_SELECTOR).forEach(function (btn) {
+      applyTo(btn, isSoldOut(btn.dataset.variantId));
+    });
+  }
+
+  /* ── 2. Plain /cart/add forms with a fixed variant (single-flavor cards) ── */
+  function guardStaticForms() {
+    document.querySelectorAll('form[action="/cart/add"]').forEach(function (form) {
+      if (form.hasAttribute('data-hrp-form') || form.hasAttribute('data-nbp-form')) return;
+      /* Dawn's own product form already renders its sold-out state. */
+      if (form.querySelector('.product-form__submit')) return;
+      var input = form.querySelector('input[name="id"]');
+      var btn   = form.querySelector('[type="submit"]');
+      if (!input || !btn) return;
+      applyTo(btn, isSoldOut(input.value));
+    });
+  }
+
+  /* ── 3. Option-selector heroes (sorbetto master case, neapolitan bucket) ──
+     The flavor buttons swap the form's variant id in JS, so availability has
+     to follow the selection. The section's own code also rewrites the submit
+     button (mix-picker state, "Adding…", "Added!"), so a MutationObserver
+     re-applies the sold-out state whenever it gets clobbered. */
+  var GROUPS = [
+    { opt: '[data-hrp-opt]', form: '[data-hrp-form]' },
+    { opt: '[data-nbp-opt]', form: '[data-nbp-form]' }
+  ];
+
+  function syncGroup(group) {
+    var opts = document.querySelectorAll(group.opt);
+    if (!opts.length) return;
+
+    opts.forEach(function (opt) {
+      opt.classList.toggle('sdz-opt-soldout', isSoldOut(opt.dataset.variant));
+    });
+
+    var active = document.querySelector(group.opt + '.active') || opts[0];
+    document.querySelectorAll(group.form).forEach(function (form) {
+      var btn = form.querySelector('[type="submit"]');
+      applyTo(btn, isSoldOut(active.dataset.variant));
+    });
+  }
+
+  function watchGroup(group) {
+    var opts = document.querySelectorAll(group.opt);
+    var form = document.querySelector(group.form);
+    if (!opts.length || !form) return;
+
+    var observer = new MutationObserver(function () { syncGroup(group); });
+    opts.forEach(function (opt) {
+      observer.observe(opt, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    var btn = form.querySelector('[type="submit"]');
+    if (btn) {
+      /* Only re-assert while sold out — otherwise the section owns the label. */
+      new MutationObserver(function () {
+        var active = document.querySelector(group.opt + '.active') || opts[0];
+        if (!isSoldOut(active.dataset.variant)) return;
+        if (btn.dataset.sdzSoldout === '1' && btn.disabled) return;
+        delete btn.dataset.sdzSoldout;
+        markSoldOut(btn);
+      }).observe(btn, { attributes: true, childList: true, subtree: true, characterData: true });
+    }
+
+    /* A sold-out flavor must never reach /cart/add, even if a stray handler
+       re-enables the button. */
+    form.addEventListener('submit', function (e) {
+      var active = document.querySelector(group.opt + '.active') || opts[0];
+      if (isSoldOut(active.dataset.variant)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    }, true);
+  }
+
+  /* ── 4. Last line of defence ──
+     Every add-to-cart in the theme goes through fetch('/cart/add(.js)').
+     Blocking sold-out ids here covers the paths that have no button of their
+     own — the wishlist drawers' "Add to cart", and anything added later. The
+     synthetic response matches Shopify's error shape so the existing .catch
+     handlers surface their normal toast. */
+  function idsFromBody(body) {
+    var ids = [];
+    if (!body) return ids;
+    try {
+      if (typeof FormData !== 'undefined' && body instanceof FormData) {
+        ids.push(body.get('id'));
+      } else if (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams) {
+        ids.push(body.get('id'));
+      } else if (typeof body === 'string') {
+        var parsed = null;
+        try { parsed = JSON.parse(body); } catch (e) { parsed = null; }
+        if (parsed && Array.isArray(parsed.items)) {
+          parsed.items.forEach(function (item) { ids.push(item && item.id); });
+        } else if (parsed && parsed.id !== undefined) {
+          ids.push(parsed.id);
+        } else {
+          ids.push(new URLSearchParams(body).get('id'));
+        }
+      }
+    } catch (e) { /* unreadable body — let the request through */ }
+    return ids;
+  }
+
+  var nativeFetch = window.fetch;
+  if (typeof nativeFetch === 'function' && typeof Response === 'function') {
+    window.fetch = function (input, init) {
+      try {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (url.indexOf('/cart/add') !== -1 && idsFromBody(init && init.body).some(isSoldOut)) {
+          return Promise.resolve(new Response(
+            JSON.stringify({ status: 422, message: 'Cart Error', description: SOLD_LABEL }),
+            { status: 422, headers: { 'Content-Type': 'application/json' } }
+          ));
+        }
+      } catch (e) { /* never let the guard break a real request */ }
+      return nativeFetch.apply(this, arguments);
+    };
+  }
+
+  function run() {
+    guardSimpleButtons();
+    guardStaticForms();
+    GROUPS.forEach(syncGroup);
+  }
+
+  run();
+  document.addEventListener('DOMContentLoaded', function () {
+    run();
+    GROUPS.forEach(watchGroup);
+  });
+  window.addEventListener('load', run);
+  window.SdzStock.refresh = run;
+})();
+</script>

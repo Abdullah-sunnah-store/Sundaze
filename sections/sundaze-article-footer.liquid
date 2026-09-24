@@ -1,0 +1,543 @@
+{% comment %}
+  Sundaze — Article footer module
+  Blueprint 7.x developer tasks: 2-4 contextual links to related guides, one
+  relevant collection CTA near the end, and the standard guide FAQ.
+  Emits FAQPage structured data when FAQ blocks are present.
+{% endcomment %}
+
+{%- liquid
+  assign faq_count = 0
+  assign link_count = 0
+  for block in section.blocks
+    case block.type
+      when 'faq'
+        assign faq_count = faq_count | plus: 1
+      when 'link'
+        assign link_count = link_count | plus: 1
+    endcase
+  endfor
+
+  assign cta_url = section.settings.cta_link
+  if section.settings.cta_collection != blank
+    assign cta_url = collections[section.settings.cta_collection].url
+  endif
+-%}
+
+<section class="sz-af" id="sz-af-{{ section.id }}">
+  <div class="sz-af__inner">
+    {%- if link_count > 0 -%}
+      <nav class="sz-af__related" aria-label="{{ section.settings.related_title | default: 'Related guides' | escape }}">
+        <h2 class="sz-af__sub">{{ section.settings.related_title }}</h2>
+        <ul>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'link' -%}
+              <li {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: '#' }}">
+                  <span class="sz-af__related-title">{{ block.settings.title }}</span>
+                  {%- if block.settings.text != blank -%}
+                    <span class="sz-af__related-text">{{ block.settings.text }}</span>
+                  {%- endif -%}
+                  <span class="sz-af__related-go" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </span>
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- if faq_count > 0 -%}
+      <div class="sz-af__faq">
+        <h2 class="sz-af__sub">{{ section.settings.faq_title }}</h2>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq' -%}
+            <details class="sz-af__item" {{ block.shopify_attributes }}>
+              <summary>
+                <span>{{ block.settings.question }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </summary>
+              <div class="sz-af__answer">{{ block.settings.answer }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.cta_heading != blank or section.settings.cta_label != blank -%}
+      <div class="sz-af__cta-card">
+        <div class="sz-af__cta-copy">
+          {%- if section.settings.cta_eyebrow != blank -%}
+            <p class="sz-af__cta-eyebrow">{{ section.settings.cta_eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.cta_heading != blank -%}
+            <h2 class="sz-af__cta-heading">{{ section.settings.cta_heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.cta_text != blank -%}
+            <div class="sz-af__cta-text">{{ section.settings.cta_text }}</div>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.cta_label != blank -%}
+          <a class="sz-af__cta" href="{{ cta_url | default: '/collections/all' }}">
+            {{ section.settings.cta_label }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.disclaimer != blank -%}
+      <p class="sz-af__disclaimer">{{ section.settings.disclaimer }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if faq_count > 0 and section.settings.faq_schema -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- assign printed = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq' and block.settings.question != blank -%}
+            {%- if printed > 0 -%},{%- endif -%}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.question | strip_html | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ block.settings.answer | strip_html | strip_newlines | json }}
+              }
+            }
+            {%- assign printed = printed | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-af-{{ section.id }} {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-peach: #d4926e;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-muted: rgba(30,17,24,0.48);
+    --sun-line:  rgba(196,96,122,0.18);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sun-ink);
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  #sz-af-{{ section.id }} * { box-sizing: border-box; }
+
+  #sz-af-{{ section.id }} .sz-af__inner {
+    max-width: 820px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__sub {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 20px;
+    text-align: center;
+  }
+
+  /* ── Related guides ── */
+  #sz-af-{{ section.id }} .sz-af__related ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    text-align: left;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__related a,
+  #sz-af-{{ section.id }} .sz-af__related a:link,
+  #sz-af-{{ section.id }} .sz-af__related a:visited {
+    position: relative;
+    display: block;
+    padding: 20px 56px 20px 24px;
+    border-radius: 18px;
+    border: 1px solid var(--sun-line);
+    background: linear-gradient(150deg, #fff8e8 0%, #ffffff 62%);
+    color: var(--sun-ink);
+    text-decoration: none;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__related a:hover {
+    border-color: var(--sun-rose);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(30,17,24,0.07);
+  }
+
+  #sz-af-{{ section.id }} .sz-af__related-title {
+    display: block;
+    font-size: 16.5px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__related-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--sun-muted);
+  }
+
+  #sz-af-{{ section.id }} .sz-af__related-go {
+    position: absolute;
+    top: 50%;
+    right: 22px;
+    transform: translateY(-50%);
+    color: var(--sun-rose);
+  }
+
+  #sz-af-{{ section.id }} .sz-af__related-go svg { width: 18px; height: 18px; display: block; }
+
+  /* ── FAQ ── */
+  /* Rows stay left-aligned with the icon on the right edge — centering each
+     row to its own width leaves the questions ragged. */
+  #sz-af-{{ section.id }} .sz-af__faq { margin-top: 52px; text-align: left; }
+
+  #sz-af-{{ section.id }} .sz-af__item { border-bottom: 1px solid var(--sun-line); }
+
+  #sz-af-{{ section.id }} .sz-af__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px 4px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__item summary::-webkit-details-marker { display: none; }
+
+  #sz-af-{{ section.id }} .sz-af__item summary svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    color: var(--sun-rose);
+    transition: transform 0.25s ease;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__item[open] summary svg { transform: rotate(45deg); }
+
+  #sz-af-{{ section.id }} .sz-af__answer { padding: 0 4px 22px; }
+
+  #sz-af-{{ section.id }} .sz-af__answer p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--sun-text);
+    margin: 0 0 12px;
+    max-width: 68ch;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__answer a,
+  #sz-af-{{ section.id }} .sz-af__cta-text a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── Collection CTA ── */
+  #sz-af-{{ section.id }} .sz-af__cta-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 24px;
+    margin-top: 52px;
+    padding: clamp(28px, 4vw, 42px);
+    border-radius: 24px;
+    border: 1px solid var(--sun-line);
+    background:
+      radial-gradient(ellipse 70% 90% at 100% 0%, rgba(232,160,180,0.30) 0%, transparent 62%),
+      linear-gradient(135deg, #ffffff 0%, #fde8f0 100%);
+  }
+
+  #sz-af-{{ section.id }} .sz-af__cta-copy { max-width: 560px; }
+
+  #sz-af-{{ section.id }} .sz-af__cta-eyebrow {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin: 0 0 12px;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__cta-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 2.8vw, 32px);
+    font-weight: 900;
+    line-height: 1.16;
+    margin: 0 0 10px;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__cta-text p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--sun-text);
+    margin: 0;
+  }
+
+  #sz-af-{{ section.id }} a.sz-af__cta,
+  #sz-af-{{ section.id }} a.sz-af__cta:link,
+  #sz-af-{{ section.id }} a.sz-af__cta:visited {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    padding: 15px 32px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    box-shadow: 0 8px 24px rgba(196,96,122,0.28);
+    transition:
+      transform 0.34s cubic-bezier(0.22, 0.68, 0.28, 1),
+      box-shadow 0.34s cubic-bezier(0.22, 0.68, 0.28, 1);
+    transform: translateY(0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  #sz-af-{{ section.id }} a.sz-af__cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(196,96,122,0.4);
+  }
+
+  #sz-af-{{ section.id }} .sz-af__cta svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #sz-af-{{ section.id }} .sz-af__disclaimer {
+    margin: 32px 0 0;
+    font-size: 12.5px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--sun-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-af-{{ section.id }} .sz-af__related a,
+    #sz-af-{{ section.id }} a.sz-af__cta,
+    #sz-af-{{ section.id }} .sz-af__item summary svg { transition: none; }
+    #sz-af-{{ section.id }} .sz-af__related a:hover,
+    #sz-af-{{ section.id }} a.sz-af__cta:hover { transform: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Article Footer",
+  "tag": "section",
+  "class": "sundaze-article-footer-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Related guides"
+    },
+    {
+      "type": "text",
+      "id": "related_title",
+      "label": "Heading",
+      "default": "Related Guides"
+    },
+    {
+      "type": "header",
+      "content": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "faq_title",
+      "label": "Heading",
+      "default": "Frequently Asked"
+    },
+    {
+      "type": "checkbox",
+      "id": "faq_schema",
+      "label": "Output FAQPage structured data",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Collection CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_eyebrow",
+      "label": "Eyebrow",
+      "default": "Ready To Shop?"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Explore Relevant Sundaze Products"
+    },
+    {
+      "type": "richtext",
+      "id": "cta_text",
+      "label": "Text",
+      "default": "<p>Browse the collection and check each product's available lab report before you choose.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Shop The Collection"
+    },
+    {
+      "type": "collection",
+      "id": "cta_collection",
+      "label": "Collection",
+      "info": "Takes priority over the link below."
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Or a custom link"
+    },
+    {
+      "type": "header",
+      "content": "Disclaimer"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "This guide is general product education. It is not legal or medical advice. Availability varies by jurisdiction — see our Shipping & Compliance page for details."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Related guide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "How to Read a COA"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Supporting text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Where should I verify product-specific potency?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Use the COA tied to the specific product or batch when available.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Sundaze Article Footer",
+      "blocks": [
+        { "type": "link", "settings": { "title": "What Is THCA?" } },
+        { "type": "link", "settings": { "title": "How to Read a COA" } },
+        { "type": "link", "settings": { "title": "Cannabinoids Explained" } },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Where should I verify product-specific potency?",
+            "answer": "<p>Use the COA tied to the specific product or batch when available.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Should this guide replace legal or medical advice?",
+            "answer": "<p>No. It is general product education.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

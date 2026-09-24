@@ -1,0 +1,400 @@
+{% comment %}
+  Sundaze — Homepage FAQ
+  Blueprint 2, item 9. Compact accordion with FAQPage structured data.
+  The full FAQ page section (sundaze-faq) stays as-is for /pages/faq.
+{% endcomment %}
+
+<section class="sz-hf" id="sz-hf-{{ section.id }}">
+  <div class="sz-hf__inner">
+    <header class="sz-hf__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="sz-hf__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="sz-hf__title">
+        {{- section.settings.heading -}}
+        {%- if section.settings.heading_accent != blank %} <em>{{ section.settings.heading_accent }}</em>{% endif -%}
+      </h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="sz-hf__sub">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="sz-hf__list">
+      {%- for block in section.blocks -%}
+        <details class="sz-hf__item" {{ block.shopify_attributes }}>
+          <summary>
+            <span>{{ block.settings.question }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <div class="sz-hf__answer">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="sz-hf__footer">
+        <a class="sz-hf__cta" href="{{ section.settings.button_link | default: '/pages/faq' }}">
+          {{ section.settings.button_label }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if section.blocks.size > 0 and section.settings.faq_schema -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- assign printed = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.question != blank -%}
+            {%- if printed > 0 -%},{%- endif -%}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.question | strip_html | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ block.settings.answer | strip_html | strip_newlines | json }}
+              }
+            }
+            {%- assign printed = printed | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-hf-{{ section.id }} {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-peach: #d4926e;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-line:  rgba(196,96,122,0.18);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sun-ink);
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  #sz-hf-{{ section.id }} * { box-sizing: border-box; }
+
+  #sz-hf-{{ section.id }} .sz-hf__inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__head {
+    text-align: center;
+    margin-bottom: 38px;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin: 0 0 14px;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+    color: #111111;
+  }
+
+  /* Accent words — same gradient italic as "Collections" in Lineup Cards. */
+  #sz-hf-{{ section.id }} .sz-hf__title em {
+    font-style: italic;
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__sub {
+    font-size: clamp(15px, 1.5vw, 17px);
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--sun-text);
+    margin: 0;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__item {
+    border-bottom: 1px solid var(--sun-line);
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__item:first-child {
+    border-top: 1px solid var(--sun-line);
+  }
+
+  /* Rows stay left-aligned with the icon on the right edge — centering each
+     row to its own width leaves the questions ragged. */
+  #sz-hf-{{ section.id }} .sz-hf__list { text-align: left; }
+
+  #sz-hf-{{ section.id }} .sz-hf__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 4px;
+    cursor: pointer;
+    list-style: none;
+    font-size: clamp(15.5px, 1.7vw, 17.5px);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__item summary::-webkit-details-marker { display: none; }
+
+  #sz-hf-{{ section.id }} .sz-hf__item summary svg {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    color: var(--sun-rose);
+    transition: transform 0.25s ease;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__item[open] summary svg { transform: rotate(45deg); }
+
+  #sz-hf-{{ section.id }} .sz-hf__answer {
+    padding: 0 4px 24px;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__answer p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.82;
+    color: var(--sun-text);
+    margin: 0 0 12px;
+    max-width: 72ch;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__answer p:last-child { margin-bottom: 0; }
+
+  #sz-hf-{{ section.id }} .sz-hf__answer a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__footer {
+    text-align: center;
+    margin-top: 38px;
+  }
+
+  #sz-hf-{{ section.id }} a.sz-hf__cta,
+  #sz-hf-{{ section.id }} a.sz-hf__cta:link,
+  #sz-hf-{{ section.id }} a.sz-hf__cta:visited {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 30px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    box-shadow: 0 8px 24px rgba(196,96,122,0.28);
+    transition:
+      transform 0.34s cubic-bezier(0.22, 0.68, 0.28, 1),
+      box-shadow 0.34s cubic-bezier(0.22, 0.68, 0.28, 1);
+    transform: translateY(0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  #sz-hf-{{ section.id }} a.sz-hf__cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(196,96,122,0.4);
+  }
+
+  #sz-hf-{{ section.id }} .sz-hf__cta svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-hf-{{ section.id }} .sz-hf__item summary svg,
+    #sz-hf-{{ section.id }} a.sz-hf__cta { transition: none; }
+    #sz-hf-{{ section.id }} a.sz-hf__cta:hover { transform: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Home FAQ",
+  "tag": "section",
+  "class": "sundaze-home-faq-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Questions"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (H2)",
+      "default": "Frequently"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent",
+      "info": "Rendered italic in the brand gradient, after the heading.",
+      "default": "Asked"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "The short answers. The Knowledge Hub has the long ones."
+    },
+    {
+      "type": "checkbox",
+      "id": "faq_schema",
+      "label": "Output FAQPage structured data",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "See All FAQs"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is THCA?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>THCA is a cannabinoid found naturally in raw cannabis and hemp plants. It is the acidic precursor to delta-9 THC.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Sundaze Home FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is THCA?",
+            "answer": "<p>THCA (tetrahydrocannabinolic acid) is a cannabinoid found naturally in raw cannabis and hemp plants. It is the acidic precursor to delta-9 THC. When exposed to sufficient heat, a process called decarboxylation can convert some THCA into delta-9 THC.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Are Sundaze products lab tested?",
+            "answer": "<p>Eligible products connect to their available third-party laboratory report. You can find COAs from product pages and from our central Lab Results page.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How do I read a COA?",
+            "answer": "<p>Match the product name, batch or lot number and dates, read the cannabinoid panel, check any safety panels and confirm which laboratory produced the report. Our guide walks through it step by step.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do I need to be 21+ to order?",
+            "answer": "<p>Yes. Sundaze is a 21+ store.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Where do you ship?",
+            "answer": "<p>Availability varies by jurisdiction. See our Shipping &amp; Compliance page for current details before ordering.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How should I store my products?",
+            "answer": "<p>Keep flower sealed in an airtight container in a cool, dark place, and follow product-specific instructions for concentrates. Keep everything secured and away from children and pets.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

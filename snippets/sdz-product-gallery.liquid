@@ -1,0 +1,97 @@
+{%- comment -%}
+  Product image gallery for the 3.5G flower page.
+
+  Crossfades between the jar render and the flower shot, auto-advances, and
+  reveals the prev/next buttons while the product panel is hovered.
+
+  Params:
+    image        — main product image (image_picker setting)
+    image_2      — optional second image; when blank, flower_asset is used
+    image_3      — optional third image
+    flower_asset — theme asset filename used as the fallback second slide
+    alt          — alt text for the product
+    shadow       — drop-shadow value applied to each slide
+    autoplay     — ms between slides (0 disables auto-advance)
+{%- endcomment -%}
+
+{%- liquid
+  assign gallery_alt = alt | default: 'Product'
+  assign gallery_shadow = shadow | default: '0 24px 36px rgba(180,30,80,0.22)'
+  assign gallery_delay = autoplay | default: 2000
+  assign slide_count = 0
+-%}
+
+<div class="sdz-gallery" data-sdz-gallery data-autoplay="{{ gallery_delay }}">
+
+  {%- if image != blank -%}
+    <img
+      class="sdz-gallery__slide is-active"
+      src="{{ image | img_url: '800x' }}"
+      alt="{{ gallery_alt | escape }}"
+      draggable="false"
+      style="filter:drop-shadow({{ gallery_shadow }});"
+    >
+    {%- assign slide_count = slide_count | plus: 1 -%}
+  {%- endif -%}
+
+  {%- comment -%} Second slide: merchant upload wins, bundled flower shot otherwise. {%- endcomment -%}
+  {%- if image_2 != blank -%}
+    <img
+      class="sdz-gallery__slide{% if slide_count == 0 %} is-active{% endif %}"
+      src="{{ image_2 | img_url: '800x' }}"
+      alt="{{ gallery_alt | escape }} flower"
+      draggable="false"
+      loading="lazy"
+      style="filter:drop-shadow({{ gallery_shadow }});"
+    >
+    {%- assign slide_count = slide_count | plus: 1 -%}
+  {%- elsif flower_asset != blank -%}
+    <img
+      class="sdz-gallery__slide{% if slide_count == 0 %} is-active{% endif %}"
+      src="{{ flower_asset | asset_img_url: '900x' }}"
+      alt="{{ gallery_alt | escape }} flower"
+      draggable="false"
+      loading="lazy"
+      style="filter:drop-shadow({{ gallery_shadow }});"
+    >
+    {%- assign slide_count = slide_count | plus: 1 -%}
+  {%- endif -%}
+
+  {%- if image_3 != blank -%}
+    <img
+      class="sdz-gallery__slide{% if slide_count == 0 %} is-active{% endif %}"
+      src="{{ image_3 | img_url: '800x' }}"
+      alt="{{ gallery_alt | escape }} detail"
+      draggable="false"
+      loading="lazy"
+      style="filter:drop-shadow({{ gallery_shadow }});"
+    >
+    {%- assign slide_count = slide_count | plus: 1 -%}
+  {%- endif -%}
+
+  {%- comment -%} Controls only make sense once there is more than one slide. {%- endcomment -%}
+  {%- if slide_count > 1 -%}
+    <button class="sdz-gallery__nav sdz-gallery__nav--prev" type="button" data-sdz-prev aria-label="Previous image">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <button class="sdz-gallery__nav sdz-gallery__nav--next" type="button" data-sdz-next aria-label="Next image">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+
+    <div class="sdz-gallery__dots">
+      {%- for i in (1..slide_count) -%}
+        <button
+          class="sdz-gallery__dot{% if forloop.first %} is-active{% endif %}"
+          type="button"
+          data-sdz-dot="{{ forloop.index0 }}"
+          aria-label="Show image {{ forloop.index }}"
+        ></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+</div>

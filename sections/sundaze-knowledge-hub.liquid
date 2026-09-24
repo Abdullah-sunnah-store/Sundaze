@@ -1,0 +1,450 @@
+{% comment %}
+  Sundaze — Knowledge Hub landing
+  Blueprint 6. H1 + intro + shallow category groups.
+
+  Two modes:
+  1. Pick a blog → categories are built from article tags automatically.
+  2. Leave the blog empty → build groups by hand. A "Category" block opens a
+     group; every "Guide link" block after it belongs to that group.
+{% endcomment %}
+
+{%- liquid
+  assign hub_blog = blogs[section.settings.blog]
+  assign use_auto = false
+  if section.settings.blog != blank and hub_blog.articles_count > 0
+    assign use_auto = true
+  endif
+-%}
+
+<section class="sz-kh" id="sz-kh-{{ section.id }}">
+  <div class="sz-kh__hero">
+    <div class="sz-kh__hero-inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="sz-kh__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading_tag == 'h2' -%}
+        <h2 class="sz-kh__title">
+          {{- section.settings.heading -}}
+          {%- if section.settings.heading_accent != blank %} <em>{{ section.settings.heading_accent }}</em>{% endif -%}
+        </h2>
+      {%- else -%}
+        <h1 class="sz-kh__title">
+          {{- section.settings.heading -}}
+          {%- if section.settings.heading_accent != blank %} <em>{{ section.settings.heading_accent }}</em>{% endif -%}
+        </h1>
+      {%- endif -%}
+
+      {%- if section.settings.intro != blank -%}
+        <div class="sz-kh__intro">{{ section.settings.intro }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="sz-kh__inner">
+    <div class="sz-kh__grid">
+      {%- if use_auto -%}
+        {%- if hub_blog.all_tags.size > 0 -%}
+          {%- for tag in hub_blog.all_tags -%}
+            <div class="sz-kh__cat sz-kh__cat--tone{{ forloop.index0 | modulo: 4 }}">
+              <h2 class="sz-kh__cat-title">{{ tag }}</h2>
+              <ul class="sz-kh__list">
+                {%- for article in hub_blog.articles -%}
+                  {%- if article.tags contains tag -%}
+                    <li>
+                      <a href="{{ article.url }}">
+                        <span>{{ article.title }}</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                      </a>
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="sz-kh__cat sz-kh__cat--tone0">
+            <h2 class="sz-kh__cat-title">{{ section.settings.fallback_category_title }}</h2>
+            <ul class="sz-kh__list">
+              {%- for article in hub_blog.articles -%}
+                <li>
+                  <a href="{{ article.url }}">
+                    <span>{{ article.title }}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+      {%- else -%}
+        {%- assign group_open = false -%}
+        {%- assign tone_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'category' -%}
+              {%- if group_open -%}</ul></div>{%- endif -%}
+              <div class="sz-kh__cat sz-kh__cat--tone{{ tone_index | modulo: 4 }}" {{ block.shopify_attributes }}>
+                <h2 class="sz-kh__cat-title">{{ block.settings.title }}</h2>
+                <ul class="sz-kh__list">
+              {%- assign group_open = true -%}
+              {%- assign tone_index = tone_index | plus: 1 -%}
+
+            {%- when 'link' -%}
+              {%- unless group_open -%}
+                <div class="sz-kh__cat sz-kh__cat--tone0"><ul class="sz-kh__list">
+                {%- assign group_open = true -%}
+              {%- endunless -%}
+              <li {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: '#' }}">
+                  <span>{{ block.settings.title }}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </li>
+          {%- endcase -%}
+        {%- endfor -%}
+        {%- if group_open -%}</ul></div>{%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.footer_text != blank -%}
+      <div class="sz-kh__note">{{ section.settings.footer_text }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-kh-{{ section.id }} {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-blush: #e8a0b4;
+    --sun-peach: #d4926e;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-muted: rgba(30,17,24,0.48);
+    --sun-line:  rgba(196,96,122,0.18);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sun-ink);
+    box-sizing: border-box;
+  }
+
+  #sz-kh-{{ section.id }} * { box-sizing: border-box; }
+
+  /* ── Hero ── */
+  #sz-kh-{{ section.id }} .sz-kh__hero {
+    position: relative;
+    padding: clamp(56px, 8vw, 100px) 24px clamp(48px, 6vw, 76px);
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,230,200,0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 45% at 20% 90%, rgba(240,190,210,0.45) 0%, transparent 60%),
+      linear-gradient(180deg, #fff8e8 0%, #fde8f0 100%);
+    overflow: hidden;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin: 0 0 18px;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 22px;
+    color: #111111;
+  }
+
+  /* Accent words — same gradient italic as "Collections" in Lineup Cards. */
+  #sz-kh-{{ section.id }} .sz-kh__title em {
+    font-style: italic;
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__intro p {
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--sun-text);
+    margin: 0 0 14px;
+  }
+
+  /* ── Category grid ── */
+  #sz-kh-{{ section.id }} .sz-kh__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(44px, 6vw, 72px) 24px clamp(56px, 7vw, 90px);
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    align-items: start;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__cat {
+    padding: 30px 28px;
+    border-radius: 24px;
+    border: 1px solid var(--sun-line);
+    box-shadow: 0 10px 30px rgba(30,17,24,0.05);
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__cat--tone0 { background: linear-gradient(165deg, #fff8e8 0%, #ffffff 62%); }
+  #sz-kh-{{ section.id }} .sz-kh__cat--tone1 { background: linear-gradient(165deg, #fde8f0 0%, #ffffff 62%); }
+  #sz-kh-{{ section.id }} .sz-kh__cat--tone2 { background: linear-gradient(165deg, #f2ecff 0%, #ffffff 62%); }
+  #sz-kh-{{ section.id }} .sz-kh__cat--tone3 { background: linear-gradient(165deg, #e8f3f5 0%, #ffffff 62%); }
+
+  #sz-kh-{{ section.id }} .sz-kh__cat-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-mauve);
+    margin: 0 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--sun-line);
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__list a,
+  #sz-kh-{{ section.id }} .sz-kh__list a:link,
+  #sz-kh-{{ section.id }} .sz-kh__list a:visited {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 12px;
+    margin: 0 -12px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--sun-ink);
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__list a:hover {
+    background: rgba(196,96,122,0.09);
+    color: var(--sun-mauve);
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__list svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__list a:hover svg {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__note {
+    max-width: 720px;
+    margin: 44px auto 0;
+    padding: 22px 26px;
+    border-radius: 18px;
+    border: 1px solid var(--sun-line);
+    background: rgba(255,255,255,0.6);
+    text-align: center;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__note p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--sun-muted);
+    margin: 0;
+  }
+
+  #sz-kh-{{ section.id }} .sz-kh__note a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-kh-{{ section.id }} .sz-kh__list a,
+    #sz-kh-{{ section.id }} .sz-kh__list svg { transition: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Knowledge Hub",
+  "tag": "section",
+  "class": "sundaze-knowledge-hub-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Learn Before You Shop"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sundaze"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent",
+      "info": "Rendered italic in the brand gradient, after the heading.",
+      "default": "Knowledge Hub"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "info": "Use H1 when this section is the top of the page. Only one H1 per page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>Learn the basics of THCA, flower, terpenes, solventless concentrates, lab testing and product care. These guides are educational and designed to help you understand product labels, formats and quality indicators before you shop.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Categories"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Build categories from a blog",
+      "info": "Optional. When set, categories come from article tags and the blocks below are ignored."
+    },
+    {
+      "type": "text",
+      "id": "fallback_category_title",
+      "label": "Category title when articles have no tags",
+      "default": "All Guides"
+    },
+    {
+      "type": "header",
+      "content": "Footer note"
+    },
+    {
+      "type": "richtext",
+      "id": "footer_text",
+      "label": "Footer note",
+      "default": "<p>These guides are general product education. They are not legal or medical advice. For product-specific potency, always use the COA tied to that product or batch.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#F9F7F4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category (starts a group)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category title",
+          "default": "THCA Basics"
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Guide link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Guide title",
+          "default": "What Is THCA?"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 40,
+  "presets": [
+    {
+      "name": "Sundaze Knowledge Hub",
+      "blocks": [
+        { "type": "category", "settings": { "title": "THCA Basics" } },
+        { "type": "link", "settings": { "title": "What Is THCA?" } },
+        { "type": "link", "settings": { "title": "THCA vs THC" } },
+        { "type": "link", "settings": { "title": "THCA vs CBD" } },
+        { "type": "link", "settings": { "title": "Cannabinoids Explained" } },
+        { "type": "link", "settings": { "title": "THCA FAQ" } },
+
+        { "type": "category", "settings": { "title": "Flower" } },
+        { "type": "link", "settings": { "title": "Indoor vs Outdoor" } },
+        { "type": "link", "settings": { "title": "What Are Terpenes?" } },
+        { "type": "link", "settings": { "title": "Choosing Flower" } },
+        { "type": "link", "settings": { "title": "Trichomes Explained" } },
+
+        { "type": "category", "settings": { "title": "Rosin / Hash" } },
+        { "type": "link", "settings": { "title": "What Is Hash Rosin?" } },
+        { "type": "link", "settings": { "title": "What Is Cold Cure?" } },
+        { "type": "link", "settings": { "title": "What Is a Hash Hole?" } },
+        { "type": "link", "settings": { "title": "Rosin vs Resin" } },
+
+        { "type": "category", "settings": { "title": "Lab + Care" } },
+        { "type": "link", "settings": { "title": "How to Read a COA" } },
+        { "type": "link", "settings": { "title": "How to Store THCA" } },
+        { "type": "link", "settings": { "title": "Beginner Guide" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

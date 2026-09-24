@@ -1,0 +1,49 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "sundaze_rosin_banner": {
+      "type": "sundaze-flower-banner",
+      "name": "Sundaze Text Banner",
+      "settings": {
+        "section_bg": "#f7f3ee",
+        "eyebrow": "Premium Collection",
+        "title": "Hash Rosin",
+        "title_accent": "Collection",
+        "description": "The Sundaze Hash Rosin collection is crafted for those who demand the purest expression of the plant. Every jar is filled with premium THCA hash rosin, carefully extracted without solvents to preserve the strain's natural terpene profile, rich flavor, and smooth, full-bodied experience from start to finish.\n\nEach strain is inspired by rich, indulgent flavors—from bright, fruity blends to decadent dessert-inspired creations—turning every session into something worth savoring. Made from premium hemp, federally legal, third-party lab tested, and available in all 50 states."
+      }
+    },
+    "sundaze_rosin_collections": {
+      "type": "sundaze-flower-collections",
+      "name": "Sundaze Collection Card",
+      "settings": {
+        "section_bg": "#ffffff",
+        "section_heading": "Collections",
+        "collection_label": "",
+        "collection_name": "Sorbetto Collection",
+        "card_link": "/pages/sorbetto-collection",
+        "card_image": "shopify://shop_images/processed.jpg"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sundaze_rosin_banner",
+    "sundaze_rosin_collections"
+  ]
+}

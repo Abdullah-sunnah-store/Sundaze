@@ -153,6 +153,21 @@
     letter-spacing: 0.2px;
   }
 
+  .ai-footer-thca-{{ ai_gen_id }} {
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(30, 17, 24, 0.50);
+    font-family: 'DM Sans', sans-serif;
+    max-width: 760px;
+    margin: 0 auto 10px;
+    letter-spacing: 0.2px;
+  }
+
+  .ai-footer-thca-{{ ai_gen_id }} strong {
+    color: rgba(30, 17, 24, 0.68);
+    font-weight: 600;
+  }
+
   /* ── MOBILE ── */
   @media screen and (max-width: 767px) {
     .ai-footer-{{ ai_gen_id }} { padding: 40px 0 0; }
@@ -168,6 +183,7 @@
     .ai-footer-brand-text-{{ ai_gen_id }} { font-size: 12px; }
     .ai-footer-column-heading-{{ ai_gen_id }} { margin-bottom: 14px; }
     .ai-footer-copyright-{{ ai_gen_id }} { font-size: 11px; }
+    .ai-footer-thca-{{ ai_gen_id }} { font-size: 11px; }
   }
 
 {% endstyle %}
@@ -307,6 +323,11 @@
   <!-- ── BOTTOM BAR ── -->
   <div class="ai-footer-inner-{{ ai_gen_id }}">
     <div class="ai-footer-bottom-bar-{{ ai_gen_id }}">
+      {% if block.settings.thca_disclaimer != blank %}
+        <p class="ai-footer-thca-{{ ai_gen_id }}">
+          <strong>THCA Disclaimer:</strong> {{ block.settings.thca_disclaimer }}
+        </p>
+      {% endif %}
       <p class="ai-footer-copyright-{{ ai_gen_id }}">
         {% if block.settings.copyright_text != blank %}
           {{ block.settings.copyright_text }}
@@ -536,6 +557,17 @@
       "type": "link_list",
       "id": "policy",
       "label": "Policy"
+    },
+    {
+      "type": "header",
+      "content": "Compliance"
+    },
+    {
+      "type": "textarea",
+      "id": "thca_disclaimer",
+      "label": "THCA disclaimer",
+      "info": "Shown above the copyright line. The \"THCA Disclaimer:\" prefix is added automatically. Keep this list in sync with the states excluded from your shipping zones.",
+      "default": "Does not ship to states where THC-A is illegal. This product is not available for shipment to the following states: Arkansas, Idaho, Minnesota, Oregon, Rhode Island, Texas, and Vermont."
     },
     {
       "type": "header",

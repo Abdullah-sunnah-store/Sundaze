@@ -1,0 +1,137 @@
+{%- comment -%}
+  ── SCOOP CATALOG — THE SITE INDEX ────────────────────────────────────────
+  Renders everything SCOOP knows about this store as one JSON blob. This is
+  the difference between a canned FAQ bot and an assistant that actually
+  understands the site: every product, page and guide below is read live from
+  Shopify at render time, so the moment you edit a product description, add a
+  strain, change a price or sell out, SCOOP knows.
+
+  It is emitted as <script type="application/json">, which the browser does
+  NOT parse or execute. The chat widget JSON.parse()s it lazily the first time
+  a shopper opens the panel, so this costs a few KB of HTML and nothing else.
+
+  ── WHERE THE EFFECT DATA COMES FROM ──
+  Effect answers ("what would give me energy?") are answered ONLY from the
+  metafields below — never guessed from marketing copy. That is deliberate:
+  hemp effect claims are regulated, so every claim SCOOP makes is one you
+  typed into Shopify admin yourself. Products with no metafields still work
+  for flavour, price, and general questions; they are simply invisible to
+  effect matching until you fill them in.
+
+  Set these up under Settings → Custom data → Products. Full instructions and
+  a paste-ready table of starting values live in:
+      docs/scoop-assistant/SETUP.md
+
+      sundaze.strain_type    Single line text   "Indica-dominant hybrid"
+      sundaze.effects        Text (list)        Relaxed, Happy, Euphoric
+      sundaze.time_of_day    Single line text   "Evening"
+      sundaze.potency_level  Single line text   "Strong"
+      sundaze.thca_percent   Decimal            34.98
+      sundaze.terpenes       Text (list)        Limonene, Myrcene
+      sundaze.flavor_notes   Text (list)        Peach, Vanilla, Cream
+      sundaze.best_for       Text (list)        Winding down, Evening sessions
+
+  ── SIZE ──
+  The product loop is capped at 100. Sundaze sells 17, so this is the whole
+  catalogue with room to grow. If the store ever passes 100 products, raise
+  the limit here rather than anywhere else.
+{%- endcomment -%}
+
+<script type="application/json" id="scoopCatalog">
+{
+  "shop": {
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }},
+    "currency": {{ shop.currency | json }}
+  },
+
+  "products": [
+    {%- assign p_first = true -%}
+    {%- for product in collections.all.products limit: 100 -%}
+      {%- unless p_first -%},{%- endunless -%}
+      {%- assign p_first = false -%}
+      {
+        "title": {{ product.title | json }},
+        "handle": {{ product.handle | json }},
+        "url": {{ product.url | json }},
+        "type": {{ product.type | json }},
+        "tags": {{ product.tags | json }},
+        "vendor": {{ product.vendor | json }},
+        "price": {{ product.price | money | json }},
+        "price_cents": {{ product.price | default: 0 }},
+        "compare_at": {{ product.compare_at_price | money | json }},
+        "available": {{ product.available | json }},
+        "variant_id": {{ product.selected_or_first_available_variant.id | json }},
+        "variant_count": {{ product.variants.size }},
+        "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 180 | json }}{%- else -%}null{%- endif -%},
+        "description": {{ product.description | strip_html | strip_newlines | truncatewords: 70 | json }},
+        "collections": [
+          {%- assign c_first = true -%}
+          {%- for c in product.collections -%}
+            {%- unless c_first -%},{%- endunless -%}{%- assign c_first = false -%}
+            {{ c.title | json }}
+          {%- endfor -%}
+        ],
+        "strain_type":   {{ product.metafields.sundaze.strain_type.value   | json }},
+        "effects":       {{ product.metafields.sundaze.effects.value       | json }},
+        "time_of_day":   {{ product.metafields.sundaze.time_of_day.value   | json }},
+        "potency_level": {{ product.metafields.sundaze.potency_level.value | json }},
+        "thca_percent":  {{ product.metafields.sundaze.thca_percent.value  | json }},
+        "terpenes":      {{ product.metafields.sundaze.terpenes.value      | json }},
+        "flavor_notes":  {{ product.metafields.sundaze.flavor_notes.value  | json }},
+        "best_for":      {{ product.metafields.sundaze.best_for.value      | json }}
+      }
+    {%- endfor -%}
+  ],
+
+  "collections": [
+    {%- assign col_first = true -%}
+    {%- for collection in collections limit: 30 -%}
+      {%- if collection.handle != 'all' and collection.products_count > 0 -%}
+        {%- unless col_first -%},{%- endunless -%}
+        {%- assign col_first = false -%}
+        {
+          "title": {{ collection.title | json }},
+          "url": {{ collection.url | json }},
+          "count": {{ collection.products_count }},
+          "description": {{ collection.description | strip_html | strip_newlines | truncatewords: 40 | json }}
+        }
+      {%- endif -%}
+    {%- endfor -%}
+  ],
+
+  {%- comment -%}
+    Page content is pulled live too, so policy answers track whatever the page
+    actually says today. Add a handle to this list and SCOOP can quote it.
+  {%- endcomment -%}
+  {%- assign page_handles = 'faq,about-us,shipping-policy,refund-policy,privacy-policy,terms-conditions,coa,flavors,contact-us,contact,fda,prop,learn-more,hash-holes,hash-holes-collection,hash-rosin,3-5g-thca-flower,neapolitan-bucket,sorbetto-collection' | split: ',' -%}
+  "pages": [
+    {%- assign pg_first = true -%}
+    {%- for handle in page_handles -%}
+      {%- assign pg = pages[handle] -%}
+      {%- if pg != blank and pg.content != blank -%}
+        {%- unless pg_first -%},{%- endunless -%}
+        {%- assign pg_first = false -%}
+        {
+          "title": {{ pg.title | json }},
+          "url": {{ pg.url | json }},
+          "content": {{ pg.content | strip_html | strip_newlines | truncatewords: 180 | json }}
+        }
+      {%- endif -%}
+    {%- endfor -%}
+  ],
+
+  "articles": [
+    {%- assign a_first = true -%}
+    {%- for article in blogs['knowledge-hub'].articles limit: 20 -%}
+      {%- unless a_first -%},{%- endunless -%}
+      {%- assign a_first = false -%}
+      {
+        "title": {{ article.title | json }},
+        "url": {{ article.url | json }},
+        "content": {{ article.content | strip_html | strip_newlines | truncatewords: 120 | json }}
+      }
+    {%- endfor -%}
+  ]
+}
+</script>

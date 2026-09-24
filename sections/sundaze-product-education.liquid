@@ -1,0 +1,545 @@
+{% comment %}
+  Sundaze — Product education module
+  Blueprint 9. Sits below the primary buy box.
+
+  Product-specific copy comes from metafields so the same paragraph never
+  repeats across every product:
+    custom.flavor_aroma  (rich text)  — flavor + aroma notes for THIS product
+    custom.storage       (rich text)  — product-specific storage, optional
+    custom.coa_url       (url)        — the COA for this product/batch
+  Panels with nothing to say simply do not render.
+{% endcomment %}
+
+{%- liquid
+  assign flavor = product.metafields.custom.flavor_aroma
+  assign storage = product.metafields.custom.storage
+  if storage == blank
+    assign storage = section.settings.storage_default
+  endif
+
+  assign coa_url = product.metafields.custom.coa_url
+  if coa_url == blank
+    assign coa_url = section.settings.lab_link
+  endif
+
+  assign faq_count = 0
+  assign link_count = 0
+  for block in section.blocks
+    case block.type
+      when 'faq'
+        assign faq_count = faq_count | plus: 1
+      when 'link'
+        assign link_count = link_count | plus: 1
+    endcase
+  endfor
+-%}
+
+<section class="sz-pe" id="sz-pe-{{ section.id }}">
+  <div class="sz-pe__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="sz-pe__title">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="sz-pe__panels">
+      {%- if flavor != blank -%}
+        <div class="sz-pe__panel">
+          <h3 class="sz-pe__panel-title">{{ section.settings.flavor_title }}</h3>
+          <div class="sz-pe__panel-body">{{ flavor }}</div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_lab -%}
+        <div class="sz-pe__panel sz-pe__panel--lab">
+          <h3 class="sz-pe__panel-title">{{ section.settings.lab_title }}</h3>
+          <div class="sz-pe__panel-body">{{ section.settings.lab_body }}</div>
+          {%- if coa_url != blank -%}
+            <a class="sz-pe__lab-link" href="{{ coa_url }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              {{ section.settings.lab_link_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if storage != blank -%}
+        <div class="sz-pe__panel">
+          <h3 class="sz-pe__panel-title">{{ section.settings.storage_title }}</h3>
+          <div class="sz-pe__panel-body">{{ storage }}</div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if faq_count > 0 -%}
+      <div class="sz-pe__faq">
+        <h3 class="sz-pe__sub">{{ section.settings.faq_title }}</h3>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq' -%}
+            <details class="sz-pe__item" {{ block.shopify_attributes }}>
+              <summary>
+                <span>{{ block.settings.question }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </summary>
+              <div class="sz-pe__answer">{{ block.settings.answer }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if link_count > 0 -%}
+      <nav class="sz-pe__learn" aria-label="{{ section.settings.learn_title | default: 'Learn more' | escape }}">
+        <h3 class="sz-pe__sub">{{ section.settings.learn_title }}</h3>
+        <ul>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'link' -%}
+              <li {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: '#' }}">
+                  <span>{{ block.settings.title }}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- if section.settings.disclaimer != blank -%}
+      <p class="sz-pe__disclaimer">{{ section.settings.disclaimer }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-pe-{{ section.id }} {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-peach: #d4926e;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-muted: rgba(30,17,24,0.48);
+    --sun-line:  rgba(196,96,122,0.18);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sun-ink);
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  #sz-pe-{{ section.id }} * { box-sizing: border-box; }
+
+  #sz-pe-{{ section.id }} .sz-pe__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 30px;
+    color: #111111;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__sub {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.4vw, 27px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 18px;
+    text-align: center;
+  }
+
+  /* ── Panels ── */
+  #sz-pe-{{ section.id }} .sz-pe__panels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 26px;
+    border-radius: 22px;
+    border: 1px solid var(--sun-line);
+    background: linear-gradient(160deg, #fff8e8 0%, #ffffff 60%);
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__panel--lab {
+    background: linear-gradient(160deg, #fde8f0 0%, #ffffff 60%);
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__panel-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-mauve);
+    margin: 0 0 14px;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__panel-body p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.78;
+    color: var(--sun-text);
+    margin: 0 0 12px;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__panel-body p:last-child { margin-bottom: 0; }
+
+  #sz-pe-{{ section.id }} .sz-pe__panel-body a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #sz-pe-{{ section.id }} a.sz-pe__lab-link,
+  #sz-pe-{{ section.id }} a.sz-pe__lab-link:link,
+  #sz-pe-{{ section.id }} a.sz-pe__lab-link:visited {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    align-self: center;
+    margin-top: 18px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    background: var(--sun-ink);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    transition: background 0.22s ease;
+  }
+
+  #sz-pe-{{ section.id }} a.sz-pe__lab-link:hover { background: var(--sun-mauve); }
+
+  #sz-pe-{{ section.id }} .sz-pe__lab-link svg { width: 15px; height: 15px; }
+
+  /* ── FAQ ── */
+  /* Rows stay left-aligned with the icon on the right edge — centering each
+     row to its own width leaves the questions ragged. */
+  #sz-pe-{{ section.id }} .sz-pe__faq {
+    margin: 44px auto 0;
+    max-width: 820px;
+    text-align: left;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__item {
+    border-bottom: 1px solid var(--sun-line);
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px 4px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--sun-ink);
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__item summary::-webkit-details-marker { display: none; }
+
+  #sz-pe-{{ section.id }} .sz-pe__item summary svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    color: var(--sun-rose);
+    transition: transform 0.25s ease;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__item[open] summary svg { transform: rotate(45deg); }
+
+  #sz-pe-{{ section.id }} .sz-pe__answer {
+    padding: 0 4px 22px;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__answer p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--sun-text);
+    margin: 0 0 12px;
+    max-width: 68ch;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__answer a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── Learn more ── */
+  #sz-pe-{{ section.id }} .sz-pe__learn { margin-top: 44px; text-align: left; }
+
+  #sz-pe-{{ section.id }} .sz-pe__learn ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__learn a,
+  #sz-pe-{{ section.id }} .sz-pe__learn a:link,
+  #sz-pe-{{ section.id }} .sz-pe__learn a:visited {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--sun-line);
+    background: #fff;
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--sun-ink);
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__learn a:hover {
+    border-color: var(--sun-rose);
+    color: var(--sun-mauve);
+    transform: translateY(-2px);
+  }
+
+  #sz-pe-{{ section.id }} .sz-pe__learn svg { width: 15px; height: 15px; flex: 0 0 auto; }
+
+  #sz-pe-{{ section.id }} .sz-pe__disclaimer {
+    margin: 36px auto 0;
+    font-size: 12.5px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--sun-muted);
+    max-width: 72ch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-pe-{{ section.id }} .sz-pe__learn a,
+    #sz-pe-{{ section.id }} .sz-pe__item summary svg,
+    #sz-pe-{{ section.id }} a.sz-pe__lab-link { transition: none; }
+    #sz-pe-{{ section.id }} .sz-pe__learn a:hover { transform: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Product Education",
+  "tag": "section",
+  "class": "sundaze-product-education-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Flavor notes come from the product metafield custom.flavor_aroma, storage from custom.storage and the COA link from custom.coa_url. Panels with no content are hidden, so no two products share the same paragraph."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (H2)",
+      "default": "Product Details"
+    },
+    {
+      "type": "header",
+      "content": "Flavor + aroma"
+    },
+    {
+      "type": "text",
+      "id": "flavor_title",
+      "label": "Panel title",
+      "default": "Flavor + Aroma"
+    },
+    {
+      "type": "header",
+      "content": "Lab results"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_lab",
+      "label": "Show lab results panel",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "lab_title",
+      "label": "Panel title",
+      "default": "Lab Results"
+    },
+    {
+      "type": "richtext",
+      "id": "lab_body",
+      "label": "Panel copy",
+      "default": "<p>Review the available third-party laboratory report for cannabinoid results and testing information associated with this product/batch.</p>"
+    },
+    {
+      "type": "text",
+      "id": "lab_link_label",
+      "label": "Link label",
+      "default": "View COA"
+    },
+    {
+      "type": "url",
+      "id": "lab_link",
+      "label": "Fallback lab link",
+      "info": "Used when a product has no custom.coa_url. Point at the Lab Results page."
+    },
+    {
+      "type": "header",
+      "content": "Storage"
+    },
+    {
+      "type": "text",
+      "id": "storage_title",
+      "label": "Panel title",
+      "default": "Storage"
+    },
+    {
+      "type": "richtext",
+      "id": "storage_default",
+      "label": "Default storage copy",
+      "default": "<p>Store sealed in a cool, dark place and follow any product-specific storage instructions. Keep all products secured, clearly labeled and inaccessible to children and pets.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Product FAQ"
+    },
+    {
+      "type": "text",
+      "id": "faq_title",
+      "label": "FAQ heading",
+      "default": "Product FAQ"
+    },
+    {
+      "type": "header",
+      "content": "Learn more"
+    },
+    {
+      "type": "text",
+      "id": "learn_title",
+      "label": "Learn more heading",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Disclaimer"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "This information is general product education and is not legal or medical advice. For product-specific potency, use the COA tied to that product or batch."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Where should I verify product-specific potency?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Use the COA tied to the specific product or batch when available.</p>"
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Guide link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "What Is THCA?"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Sundaze Product Education",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Where should I verify product-specific potency?",
+            "answer": "<p>Use the COA tied to the specific product or batch when available.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Should this replace legal or medical advice?",
+            "answer": "<p>No. It is general product education.</p>"
+          }
+        },
+        { "type": "link", "settings": { "title": "What Is THCA?" } },
+        { "type": "link", "settings": { "title": "How to Read a COA" } },
+        { "type": "link", "settings": { "title": "How to Store THCA Products" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

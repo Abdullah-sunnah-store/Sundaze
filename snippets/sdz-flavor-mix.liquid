@@ -1,0 +1,234 @@
+{%- comment -%}
+  Flavor mix picker — "choose N jars from these flavors".
+
+  Steppers share one cap, so a shopper can take one of each, doubles, or N of a
+  single flavor. Each chosen flavor rides along as a line item property, which
+  carries into the cart, the checkout and the order.
+
+  The hidden inputs use the HTML `form` attribute rather than living inside the
+  form, so the picker can sit anywhere on the page — Shopify's product form is
+  rendered separately by buy-buttons.liquid. Flavors at 0 are disabled, so they
+  are left out of the submission entirely.
+
+  Params:
+    id       — unique suffix for this instance (required)
+    form_id  — id of the form to submit with (required)
+    flavors  — comma separated flavor names
+    max      — jars the shopper must pick (default 4)
+    heading  — label above the steppers
+{%- endcomment -%}
+
+{%- liquid
+  assign mix_id = id | default: 'mix'
+  assign mix_max = max | default: 4
+  assign mix_heading = heading | default: 'Choose your jars'
+  assign mix_list = flavors | default: 'Strawberry, Banana Lemon Headz, Peaches & Cream, Frootie Scoops' | split: ','
+-%}
+
+{%- if mix_list.size > 0 and form_id != blank -%}
+  <div class="sdz-fmix" id="sdz-fmix-{{ mix_id }}" data-sdz-fmix data-max="{{ mix_max }}" data-form="{{ form_id }}">
+    <p class="sdz-fmix__head">
+      <span>{{ mix_heading }}</span>
+      <span class="sdz-fmix__meter" data-sdz-fmix-meter></span>
+    </p>
+
+    {%- for flavor in mix_list -%}
+      {%- assign flavor_name = flavor | strip -%}
+      <div class="sdz-fmix__row">
+        <span class="sdz-fmix__name">{{ flavor_name }}</span>
+        <div class="sdz-fmix__stepper">
+          <button type="button" class="sdz-fmix__btn" data-sdz-fmix-step="-1" data-sdz-fmix-index="{{ forloop.index0 }}" aria-label="Remove one {{ flavor_name | escape }}">&minus;</button>
+          <span class="sdz-fmix__qty" data-sdz-fmix-qty="{{ forloop.index0 }}" aria-live="polite">0</span>
+          <button type="button" class="sdz-fmix__btn" data-sdz-fmix-step="1" data-sdz-fmix-index="{{ forloop.index0 }}" aria-label="Add one {{ flavor_name | escape }}">+</button>
+        </div>
+        <input
+          type="hidden"
+          form="{{ form_id }}"
+          name="properties[{{ flavor_name | escape }}]"
+          data-sdz-fmix-prop="{{ forloop.index0 }}"
+          value=""
+          disabled
+        >
+      </div>
+    {%- endfor -%}
+
+    <p class="sdz-fmix__hint" data-sdz-fmix-hint></p>
+  </div>
+
+  {%- comment -%} Styles and behaviour ship once, however many pickers are on the page. {%- endcomment -%}
+  {%- unless sdz_fmix_assets_rendered -%}
+    {%- assign sdz_fmix_assets_rendered = true -%}
+
+    <style>
+      .sdz-fmix {
+        margin: 0 0 18px;
+        padding: 15px 17px 13px;
+        border: 1.5px solid rgba(196, 96, 122, 0.28);
+        border-radius: 16px;
+        background: rgba(255, 245, 249, 0.6);
+      }
+
+      .sdz-fmix__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 0 0 10px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.75;
+      }
+      .sdz-fmix__meter { color: #c4607a; white-space: nowrap; opacity: 1; }
+
+      .sdz-fmix__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0;
+        border-top: 1px solid rgba(196, 96, 122, 0.14);
+      }
+      .sdz-fmix__row:first-of-type { border-top: none; }
+
+      .sdz-fmix__name { font-size: 14px; line-height: 1.3; }
+
+      .sdz-fmix__stepper {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      .sdz-fmix__btn {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 1.5px solid rgba(196, 96, 122, 0.4);
+        border-radius: 50%;
+        background: #fff;
+        color: #b8426e;
+        font-size: 15px;
+        line-height: 1;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s, opacity 0.15s;
+      }
+      .sdz-fmix__btn:hover:not(:disabled) { border-color: #c4607a; background: #fff0f6; }
+      .sdz-fmix__btn:disabled { opacity: 0.35; cursor: not-allowed; }
+      .sdz-fmix__btn:focus-visible { outline: 2px solid #c4607a; outline-offset: 2px; }
+
+      .sdz-fmix__qty {
+        min-width: 26px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .sdz-fmix__hint {
+        margin: 9px 0 0;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #b8426e;
+        min-height: 18px;
+      }
+    </style>
+
+    <script>
+      (function () {
+        function initMix(root) {
+          var form = document.getElementById(root.dataset.form);
+          if (!form) return;
+
+          var max     = parseInt(root.dataset.max, 10) || 4;
+          var qtyEls  = root.querySelectorAll('[data-sdz-fmix-qty]');
+          var props   = root.querySelectorAll('[data-sdz-fmix-prop]');
+          var steps   = root.querySelectorAll('[data-sdz-fmix-step]');
+          var meterEl = root.querySelector('[data-sdz-fmix-meter]');
+          var hintEl  = root.querySelector('[data-sdz-fmix-hint]');
+          var qty     = [];
+
+          // Open on one of each, up to the cap — the common case needs no clicks.
+          for (var i = 0; i < qtyEls.length; i++) qty.push(i < max ? 1 : 0);
+
+          function total() {
+            return qty.reduce(function (a, b) { return a + b; }, 0);
+          }
+
+          // Every submit button belonging to this form, inside it or attached by id.
+          function submitButtons() {
+            return form.querySelectorAll('[type="submit"], [name="add"]');
+          }
+
+          function render() {
+            var sum  = total();
+            var left = max - sum;
+
+            qtyEls.forEach(function (el, i) { el.textContent = qty[i]; });
+
+            steps.forEach(function (btn) {
+              var i = parseInt(btn.dataset.sdzFmixIndex, 10);
+              var d = parseInt(btn.dataset.sdzFmixStep, 10);
+              btn.disabled = d > 0 ? left <= 0 : qty[i] <= 0;
+            });
+
+            props.forEach(function (input, i) {
+              var chosen = qty[i] > 0;
+              input.value    = chosen ? String(qty[i]) : '';
+              input.disabled = !chosen;
+            });
+
+            if (meterEl) meterEl.textContent = sum + ' of ' + max + ' selected';
+            if (hintEl) {
+              hintEl.textContent = left > 0
+                ? 'Add ' + left + ' more jar' + (left === 1 ? '' : 's') + ' to complete the case.'
+                : '';
+            }
+
+            submitButtons().forEach(function (btn) {
+              btn.disabled = sum !== max;
+            });
+          }
+
+          steps.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var i = parseInt(btn.dataset.sdzFmixIndex, 10);
+              var d = parseInt(btn.dataset.sdzFmixStep, 10);
+              if (isNaN(i) || isNaN(d)) return;
+              var next = qty[i] + d;
+              if (next < 0 || (d > 0 && total() >= max)) return;
+              qty[i] = next;
+              render();
+            });
+          });
+
+          // Variant switching re-renders the buy buttons, which resets `disabled`.
+          if (window.MutationObserver) {
+            new MutationObserver(function () {
+              if (total() !== max) render();
+            }).observe(form, { childList: true, subtree: true });
+          }
+
+          form.addEventListener('submit', function (e) {
+            if (total() !== max) e.preventDefault();
+          });
+
+          render();
+        }
+
+        function initAll() {
+          document.querySelectorAll('[data-sdz-fmix]').forEach(initMix);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAll);
+        } else {
+          initAll();
+        }
+      })();
+    </script>
+  {%- endunless -%}
+{%- endif -%}

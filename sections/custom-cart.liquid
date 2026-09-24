@@ -55,19 +55,23 @@
 
   .section-heading {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(28px, 4vw, 46px);
-    font-weight: 700;
-    font-style: italic;
-    color: var(--sun-ink);
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 900;
+    font-style: normal;
+    letter-spacing: -0.01em;
+    color: #111111;
     margin: 0;
-    line-height: 1.15;
+    line-height: 1.08;
   }
 
+  /* Accent words — same gradient italic as "Collections" in Lineup Cards. */
   .section-heading strong {
-    background: linear-gradient(135deg, var(--sun-peach) 0%, var(--sun-rose) 55%, var(--sun-mauve) 100%);
+    font-style: italic;
+    background: linear-gradient(135deg, #e8728a 0%, #c94b7b 40%, #b8426e 70%, #a83d65 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: transparent;
     font-weight: 900;
   }
 
@@ -190,6 +194,51 @@
     font-weight: 400;
     letter-spacing: 0.06em;
     color: var(--sun-muted);
+  }
+
+  /* ─── Line item properties (e.g. master case flavor mix) ─── */
+  .cart-product-props {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+  }
+
+  .cart-product-props li {
+    display: flex;
+    gap: 6px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--sun-text);
+  }
+
+  .cart-product-props__name {
+    color: var(--sun-muted);
+  }
+
+  .cart-product-props__name::after {
+    content: ':';
+  }
+
+  .cart-product-props__value {
+    font-weight: 600;
+  }
+
+  /* Same properties, condensed for the order summary column. */
+  .cart-summary-props {
+    display: block;
+    margin-top: 3px;
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: var(--sun-muted);
+  }
+
+  .cart-summary-props__item {
+    display: block;
+  }
+
+  .cart-summary-props__item strong {
+    color: var(--sun-text);
+    font-weight: 600;
   }
 
   /* ─── Product bottom (price + controls) ─── */
@@ -1457,6 +1506,22 @@
                         <p><span x-text="item.variant_title"></span></p>
                       </template>
                     </div>
+
+                    {% comment %}
+                      Line item properties — e.g. the Sorbetto master case flavor mix.
+                      Keys starting with "_" are Shopify's convention for hidden
+                      properties, and blank values are skipped.
+                    {% endcomment %}
+                    <ul class="cart-product-props">
+                      <template x-for="prop in Object.entries(item.properties || {})" :key="prop[0]">
+                        <template x-if="prop[1] && String(prop[0]).charAt(0) !== '_'">
+                          <li>
+                            <span class="cart-product-props__name" x-text="prop[0]"></span>
+                            <span class="cart-product-props__value" x-text="prop[1]"></span>
+                          </li>
+                        </template>
+                      </template>
+                    </ul>
                     <div class="cart-product-btm" style="position: relative;">
                       <p class="cart-product-price"><strong x-text="formatMoney(item.final_line_price)"></strong></p>
                       <div class="dlt-btn-with-cart-quantity">
@@ -1548,7 +1613,19 @@
               <ul class="cart-product-summary-list order-list">
                 <template x-for="item in cart.items" :key="'summary-' + item.key">
                   <li>
-                    <p><span x-text="'x' + item.quantity"></span> <span x-text="item.product_title"></span></p>
+                    <p>
+                      <span x-text="'x' + item.quantity"></span> <span x-text="item.product_title"></span>
+                      {% comment %} Same line item properties as the product list above. {% endcomment %}
+                      <span class="cart-summary-props">
+                        <template x-for="prop in Object.entries(item.properties || {})" :key="'summary-prop-' + item.key + '-' + prop[0]">
+                          <template x-if="prop[1] && String(prop[0]).charAt(0) !== '_'">
+                            <span class="cart-summary-props__item">
+                              <span x-text="prop[0]"></span>: <strong x-text="prop[1]"></strong>
+                            </span>
+                          </template>
+                        </template>
+                      </span>
+                    </p>
                     <p><strong class="price" x-text="formatMoney(item.final_line_price)"></strong></p>
                   </li>
                 </template>
@@ -1614,6 +1691,7 @@
           </div>
           <div class="cart-checkout-btn">
             <a
+              id="checkout"
               :href="discountCode.trim() ? '/checkout?discount=' + encodeURIComponent(discountCode) : '/checkout'"
               class="btn primary-btn"
             >

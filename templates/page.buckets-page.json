@@ -23,16 +23,16 @@
       "settings": {
         "back_link": "/",
         "p1_image": "shopify://shop_images/MysticCandySwirl.png",
-        "p1_price": "$20.00",
+        "p1_price": "$32.00",
         "p1_variant_id": "46411672420513",
         "p2_image": "shopify://shop_images/MapleSoakedPancakes.png",
-        "p2_price": "$20.00",
+        "p2_price": "$32.00",
         "p2_variant_id": "46410485989537",
         "p3_image": "shopify://shop_images/FrostyShorty.png",
-        "p3_price": "$20.00",
+        "p3_price": "$32.00",
         "p3_variant_id": "46410413310113",
         "p4_image": "shopify://shop_images/DubaiDrip.png",
-        "p4_price": "$22.00",
+        "p4_price": "$32.00",
         "p4_variant_id": "46411841077409"
       }
     }

@@ -1,0 +1,99 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumbs": {
+      "type": "sundaze-breadcrumbs",
+      "settings": {
+        "home_label": "Home",
+        "bg_color": "#FFFFFF",
+        "padding_top": 20,
+        "padding_bottom": 8
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "featured_image": {
+          "type": "featured_image",
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": false
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "featured_image",
+        "title",
+        "share",
+        "content"
+      ],
+      "settings": {}
+    },
+    "footer_module": {
+      "type": "sundaze-article-footer",
+      "blocks": {
+        "faq_potency": {
+          "type": "faq",
+          "settings": {
+            "question": "Where should I verify product-specific potency?",
+            "answer": "<p>Use the COA tied to the specific product or batch when available.</p>"
+          }
+        },
+        "faq_advice": {
+          "type": "faq",
+          "settings": {
+            "question": "Should this guide replace legal or medical advice?",
+            "answer": "<p>No. It is general product education.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_potency",
+        "faq_advice"
+      ],
+      "settings": {
+        "related_title": "Related Guides",
+        "faq_title": "Frequently Asked",
+        "faq_schema": true,
+        "cta_eyebrow": "Ready To Shop?",
+        "cta_heading": "Explore Relevant Sundaze Products",
+        "cta_text": "<p>Browse the collection and check each product's available lab report before you choose.</p>",
+        "cta_label": "Shop The Collection",
+        "cta_link": "/collections/all",
+        "disclaimer": "This guide is general product education. It is not legal or medical advice. Availability varies by jurisdiction — see our Shipping & Compliance page for details.",
+        "bg_color": "#FFFFFF",
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "main",
+    "footer_module"
+  ]
+}

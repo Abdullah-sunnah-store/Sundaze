@@ -1,0 +1,90 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "disabled": true,
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "products_per_page": 36,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "show_vendor": false,
+        "enable_sorting": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "breadcrumbs": {
+      "type": "sundaze-breadcrumbs",
+      "settings": {
+        "home_label": "Home",
+        "bg_color": "#FFFFFF",
+        "padding_top": 20,
+        "padding_bottom": 8
+      }
+    },
+    "education": {
+      "type": "sundaze-collection-education",
+      "blocks": {
+        "link_rosin": {
+          "type": "link",
+          "settings": {
+            "title": "What Is Hash Rosin?",
+            "link": "/blogs/knowledge-hub/what-is-hash-rosin"
+          }
+        },
+        "link_coa": {
+          "type": "link",
+          "settings": {
+            "title": "How to Read a COA",
+            "link": "/blogs/knowledge-hub/how-to-read-a-coa"
+          }
+        },
+        "link_storage": {
+          "type": "link",
+          "settings": {
+            "title": "How to Store THCA Products",
+            "link": "/blogs/knowledge-hub/how-to-store-thca"
+          }
+        }
+      },
+      "block_order": [
+        "link_rosin",
+        "link_coa",
+        "link_storage"
+      ],
+      "settings": {
+        "eyebrow": "Category Guide",
+        "heading": "Solventless Hash Rosin",
+        "body": "<p>Hash rosin is produced from hash using heat and pressure rather than hydrocarbon extraction. Starting material, trichome separation, pressing, curing and storage all influence the finished texture and aromatic profile. Review the product’s available COA and explore our <a href=\"/blogs/knowledge-hub\">rosin education guides</a> before choosing a jar.</p>",
+        "links_title": "Related Guides",
+        "bg_color": "#FFFFFF",
+        "padding_top": 56,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "banner",
+    "product-grid",
+    "education"
+  ]
+}

@@ -297,7 +297,100 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
-  </head>
+  
+
+
+
+
+
+
+
+<!-- Wetracked Integration Script -->
+<script async src="https://pixel.wetracked.io/wtp.js"></script>
+<script async src="https://pixel.wetracked.io/50crxh-ay.myshopify.com/events.js"></script>
+<!-- End Wetracked Integration -->
+<!-- TagadaPay Integration Script -->
+<script>
+(function() {
+  window.TgdShim = {
+    captured: null,
+    custom: [],
+    defaults: {
+      checkoutLink: ['//*[@id="checkout"]', '//button[@name="checkout"]', '//form[@action="/cart"]//button[@type="submit"]'],
+      buyNowLink: ['.shopify-payment-button__button--unbranded', '.shopify-payment-button__button--branded']
+    }
+  };
+
+  function matches(el, xpath) {
+    try {
+      if (!el || !xpath) return false;
+      const isXpath = xpath.startsWith('//') || xpath.startsWith('/') || xpath.startsWith('(');
+      if (isXpath) {
+        const res = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        return res === el || res?.contains(el);
+      }
+      return el.matches(xpath) || el.closest(xpath);
+    } catch(e) { return false; }
+  }
+
+  document.addEventListener('click', function(e) {
+    if (window.TgdMapperInitialized) return;
+    const target = e.composedPath ? e.composedPath()[0] : e.target;
+
+    for (const item of window.TgdShim.custom) {
+      if (matches(target, item.xpath)) {
+        return capture(e, item.label);
+      }
+    }
+
+    for (const label in window.TgdShim.defaults) {
+      for (const selector of window.TgdShim.defaults[label]) {
+        if (matches(target, selector)) {
+          return capture(e, label);
+        }
+      }
+    }
+
+    function capture(event, label) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      window.TgdShim.captured = { target: target };
+      window.TgdShim.label = label;
+      return false;
+    }
+  }, true);
+})();
+</script>
+<script src="https://api.tagada.io/assets/js/tgdmap.js" async></script>
+<script>
+  window.addEventListener('load', function () {
+    if (window.TgdMapper) {
+      TgdMapper.initialize({
+        storeId: 'store_42f9fb6ec6de',
+        appUrl: 'https://api.tagada.io',
+        enableShopifyIntegration: true,
+        enableSelector: true,
+        enableGenericBuyNow: true,
+        enableBuyNowButtonDetector: true,
+        enableCheckoutButtonDetector: true,
+        enableKachingBundle: true,
+        enableShopifyCartPreloader: false,
+        shopifyCheckoutSplitRatio: 100,
+        funnelId: 'funnelv2_3a7766ef73af',
+        accountId: 'acc_83bd761091af',
+        stepId: 'step_1786541245380',
+        buyNowButtonDetectorUrlPatterns: [],
+        buyNowButtonDetectorExcludeUrlPatterns: [],
+        checkoutButtonDetectorExcludeUrlPatterns: [],
+        selectors: [],
+        mockMode: false
+      });
+    }
+  });
+</script>
+<!-- End TagadaPay Integration -->
+</head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
@@ -315,6 +408,15 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {%- comment -%} Disables add-to-cart on sold-out variants across the custom landing pages. {%- endcomment -%}
+    {%- render 'sdz-stock-guard' -%}
+
+    {%- comment -%} Stops checkout for states THCA can't ship to. Shipping zones are the real block. {%- endcomment -%}
+    {%- render 'sdz-ship-restrictions' -%}
+
+    {%- comment -%} SCOOP — site chat bubble. Answers from the site's own content, hands off to the contact form when it can't. {%- endcomment -%}
+    {%- render 'sdz-scoop-chat' -%}
 
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>

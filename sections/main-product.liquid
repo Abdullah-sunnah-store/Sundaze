@@ -922,6 +922,24 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+              {%- when 'flavor_mix' -%}
+                {%- comment -%}
+                  Only renders for the product picked in the block, so the block
+                  can live in the shared product template without appearing on
+                  every product. Leave the setting empty to show it everywhere.
+                {%- endcomment -%}
+                {%- assign mix_target = block.settings.limit_product -%}
+                {%- if mix_target == blank or mix_target.id == product.id -%}
+                  <div {{ block.shopify_attributes }}>
+                    {%- render 'sdz-flavor-mix',
+                      id: block.id,
+                      form_id: product_form_id,
+                      flavors: block.settings.flavors,
+                      max: block.settings.max_jars,
+                      heading: block.settings.heading
+                    -%}
+                  </div>
+                {%- endif -%}
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
@@ -1349,6 +1367,46 @@
             }
           ],
           "default": "circle"
+        }
+      ]
+    },
+    {
+      "type": "flavor_mix",
+      "name": "Flavor mix picker",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Lets the shopper split one case across flavors. Each choice is saved on the order as a line item property."
+        },
+        {
+          "type": "product",
+          "id": "limit_product",
+          "label": "Show only on this product",
+          "info": "Leave empty to show the picker on every product using this template."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Choose your 4 jars"
+        },
+        {
+          "type": "text",
+          "id": "flavors",
+          "label": "Flavors",
+          "info": "Comma separated. Each becomes a line item property on the order.",
+          "default": "Strawberry, Banana Lemon Headz, Peaches & Cream, Frootie Scoops"
+        },
+        {
+          "type": "range",
+          "id": "max_jars",
+          "label": "Jars per case",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "unit": "jar",
+          "default": 4
         }
       ]
     },

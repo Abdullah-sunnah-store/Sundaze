@@ -1,0 +1,2178 @@
+{%- comment -%}
+  ── SCOOP — SUNDAZE SITE ASSISTANT ────────────────────────────────────────
+  A chat bubble pinned to the bottom-right of every page. SCOOP reads this
+  store — every product, collection, page and knowledge-hub guide — and
+  answers customer questions from it. When it can't answer confidently it
+  stops rather than guessing, and hands the shopper a short form so the team
+  can pick the question up. That submission goes through Shopify's contact
+  form, so it lands in the store's notification inbox alongside every other
+  contact enquiry.
+
+  ── HOW IT KNOWS THE SITE ──
+  `sdz-scoop-catalog` renders the whole store as JSON at page-render time:
+  products with prices, stock, descriptions and effect metafields, plus page
+  and article copy. SCOOP parses it the first time a shopper opens the panel.
+  Nothing is hard-coded, so editing a product in Shopify admin updates what
+  SCOOP says — no theme change needed.
+
+  ── WHAT IS STILL HAND-WRITTEN ──
+  The SCOOP_KB array in the script holds policy, legality and education
+  answers — the ones that have to be exact rather than paraphrased. Each
+  entry is:
+      q  — the canonical question (also matched against)
+      k  — extra keywords/synonyms a shopper might type
+      a  — the answer, as HTML
+  Catalogue questions (what exists, what it costs, what it tastes like, what
+  it does) are answered live and do not belong in there.
+
+  ── EFFECT ANSWERS AND COMPLIANCE ──
+  "What would give me energy?" is answered from the sundaze.* product
+  metafields first. Where a product has none, SCOOP falls back to the effect
+  words that product's own page already prints — matched literally against a
+  fixed vocabulary, never inferred, never expanded through synonyms. Either
+  way the rule holds: SCOOP cannot state an effect this store has not already
+  published. Fill the metafields in and they take over silently.
+
+  The compliance gate in section 2 of the script is a hard stop on medical
+  claims, dosage advice, under-21 shoppers and restricted-state workarounds.
+  Read that section before loosening anything in it.
+
+  Setting the metafields up: docs/scoop-assistant/SETUP.md
+
+  ── OPTIONAL: WIRING A REAL LLM ──
+  Set `ai_endpoint` below to a URL you control (an app proxy or your own
+  serverless function). SCOOP POSTs {question, history, context} to it — the
+  `context` being the site content it just retrieved, so the model answers
+  from this store rather than from general knowledge — and renders {answer}
+  from the response. Never put an API key in the theme; it is public. If the
+  endpoint is blank, errors, or replies with no answer, SCOOP falls back to
+  the engine below and then to the lead form. It is blank by default and the
+  assistant is fully functional without it.
+{%- endcomment -%}
+
+{%- liquid
+  assign ai_endpoint = ''
+
+  assign url_faq        = pages['faq'].url        | default: '/pages/faq'
+  assign url_contact    = pages['contact-us'].url | default: '/pages/contact-us'
+  assign url_about      = pages['about-us'].url   | default: '/pages/about-us'
+  assign url_flavors    = pages['flavors'].url    | default: '/pages/flavors'
+  assign url_coa        = pages['coa'].url        | default: '/pages/coa'
+  assign url_flower     = pages['3-5g-thca-flower'].url      | default: '/pages/3-5g-thca-flower'
+  assign url_holes      = pages['hash-holes-collection'].url | default: '/pages/hash-holes-collection'
+  assign url_shipping   = pages['shipping-policy'].url       | default: '/pages/shipping-policy'
+  assign url_refund     = pages['refund-policy'].url         | default: '/pages/refund-policy'
+  assign url_privacy    = pages['privacy-policy'].url        | default: '/pages/privacy-policy'
+  # Live handle is terms-conditions; terms-of-service 404s. Both are tried so
+  # the link survives whichever handle the page ends up on.
+  assign url_terms      = pages['terms-conditions'].url | default: pages['terms-of-service'].url | default: '/pages/terms-conditions'
+  assign url_rosin      = collections['hash-rosin'].url      | default: '/collections/hash-rosin'
+  assign url_buckets    = collections['sundaze-neapolitan-collection'].url | default: '/collections/sundaze-neapolitan-collection'
+  assign url_hub        = '/blogs/knowledge-hub'
+  assign url_all        = '/collections/all'
+  assign url_account    = routes.account_url
+-%}
+
+<style>
+  /* ── Launcher ───────────────────────────────────────────────────────── */
+  .scoop {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 990; /* under the cart drawer (1000) and the age gate (99999) */
+    font-family: 'DM Sans', Georgia, sans-serif;
+  }
+
+  .scoop__launcher {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    height: 60px;
+    width: 60px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffd9a3 0%, #ffaed0 52%, #ec4f9a 100%);
+    box-shadow: 0 10px 30px rgba(196, 96, 122, 0.36);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .scoop__launcher:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 14px 36px rgba(196, 96, 122, 0.45); }
+  .scoop__launcher:active { transform: scale(0.96); }
+  .scoop__launcher:focus-visible { outline: 3px solid #3d2314; outline-offset: 3px; }
+  .scoop__launcher svg { width: 30px; height: 30px; margin: auto; color: #fff; }
+
+  /* One soft ring on load so the bubble is noticed once, then it settles. */
+  .scoop__launcher::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 2px solid rgba(236, 79, 154, 0.55);
+    animation: scoop-ring 2.4s ease-out 3;
+    pointer-events: none;
+  }
+  @keyframes scoop-ring {
+    0%   { transform: scale(1);    opacity: 0.7; }
+    100% { transform: scale(1.55); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scoop__launcher::before { animation: none; }
+  }
+
+  .scoop__badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    min-width: 20px; height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #3d2314;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .scoop__badge[hidden] { display: none; }
+
+  .scoop__tip {
+    position: absolute;
+    right: 72px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background: #fffcf4;
+    color: #3d2314;
+    border: 1px solid #f0ddc2;
+    border-radius: 999px;
+    padding: 9px 15px;
+    font-size: 13px;
+    box-shadow: 0 8px 22px rgba(93, 58, 34, 0.14);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .scoop__launcher:hover + .scoop__tip { opacity: 1; transform: translateY(-50%) translateX(-4px); }
+
+  /* ── Panel ──────────────────────────────────────────────────────────── */
+  .scoop__panel {
+    position: absolute;
+    right: 0;
+    bottom: 76px;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: min(600px, calc(100vh - 120px));
+    display: flex;
+    flex-direction: column;
+    background: #fffdf8;
+    border: 1px solid #f2e2cc;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(93, 58, 34, 0.22);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    transform-origin: bottom right;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .scoop.is-open .scoop__panel { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .scoop.is-open .scoop__tip { display: none; }
+
+  .scoop__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 15px;
+    background: linear-gradient(135deg, #ffe4bd 0%, #ffc3dd 55%, #ffaed0 100%);
+    border-bottom: 1px solid rgba(196, 96, 122, 0.18);
+    flex-shrink: 0;
+  }
+  .scoop__avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #fffdf8;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(93, 58, 34, 0.12);
+    flex-shrink: 0;
+  }
+  .scoop__avatar svg { width: 22px; height: 22px; color: #ec4f9a; }
+  .scoop__id { flex: 1; min-width: 0; }
+  .scoop__name {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #3d2314;
+    line-height: 1.1;
+  }
+  .scoop__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: #7c4d34;
+    margin-top: 3px;
+  }
+  .scoop__status i {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  /* The mark is an SVG centred by flex, not a text glyph in a default button
+     box. A text "x" inherits UA button padding and the body font metrics, which
+     pushed it a few px off centre; this way the cross is geometrically centred
+     on every device and font stack. */
+  .scoop__close {
+    position: relative;
+    box-sizing: border-box;
+    width: 32px; height: 32px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    color: #3d2314;
+    font: inherit;
+    line-height: 0;
+    letter-spacing: 0;
+    text-indent: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease;
+  }
+  .scoop__close svg {
+    display: block;
+    width: 14px; height: 14px;
+    pointer-events: none;
+  }
+  /* Invisible 44px hit area for touch, without changing the drawn circle. */
+  .scoop__close::after { content: ''; position: absolute; inset: -6px; }
+  .scoop__close:hover { background: rgba(255,255,255,0.9); }
+  .scoop__close:focus-visible { outline: 2px solid #3d2314; outline-offset: 2px; }
+
+  /* ── Transcript ─────────────────────────────────────────────────────── */
+  .scoop__log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 16px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #e8d5be transparent;
+  }
+  .scoop__log::-webkit-scrollbar { width: 6px; }
+  .scoop__log::-webkit-scrollbar-thumb { background: #e8d5be; border-radius: 50px; }
+
+  .scoop__msg {
+    max-width: 86%;
+    padding: 11px 14px;
+    border-radius: 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    word-wrap: break-word;
+  }
+  .scoop__msg--bot {
+    align-self: flex-start;
+    background: #fff6ea;
+    border: 1px solid #f4e2ca;
+    border-bottom-left-radius: 5px;
+    color: #4a3122;
+  }
+  .scoop__msg--user {
+    align-self: flex-end;
+    background: #3d2314;
+    border-bottom-right-radius: 5px;
+    color: #fff;
+  }
+  .scoop__msg p { margin: 0 0 9px; }
+  .scoop__msg p:last-child { margin-bottom: 0; }
+  .scoop__msg a { color: #cf4d8a; font-weight: 600; text-decoration: underline; }
+  .scoop__msg--user a { color: #ffd9a3; }
+  .scoop__msg ul { margin: 0 0 9px; padding-left: 18px; }
+  .scoop__msg li { margin-bottom: 4px; }
+  .scoop__msg strong { font-weight: 600; }
+
+  .scoop__typing { display: flex; gap: 4px; align-items: center; padding: 13px 15px; }
+  .scoop__typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #d8a6bd;
+    animation: scoop-bounce 1.3s infinite ease-in-out;
+  }
+  .scoop__typing span:nth-child(2) { animation-delay: 0.18s; }
+  .scoop__typing span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes scoop-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+    30%           { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* ── Suggestion chips ───────────────────────────────────────────────── */
+  .scoop__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 4px 16px 10px;
+    flex-shrink: 0;
+  }
+  .scoop__chips:empty { display: none; }
+  .scoop__chip {
+    border: 1px solid #f0cfdd;
+    background: #fff;
+    color: #b8426e;
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .scoop__chip:hover { background: #fff0f6; border-color: #ec4f9a; color: #ec4f9a; }
+
+  /* ── Lead capture card ──────────────────────────────────────────────── */
+  .scoop__lead {
+    align-self: stretch;
+    max-width: 100%;
+    background: #fffcf4;
+    border: 1px solid #f0ddc2;
+    border-radius: 16px;
+    padding: 14px;
+  }
+  .scoop__lead h4 {
+    margin: 0 0 4px;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #3d2314;
+  }
+  .scoop__lead p.scoop__lead-sub {
+    margin: 0 0 11px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #7c4d34;
+  }
+  .scoop__lead label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(61, 35, 20, 0.6);
+    margin: 0 0 4px;
+  }
+  .scoop__lead input,
+  .scoop__lead textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    margin-bottom: 9px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #3d2314;
+    background: #fff;
+    border: 1px solid #ecd8bd;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .scoop__lead textarea { resize: vertical; min-height: 60px; }
+  .scoop__lead input:focus,
+  .scoop__lead textarea:focus {
+    border-color: #ec4f9a;
+    box-shadow: 0 0 0 3px rgba(236, 79, 154, 0.12);
+  }
+  .scoop__lead-err {
+    display: none;
+    margin: 0 0 9px;
+    font-size: 12px;
+    color: #c0392b;
+  }
+  .scoop__lead-err.is-shown { display: block; }
+  .scoop__lead-btn {
+    width: 100%;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 999px;
+    background: #3d2314;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .scoop__lead-btn:hover { opacity: 0.88; }
+  .scoop__lead-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Composer ───────────────────────────────────────────────────────── */
+  .scoop__composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 11px 14px;
+    border-top: 1px solid #f2e2cc;
+    background: #fffdf8;
+    flex-shrink: 0;
+  }
+  .scoop__input {
+    flex: 1;
+    min-width: 0;
+    max-height: 96px;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: #3d2314;
+    background: #fff;
+    border: 1px solid #ecd8bd;
+    border-radius: 18px;
+    outline: none;
+    resize: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .scoop__input:focus { border-color: #ec4f9a; box-shadow: 0 0 0 3px rgba(236, 79, 154, 0.12); }
+  .scoop__send {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffaed0 0%, #ec4f9a 100%);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .scoop__send svg { width: 17px; height: 17px; }
+  .scoop__send:hover { transform: scale(1.06); }
+  .scoop__send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .scoop__legal {
+    padding: 0 16px 11px;
+    margin: 0;
+    font-size: 10.5px;
+    line-height: 1.45;
+    color: rgba(61, 35, 20, 0.45);
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .scoop { right: 14px; bottom: 14px; }
+    .scoop__panel {
+      position: fixed;
+      right: 8px; left: 8px; bottom: 84px;
+      width: auto;
+      max-width: none;
+      height: min(560px, calc(100vh - 110px));
+    }
+    .scoop__tip { display: none; }
+  }
+
+  /* ── Product cards ──────────────────────────────────────────────────
+     When SCOOP recommends something it shows the product rather than
+     describing it — image, price and the published reason it matched. */
+  .scoop__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 10px 0 2px;
+  }
+
+  .scoop__card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 10px;
+    background: #fff;
+    border: 1px solid #f0ddc2;
+    border-radius: 13px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .scoop__card:hover {
+    border-color: #ec4f9a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(196, 96, 122, 0.16);
+  }
+  .scoop__card:focus-visible { outline: 2px solid #ec4f9a; outline-offset: 2px; }
+
+  .scoop__card-img {
+    flex-shrink: 0;
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff6ea;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .scoop__card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .scoop__card-body { flex: 1; min-width: 0; display: block; }
+
+  .scoop__card-name {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #3d2314;
+    /* Long product names wrap rather than blowing out the bubble width. */
+    overflow-wrap: anywhere;
+  }
+  .scoop__card-meta {
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+    color: #7c4d34;
+  }
+  .scoop__card-why {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #b8426e;
+    letter-spacing: 0.01em;
+  }
+  .scoop__card-out {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #f4e2ca;
+    color: #7c4d34;
+    font-family: 'DM Sans', Georgia, sans-serif;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  /* The regulatory line under any answer that mentions effects. Quiet, but
+     never optional — see the compliance gate in the script. */
+  .scoop__msg p.scoop__fine {
+    margin: 9px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid #f4e2ca;
+    font-size: 10.5px;
+    line-height: 1.45;
+    color: rgba(61, 35, 20, 0.5);
+  }
+</style>
+
+<div class="scoop" id="scoopWidget">
+  <div
+    class="scoop__panel"
+    id="scoopPanel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="scoopName"
+    aria-hidden="true"
+  >
+    <div class="scoop__header">
+      <span class="scoop__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 11h8l-4 10-4-10z"/>
+          <circle cx="9.5" cy="7.5" r="3.2"/>
+          <circle cx="14.5" cy="7.5" r="3.2"/>
+          <circle cx="12" cy="5" r="3.2"/>
+        </svg>
+      </span>
+      <span class="scoop__id">
+        <strong class="scoop__name" id="scoopName">SCOOP</strong>
+        <span class="scoop__status"><i aria-hidden="true"></i> The inside scoop on Sundaze</span>
+      </span>
+      <button type="button" class="scoop__close" id="scoopClose" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="scoop__log" id="scoopLog" role="log" aria-live="polite" aria-atomic="false"></div>
+
+    <div class="scoop__chips" id="scoopChips"></div>
+
+    <div class="scoop__composer">
+      <textarea
+        class="scoop__input"
+        id="scoopInput"
+        rows="1"
+        placeholder="Ask SCOOP anything&hellip;"
+        aria-label="Type your question for SCOOP"
+      ></textarea>
+      <button type="button" class="scoop__send" id="scoopSend" aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+
+    <p class="scoop__legal">
+      SCOOP is an automated assistant. Nothing here is medical or legal advice. 21+ only.
+    </p>
+  </div>
+
+  <button type="button" class="scoop__launcher" id="scoopLauncher" aria-expanded="false" aria-controls="scoopPanel" aria-label="Chat with SCOOP">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M8 11h8l-4 10-4-10z"/>
+      <circle cx="9.5" cy="7.5" r="3.2"/>
+      <circle cx="14.5" cy="7.5" r="3.2"/>
+      <circle cx="12" cy="5" r="3.2"/>
+    </svg>
+    <span class="scoop__badge" id="scoopBadge">1</span>
+  </button>
+  <span class="scoop__tip" aria-hidden="true">Questions? Get the scoop 🍨</span>
+</div>
+
+{%- comment -%} The live site index SCOOP reads from. {%- endcomment -%}
+{%- render 'sdz-scoop-catalog' -%}
+
+<script>
+  (function () {
+    'use strict';
+
+    var widget = document.getElementById('scoopWidget');
+    if (!widget || widget.dataset.scoopReady) return;
+    widget.dataset.scoopReady = '1';
+
+    var panel    = document.getElementById('scoopPanel');
+    var launcher = document.getElementById('scoopLauncher');
+    var closeBtn = document.getElementById('scoopClose');
+    var log      = document.getElementById('scoopLog');
+    var chips    = document.getElementById('scoopChips');
+    var input    = document.getElementById('scoopInput');
+    var sendBtn  = document.getElementById('scoopSend');
+    var badge    = document.getElementById('scoopBadge');
+
+    var AI_ENDPOINT = {{ ai_endpoint | json }};
+
+    var L = {
+      faq:      {{ url_faq | json }},
+      contact:  {{ url_contact | json }},
+      about:    {{ url_about | json }},
+      flavors:  {{ url_flavors | json }},
+      coa:      {{ url_coa | json }},
+      flower:   {{ url_flower | json }},
+      holes:    {{ url_holes | json }},
+      rosin:    {{ url_rosin | json }},
+      buckets:  {{ url_buckets | json }},
+      shipping: {{ url_shipping | json }},
+      refund:   {{ url_refund | json }},
+      privacy:  {{ url_privacy | json }},
+      terms:    {{ url_terms | json }},
+      hub:      {{ url_hub | json }},
+      all:      {{ url_all | json }},
+      account:  {{ url_account | json }}
+    };
+
+    function a(href, text) { return '<a href="' + href + '">' + text + '</a>'; }
+
+    /* ══════════════════════════════════════════════════════════════════
+       1. THE SITE INDEX
+       Parsed once, on first open, out of the JSON that sdz-scoop-catalog
+       renders. Everything downstream reads from here — which is why SCOOP
+       tracks the live store rather than a stale copy of it.
+    ══════════════════════════════════════════════════════════════════ */
+    var SITE = { products: [], collections: [], pages: [], articles: [], shop: {} };
+    var siteLoaded = false;
+
+    function loadSite() {
+      if (siteLoaded) return;
+      siteLoaded = true;
+      try {
+        var el = document.getElementById('scoopCatalog');
+        if (!el) return;
+        var data = JSON.parse(el.textContent);
+        SITE.shop        = data.shop || {};
+        SITE.products    = (data.products || []).filter(function (p) { return p && p.title; });
+        SITE.collections = data.collections || [];
+        SITE.pages       = data.pages || [];
+        SITE.articles    = data.articles || [];
+      } catch (e) {
+        /* A malformed blob must never take the widget down — SCOOP falls
+           back to the curated answers and the handoff form. */
+        SITE.products = [];
+      }
+      SITE.products.forEach(enrichFromCopy);
+      buildCorpus();
+    }
+
+    /* Metafield lists arrive as arrays, single-text as strings, unset as
+       null. Normalise all three into a lowercased array. */
+    function listOf(value) {
+      if (!value) return [];
+      var arr = Object.prototype.toString.call(value) === '[object Array]' ? value : String(value).split(',');
+      var out = [];
+      for (var i = 0; i < arr.length; i++) {
+        var v = String(arr[i] || '').trim().toLowerCase();
+        if (v) out.push(v);
+      }
+      return out;
+    }
+
+    function textOf(value) { return value == null ? '' : String(value).trim(); }
+
+    /* ── PUBLISHED COPY AS A FALLBACK SOURCE ────────────────────────────
+       The sundaze.* metafields are the preferred source and always win. But
+       until they are filled in, every effect question dead-ends on "I can't
+       match products to how they feel yet" — which is true about SCOOP and
+       useless to the shopper, because the product pages have been publishing
+       those words the whole time.
+
+       So when a product carries no effect metafield, SCOOP falls back to the
+       effect words its own product page already prints. Matched literally,
+       against the fixed vocabulary below, with no synonym expansion and no
+       inference: if the word is not on the page, it is not in the list.
+
+       Repeating a word this store published and guessing how something feels
+       are different acts, and only the second is a claim SCOOP would be
+       making up. That one still cannot happen. Fill the metafields in and
+       this layer goes quiet on its own — admin always wins.
+
+       The THCa figure works the same way: the flower pages print it, so
+       SCOOP ranks on what it read rather than pretending it has no numbers.
+       Read, never calculated, never rounded. */
+    var COPY_EFFECTS = [
+      ['energized', /\benergi[sz](?:ing|ed)\b|\benergetic\b/i],
+      ['uplifted',  /\buplift(?:ing|ed|s)?\b/i],
+      ['motivated', /\bmotivat(?:ing|ed)\b/i],
+      ['focused',   /\bfocus(?:ed|sed)\b/i],
+      ['creative',  /\bcreativ(?:e|ity)\b/i],
+      ['happy',     /\bhapp(?:y|iness)\b/i],
+      ['euphoric',  /\beuphori(?:c|a)\b/i],
+      ['blissful',  /\bbliss(?:ful)?\b/i],
+      ['giggly',    /\bgiggl\w*\b/i],
+      ['social',    /\bsocial\b/i],
+      ['talkative', /\btalkative\b/i],
+      ['relaxed',   /\brelax(?:ed|ing|ation)\b/i],
+      ['calm',      /\bcalm(?:ing)?\b/i],
+      ['peaceful',  /\bpeaceful\b/i],
+      ['sleepy',    /\bsleepy\b/i],
+      ['sedating',  /\bsedat(?:ing|ive)\b/i],
+      ['restful',   /\brestful\b/i],
+      ['balanced',  /\bbalanced\b/i]
+    ];
+
+    var COPY_THCA = /(\d{1,2}(?:\.\d+)?)\s*%\s*THC\s*-?\s*A\b/i;
+
+    function enrichFromCopy(p) {
+      var copy = String(p.description || '');
+      p._copyEffects = [];
+      p._copyThca    = null;
+      if (!copy) return;
+
+      if (!listOf(p.effects).length) {
+        for (var i = 0; i < COPY_EFFECTS.length; i++) {
+          if (COPY_EFFECTS[i][1].test(copy)) p._copyEffects.push(COPY_EFFECTS[i][0]);
+        }
+      }
+      if (p.thca_percent == null) {
+        var m = copy.match(COPY_THCA);
+        if (m) p._copyThca = m[1];
+      }
+    }
+
+    /* Admin metafield first, published copy second, nothing third. */
+    function effectsOf(p) {
+      var eff = listOf(p.effects);
+      return eff.length ? eff : (p._copyEffects || []);
+    }
+    function thcaOf(p) {
+      if (p.thca_percent != null) return p.thca_percent;
+      return p._copyThca != null ? p._copyThca : null;
+    }
+
+    /* A product counts as "tagged" once effect wording exists for it, from
+       either source. Products with neither stay invisible to effect matching
+       by design — see section 2. */
+    function isTagged(p) {
+      return effectsOf(p).length > 0 || textOf(p.strain_type) !== '' || textOf(p.time_of_day) !== '';
+    }
+    function taggedProducts() { return SITE.products.filter(isTagged); }
+
+    /* ══════════════════════════════════════════════════════════════════
+       2. COMPLIANCE GATE — runs before anything else may answer.
+
+       Sundaze sells hemp, where effect and health claims are regulated.
+       These are hard stops, not preferences. SCOOP will not:
+         · say a product treats, cures, eases or helps any condition
+         · give a dose, an amount, or a "start with about this much"
+         · advise anyone on medication, pregnancy or nursing
+         · continue with anyone who says they are under 21
+         · help route an order into a state Sundaze cannot ship to
+         · describe an effect that isn't published on this store already
+
+       Each stop hands off to a human instead. Deflecting a genuine customer
+       costs one reply; a claim costs considerably more than that.
+    ══════════════════════════════════════════════════════════════════ */
+    var GUARD = {
+      conditions: /\b(chronic pain|back pain|joint pain|nerve pain|pain relief|for pain|my pain|anxiety|anxious|panic attacks?|depress\w*|ptsd|insomnia|nausea|vomiting|appetite loss|cancer|chemo\w*|seizures?|epilep\w*|migraines?|arthritis|adhd|autism|glaucoma|crohn\w*|inflammation|withdrawals?|addiction|eating disorder|blood pressure|heart condition|diabet\w*|asthma|copd)\b/i,
+      claim: /\b(cures?(?!\s+(?:yourself|myself))|heals?|healing|remedy|therapeutic|medicinal|medical (?:use|grade|benefit|advice)|symptoms?|diseases?|illness)\b/i,
+      dosage: /\b(how much should i|how much do i|how many should i|how many do i|dosage|dosing|correct dose|right dose|proper dose|milligrams?|overdose|too much|safe amount|how much is safe)\b/i,
+      interaction: /\b(medication|medications|prescription|antidepressants?|ssri|blood thinner|pregnan\w*|nursing|breastfeed\w*|drug interaction)\b/i,
+      minor: /\b(?:i'?m|i am|im)\s?(?:1[0-9]|20)\b|\b(?:under ?21|not 21|underage|a minor|my kid|my son|my daughter|for a teen)\b/i,
+      evasion: /\b(fake id|beat (?:a|the) drug test|pass (?:a|the) drug test|get around|work around|bypass|sneak|smuggle|reroute|forwarding address)\b/i
+    };
+
+    var RESTRICTED = /\b(arkansas|idaho|minnesota|oregon|rhode island|texas|vermont)\b/i;
+
+    /* Returns a hard-stop reply, or null to let the question carry on down
+       the normal path. */
+    function complianceCheck(q) {
+      if (GUARD.minor.test(q)) {
+        return {
+          html: '<p>I have to stop there — Sundaze is strictly 21+, and I can’t help with a purchase for anyone under that age.</p>' +
+                '<p>Nothing personal. It’s the one rule we don’t bend.</p>',
+          chips: []
+        };
+      }
+
+      if (GUARD.evasion.test(q) || (RESTRICTED.test(q) && /\b(around|anyway|somehow|still|any ?way)\b/i.test(q))) {
+        return {
+          html: '<p>That’s not something I can help with.</p>' +
+                '<p>We don’t ship to Arkansas, Idaho, Minnesota, Oregon, Rhode Island, Texas or Vermont, and there’s no way around that on our end. Full detail on the ' + a(L.shipping, 'shipping policy page') + '.</p>',
+          chips: ['Which states do you not ship to?']
+        };
+      }
+
+      if (GUARD.dosage.test(q)) {
+        return {
+          html: '<p>I can’t advise on amounts — that’s genuinely individual, and it isn’t something an automated assistant should be guessing at.</p>' +
+                '<p>What I can tell you is exactly what’s in each product and how it’s made. For how much is right for you, please talk to a healthcare professional.</p>',
+          chips: ['What is in a hash hole?', 'Where are the lab results?']
+        };
+      }
+
+      if (GUARD.interaction.test(q)) {
+        return {
+          html: '<p>That one needs a real clinician, not me. If you’re pregnant, nursing, or taking prescription medication, please check with your healthcare provider before using any hemp-derived product.</p>' +
+                '<p>I’d rather point you to the right person than give you an answer I’m not qualified to give.</p>',
+          chips: []
+        };
+      }
+
+      if (GUARD.conditions.test(q) || GUARD.claim.test(q)) {
+        return {
+          html: '<p>I can’t speak to health conditions or medical use — our products aren’t intended to diagnose, treat, cure or prevent any disease, and they haven’t been evaluated by the FDA.</p>' +
+                '<p>Please take that one to a healthcare professional. I’m glad to cover anything about the products themselves: how they’re made, what’s in them, or what the lab results say.</p>',
+          chips: ['Where are the lab results?', 'What is hash rosin?']
+        };
+      }
+
+      return null;
+    }
+
+    /* Appended to every answer that touches effects. Non-negotiable. */
+    var EFFECT_DISCLAIMER =
+      '<p class="scoop__fine">Effects vary from person to person. Not evaluated by the FDA and not intended to diagnose, treat, cure or prevent any disease. 21+ only.</p>';
+
+    /* ══════════════════════════════════════════════════════════════════
+       3. CURATED ANSWERS — policy, legality, brand, education.
+
+       These stay hand-written because they must be exact: a shipping ban or
+       an age rule is not something to paraphrase out of page copy. Anything
+       about the catalogue — what exists, what it costs, what it tastes like,
+       what it does — is answered live from the site index instead, further
+       down in section 5.
+    ══════════════════════════════════════════════════════════════════ */
+    var SCOOP_KB = [
+      {
+        q: 'What is THCa and how is it different from THC?',
+        k: 'thca thc difference cannabinoid psychoactive raw decarb heat convert what is',
+        a: '<p>THCa (tetrahydrocannabinolic acid) is the non-psychoactive cannabinoid found in raw cannabis. Heat it — smoking or vaping — and it converts to THC, which is where the effect comes from.</p>' +
+           '<p>That’s why our products stay federally compliant while still delivering. More in the ' + a(L.faq, 'FAQ') + '.</p>'
+      },
+      {
+        q: 'Are Sundaze products federally legal?',
+        k: 'legal legality farm bill 2018 hemp derived compliant law federal 0.3 delta 9 d9',
+        a: '<p>Yes. Every Sundaze product is hemp-derived and contains less than 0.3% &Delta;9 THC by dry weight, which makes it compliant with the 2018 Farm Bill.</p>' +
+           '<p>State law still varies, so it’s worth checking your own — see ' + a(L.terms, 'our terms') + '.</p>'
+      },
+      {
+        q: 'Which states do you not ship to?',
+        k: 'ship shipping state states restricted banned cannot deliver arkansas idaho minnesota oregon rhode island texas vermont where do you ship legal in my state',
+        a: '<p>We ship to most of the US, but <strong>not</strong> to these seven states:</p>' +
+           '<ul><li>Arkansas</li><li>Idaho</li><li>Minnesota</li><li>Oregon</li><li>Rhode Island</li><li>Texas</li><li>Vermont</li></ul>' +
+           '<p>Orders with a shipping address in those states can’t be accepted or fulfilled. Full details on the ' + a(L.shipping, 'shipping policy page') + '.</p>'
+      },
+      {
+        q: 'Do you ship discreetly?',
+        k: 'discreet discrete packaging package plain box branding privacy private neighbors',
+        a: '<p>Always. Orders go out in plain packaging with no Sundaze branding on the outside of the box.</p>'
+      },
+      {
+        q: 'How old do I have to be to order?',
+        k: 'age 21 twenty one old minimum adult id verification verify identity underage need to be',
+        a: '<p>21+, no exceptions. We also reserve the right to verify your age and identity before an order ships — anything we can’t verify gets canceled.</p>'
+      },
+      {
+        q: 'Will your products show up on a drug test?',
+        k: 'drug test screening urine job employer fail positive probation',
+        a: '<p>Possibly, yes. Our products are federally legal, but they still contain cannabinoids that can trigger a positive result.</p>' +
+           '<p>If you’re subject to testing at work or anywhere else, we’d be careful.</p>'
+      },
+      {
+        q: 'Can I travel with Sundaze products?',
+        k: 'travel fly flying plane airport tsa state lines road trip carry',
+        a: '<p>Our products are federally legal under the 2018 Farm Bill, but individual state laws vary a lot. Check local and state rules before traveling with any hemp-derived product, especially across state lines.</p>'
+      },
+      {
+        q: 'What is a hash hole pre-roll and what’s inside it?',
+        k: 'hash hole preroll pre-roll joint donut donutte inside contains grams 1.5g 0.6g 90u 120u micron glass tip bubble whole bud exotic infused rosin worm',
+        a: '<p>Each Sundaze hash hole is 1.5G of exotic whole bud flower wrapped around a 0.6G core of cold cure 90u–120u rosin pressed from bubble hash — the “rosin worm”, set dead centre so it burns even and doesn’t clog.</p>' +
+           '<p>Glass tip, hand rolled, flushed before harvest for white ash. No smalls, no trim, no shortcuts.</p>' +
+           '<p>Browse them here: ' + a(L.holes, 'Hash Holes') + '.</p>'
+      },
+      {
+        q: 'How many hash holes are in a bucket?',
+        k: 'bucket buckets how many count 12 twelve 36 thirty six mixed neapolitan vanilla strawberry shortcake nugtella inside contains bulk series',
+        a: '<p>Every Sundaze bucket holds <strong>12 hash holes</strong>, pre-roll style, sealed in the signature bucket packaging. Single-flavour buckets come in Vanilla, Strawberry Shortcake and Nugtella.</p>' +
+           '<p>The <strong>Mixed Bucket</strong> is all three of those buckets bundled together — 36 hash holes, the full Neapolitan lineup.</p>' +
+           '<p>See them here: ' + a(L.buckets, 'the Bucket Series') + '.</p>'
+      },
+      {
+        q: 'How much rosin is in a jar?',
+        k: 'rosin jar jars size grams 2g how big how much master case sorbetto four flavor collection quantity',
+        a: '<p>Each jar is <strong>2G of cold cure live rosin</strong> — 90–120&micro; solventless, pressed in small batches off fresh frozen indoor flower.</p>' +
+           '<p>The <strong>Sorbetto Master Case</strong> brings all four flavours together in one case: Melted Strawberries, Banana Lemon Headz, Peaches &amp; Cream and Frootie Scoops.</p>' +
+           '<p>See the jars: ' + a(L.rosin, 'Hash Rosin') + '.</p>'
+      },
+      {
+        q: 'What is hash rosin?',
+        k: 'hash rosin solventless cold cure live extraction micron 90 120 concentrate dab what is rosin',
+        a: '<p>Hash rosin is made from hash using only heat and pressure — no solvents. Ours is cold cure live rosin pressed from 90&ndash;120&micro; bubble hash off fresh frozen indoor flower, in small batches.</p>' +
+           '<p>See the jars: ' + a(L.rosin, 'Hash Rosin collection') + ', or read ' + a(L.hub, 'our guides') + '.</p>'
+      },
+      {
+        q: 'Do your products contain additives or fillers?',
+        k: 'additives fillers cutting agents artificial flavoring pesticides ingredients clean pure natural',
+        a: '<p>No. Whole bud flower and solventless concentrates, nothing else — no additives, no cutting agents, no artificial flavoring.</p>'
+      },
+      {
+        q: 'What is a COA and how do I read one?',
+        k: 'coa read reading certificate analysis understand explain my lab report batch lot number panel cannabinoid pesticide safety date thca percentage where find',
+        a: '<p>A COA is the third-party lab report for a batch — cannabinoid results, batch or lot number, the testing date and the applicable safety panels.</p>' +
+           '<p>Reading one: match the product name and batch number first, check the date, then the cannabinoid panel for the THCa figure, then the safety panels and the lab that ran them.</p>' +
+           '<p>Ours are here: ' + a(L.coa, 'COAs') + ', and ' + a(L.hub, 'the knowledge hub') + ' walks through a full report.</p>'
+      },
+      {
+        q: 'Are your products third-party lab tested?',
+        k: 'coa lab test tested results certificate analysis third party potency batch report',
+        a: '<p>Yes — everything is third-party lab tested. You can pull up the certificates of analysis here: ' + a(L.coa, 'COAs') + '.</p>' +
+           '<p>New to reading one? ' + a(L.hub, 'Our knowledge hub') + ' walks through it.</p>'
+      },
+      {
+        q: 'How should I store my products?',
+        k: 'store storage keep fresh fridge freezer cool dry sunlight heat airtight shelf life expire',
+        a: '<p>Cool, dry, out of direct sunlight and away from heat. For flower and pre-rolls especially, an airtight container — or the original packaging sealed tight — keeps things fresh.</p>'
+      },
+      {
+        q: 'What is the best way to smoke a hash hole?',
+        k: 'smoke how to light burn canoe hit puff best way dab use',
+        a: '<p>Light the tip slowly and evenly, rotating as you go, then take slow steady pulls so the rosin core heats gradually. White ash means the airflow and the material are both right.</p>'
+      },
+      {
+        q: 'What is your return or refund policy?',
+        k: 'return refund exchange guarantee money back damaged broken wrong item 30 days satisfied policy',
+        a: '<p>We stand behind everything we make. If you’re not happy with an order, get in touch within 30 days of purchase and we’ll make it right.</p>' +
+           '<p>Details: ' + a(L.refund, 'refund policy') + ' &middot; ' + a(L.contact, 'contact us') + '.</p>'
+      },
+      {
+        q: 'How do I contact Sundaze?',
+        k: 'contact email phone support customer service reach speak talk human agent person help representative',
+        a: '<p>Head to ' + a(L.contact, 'our contact page') + ' — the team replies within about 24 hours.</p>' +
+           '<p>Want me to pass your question along instead? Just say <strong>leave a message</strong> and I’ll take your details.</p>'
+      },
+      {
+        q: 'Where is my order? How do I track it?',
+        k: 'order tracking track shipped status where is delivery arrive arrived when number confirmation package parcel late missing lost delayed',
+        a: '<p>Tracking goes out by email as soon as your order ships, and you can also check it from your ' + a(L.account, 'account page') + '.</p>' +
+           '<p>If it hasn’t turned up, leave me your details and the team will chase it down — just say <strong>leave a message</strong>.</p>'
+      },
+      {
+        q: 'Who is Sundaze?',
+        k: 'about who are you brand story company farms sundaze made owner owns founder founded team behind',
+        a: '<p>Sundaze is a small-batch, solventless hemp brand — hand-rolled hash holes, cold cure live rosin, and fresh frozen indoor flower. Every day deserves a little sunshine.</p>' +
+           '<p>More on the ' + a(L.about, 'about page') + '.</p>'
+      },
+      {
+        q: 'Do you offer wholesale?',
+        k: 'wholesale bulk reseller retailer distributor stock carry store b2b partnership collab',
+        a: '<p>That one’s best answered by the team directly. Leave me your email or phone with a few details and they’ll get back to you — just say <strong>leave a message</strong>.</p>'
+      },
+      {
+        q: 'Can I buy Sundaze in a store near me?',
+        k: 'near nearby store shop dispensary retail retailer location locations stockist smoke local in person carry',
+        a: '<p>This site is the place to order direct. Asking about a shop near you carrying Sundaze? That one is for the team — say <strong>leave a message</strong> and I’ll take your details.</p>'
+      },
+      {
+        q: 'How long does shipping take?',
+        k: 'shipping time long fast transit eta speed overnight express when arrive delivery estimate',
+        a: '<p>Tracking is emailed the moment your order ships. Current processing and transit times are on the ' + a(L.shipping, 'shipping policy page') + '.</p>' +
+           '<p>Need an ETA on a specific order? Say <strong>leave a message</strong> and the team will look it up.</p>'
+      },
+      {
+        q: 'How do you handle my personal information?',
+        k: 'privacy data personal information gdpr cookies security secure safe protected card details',
+        a: '<p>It’s all laid out in our ' + a(L.privacy, 'privacy policy') + '.</p>'
+      },
+      {
+        q: 'How much flower is in a jar, and how is it grown?',
+        k: 'flower jar jars 3.5 3.5g eighth grams how much comes in indoor grown greenhouse outdoor cultivation lab tested third party premium quantity',
+        a: '<p>Every flower jar is <strong>3.5G</strong>. Indoor grown, third-party lab tested, and the THCa percentage is published on each strain’s own page.</p>' +
+           '<p>See the strains: ' + a(L.flower, '3.5G Flower') + ' &middot; certificates on the ' + a(L.coa, 'COA page') + '.</p>'
+      },
+      {
+        q: 'What is the difference between flower, hash rosin and a hash hole?',
+        k: 'difference between flower rosin hash hole compare comparison versus vs formats format explain loose jar concentrate preroll pre-roll which one',
+        a: '<p>Three formats, same starting material:</p>' +
+           '<ul>' +
+           '<li><strong>3.5G Flower</strong> — loose whole bud in a jar, 3.5 grams, smoked however you like.</li>' +
+           '<li><strong>Hash rosin</strong> — the concentrate on its own: 2G of cold cure live rosin per jar, pressed solventless with heat and pressure.</li>' +
+           '<li><strong>Hash holes</strong> — both at once: 1.5G of exotic flower wrapped around a 0.6G rosin core, hand rolled with a glass tip.</li>' +
+           '</ul>' +
+           '<p>Tell me the kind of session you’re after and I’ll point you at one.</p>'
+      },
+      {
+        q: 'What is a terpene?',
+        k: 'terpene terpenes terps aroma smell nose flavour flavor compounds limonene myrcene caryophyllene profile what are',
+        a: '<p>Terpenes are the aromatic compounds in the plant — they’re what makes one strain smell like berries and the next like chocolate.</p>' +
+           '<p>Solventless extraction is built around keeping them intact, which is why cold cure rosin tastes like the flower it came from. Longer read: ' + a(L.hub, 'our guides') + '.</p>'
+      },
+      {
+        q: 'What do cold cure, fresh frozen and 90&ndash;120&micro; mean?',
+        k: 'cold cure curing micron microns 90 120 90u 120u mesh bubble hash wash washed fresh frozen live small batch what does mean',
+        a: '<p><strong>Fresh frozen</strong> — the flower is frozen at harvest instead of dried, so the terpenes never get a chance to bake off.</p>' +
+           '<p><strong>90&ndash;120&micro;</strong> — the mesh sizes the bubble hash is washed through. That band is the full-melt range: the heads that press cleanest.</p>' +
+           '<p><strong>Cold cure</strong> — the rosin is cured cold and slow rather than heated, which is what keeps the flavour and gives it the batter texture.</p>' +
+           '<p>Every jar is pressed in small batches: ' + a(L.rosin, 'Hash Rosin') + '.</p>'
+      },
+      {
+        q: 'Do you ship internationally or to a P.O. Box?',
+        k: 'international internationally canada uk overseas outside abroad worldwide another country po box p.o. pobox apo fpo military mailbox usa united states only',
+        a: '<p>US only — we don’t ship internationally, and we can’t ship to a P.O. Box. It has to be a street address in a state we serve.</p>' +
+           '<p>The seven we can’t reach are Arkansas, Idaho, Minnesota, Oregon, Rhode Island, Texas and Vermont. Full detail: ' + a(L.shipping, 'shipping policy') + '.</p>'
+      },
+      {
+        q: 'How long does an order take to process before it ships?',
+        k: 'processing process order business days 1-3 before ships dispatch when will my order ship how soon leaves weekend holiday',
+        a: '<p>Orders are typically processed within <strong>1&ndash;3 business days</strong>, not counting weekends and holidays. Transit time on top of that is down to the carrier and the destination, and estimates aren’t guaranteed.</p>' +
+           '<p>Tracking is emailed the moment it leaves us. Details: ' + a(L.shipping, 'shipping policy') + '.</p>'
+      },
+      {
+        q: 'My tracking hasn’t updated, or my package says delivered but isn’t here.',
+        k: 'tracking not updating stuck no movement hasnt updated says delivered but missing never arrived stolen porch lost carrier claim wrong address entered mistake change address',
+        a: '<p>Tracking scans belong to the carrier, not to us, and they can sit still for a day or two before catching up. If it says delivered and it isn’t there, start with the carrier — they’re the ones who can open a trace.</p>' +
+           '<p>Entered the wrong address? Tell us as fast as you can. Once an order has been processed or shipped it often can’t be changed, and the address on the order is the customer’s to get right.</p>' +
+           '<p>Either way I can put it in front of the team — say <strong>leave a message</strong> and I’ll take your details.</p>'
+      },
+      {
+        q: 'What is the Neapolitan collection, and how do I try several flavours at once?',
+        k: 'neapolitan trio three flavours flavors sampler variety pack try multiple all of them cant decide cannot decide best value bundle mixed master case selection every flavor',
+        a: '<p>Neapolitan is the three Donutte flavours together — Vanilla, Strawberry Shortcake and Nugtella.</p>' +
+           '<p>To taste the range in one go: <strong>Neapolitan Donuttes</strong> for the hash hole trio, the <strong>Mixed Bucket</strong> for all three buckets at 36 hash holes, or the <strong>Sorbetto Master Case</strong> for all four rosin flavours.</p>' +
+           '<p>Browse: ' + a(L.holes, 'Hash Holes') + ' &middot; ' + a(L.buckets, 'Buckets') + ' &middot; ' + a(L.rosin, 'Hash Rosin') + '.</p>'
+      },
+      {
+        q: 'Where can I learn more about THCa, terpenes and storage?',
+        k: 'knowledge hub guides guide learn education educational articles blog read up beginner explain teach resources 101',
+        a: '<p>The ' + a(L.hub, 'Knowledge Hub') + ' has plain-English guides on THCa vs THC, terpenes, how to read a lab report, storing flower, and how solventless concentrates are made.</p>'
+      },
+      {
+        q: 'What is SCOOP? Are you a bot?',
+        k: 'scoop bot ai robot automated assistant chatbot who are you what are you machine software exactly',
+        a: '<p>I’m SCOOP 🍨 — the automated Sundaze assistant. I answer from what this store actually publishes: product pages, policies, lab results and the knowledge hub.</p>' +
+           '<p>If I don’t have something on hand I’ll say so rather than guess, and hand you to the team. Say <strong>leave a message</strong> any time you’d rather talk to a person.</p>'
+      }
+    ];
+
+    /* ══════════════════════════════════════════════════════════════════
+       4. WHAT SHOPPERS ACTUALLY MEAN
+
+       Nobody types "products with the energized effect metafield". They type
+       "something for the gym" or "what'll wake me up". Each intent below maps
+       that language onto the values you set in Shopify admin.
+
+       `want`  — effects that satisfy the ask outright (scored highest)
+       `near`  — effects that are adjacent, used only when nothing matches
+                 `want`, so SCOOP can offer a closest-thing instead of a
+                 dead end. It always says which one it is doing.
+    ══════════════════════════════════════════════════════════════════ */
+    var EFFECT_INTENTS = [
+      {
+        id: 'energy',
+        asked: 'energizing',
+        match: /\b(energy|energetic|energi[sz]\w*|awake|wake me|wake up|alert|alertness|productive|productivity|day ?time|morning|pick ?me ?up|motivat\w*|get going|get moving|active|workout|work out|gym|hike|hiking|running|stimulat\w*|lively|perk\w* up|before work)\b/i,
+        want: ['energized', 'energizing', 'energetic', 'uplifted', 'uplifting', 'motivated', 'stimulating'],
+        near: ['focused', 'creative', 'happy', 'euphoric'],
+        strain: /sativa/i,
+        time: /day|morning|anytime/i
+      },
+      {
+        id: 'relax',
+        asked: 'relaxing',
+        match: /\b(relax\w*|chill|chilling|calm\w*|unwind|wind ?down|winding down|decompress|de-?stress|stress|mellow|laid ?back|take the edge off|after work|couch|lazy|easy going|peaceful|soothing)\b/i,
+        want: ['relaxed', 'relaxing', 'calm', 'calming', 'mellow', 'blissful', 'peaceful'],
+        near: ['sleepy', 'happy', 'balanced'],
+        strain: /indica/i,
+        time: /evening|night|anytime/i
+      },
+      {
+        id: 'sleep',
+        asked: 'sleepy or wind-down',
+        match: /\b(sleep|sleepy|asleep|bed ?time|before bed|night ?time|at night|late night|knock me out|pass out|drowsy|doze|restful|rest|nightcap|end of the day)\b/i,
+        want: ['sleepy', 'sedating', 'sedative', 'restful', 'drowsy'],
+        near: ['relaxed', 'calm', 'mellow', 'blissful'],
+        strain: /indica/i,
+        time: /night|evening/i
+      },
+      {
+        id: 'focus',
+        asked: 'focused',
+        match: /\b(focus\w*|concentrat\w*|study|studying|clear ?head\w*|sharp|dial\w* in|work on|getting things done|task|deep work)\b/i,
+        want: ['focused', 'focus', 'clear-headed', 'clear headed', 'motivated'],
+        near: ['energized', 'uplifted', 'creative', 'balanced'],
+        strain: /sativa|hybrid/i,
+        time: /day|anytime/i
+      },
+      {
+        id: 'creative',
+        asked: 'creative',
+        match: /\b(creativ\w*|inspir\w*|art|artistic|music|writing|write|paint|ideas|brainstorm|studio)\b/i,
+        want: ['creative', 'creativity', 'inspired', 'inspiring'],
+        near: ['euphoric', 'uplifted', 'happy', 'energized'],
+        strain: /sativa|hybrid/i,
+        time: /day|anytime/i
+      },
+      {
+        id: 'mood',
+        asked: 'mood-lifting',
+        match: /\b(happy|happier|mood|uplift\w*|euphor\w*|giggl\w*|laugh\w*|good vibes|feel good|cheer\w*|bliss\w*|joy\w*)\b/i,
+        want: ['happy', 'euphoric', 'uplifted', 'blissful', 'giggly'],
+        near: ['relaxed', 'creative', 'social'],
+        strain: null,
+        time: null
+      },
+      {
+        id: 'social',
+        asked: 'social',
+        match: /\b(social|party|parties|friends|hang ?out|hanging out|gathering|talkative|chatty|group|kickback|get ?together|with people)\b/i,
+        want: ['social', 'talkative', 'giggly', 'happy'],
+        near: ['euphoric', 'uplifted', 'energized'],
+        strain: null,
+        time: null
+      }
+    ];
+
+    /* Product-shaped asks that are not about effects. */
+    var ASK = {
+      recommend:  /\b(recommend\w*|suggest\w*|what should i (get|buy|try|order|start with)|which (one|should|product)|help me (pick|choose|decide)|best (one|seller|product)|most popular|new here|first time (buyer|ordering)|where do i start|what do you (have|sell|carry|offer)|what are my options|show me)\b/i,
+      strongest:  /\b(strong\w*|potent|potency|hardest hitting|heaviest|highest thca|most thca|knock\w* out|highest percentage)\b/i,
+      mildest:    /\b(mild\w*|weak\w*|lightest|low tolerance|lightweight|beginner|beginners|new to this|first time (smoking|trying)|not too strong|gentle|easy)\b/i,
+      cheapest:   /\b(cheap\w*|affordable|budget|least expensive|lowest price|best value|deal|under \$?\d+|entry level)\b/i,
+      priciest:   /\b(most expensive|priciest|top shelf|highest end|splurge|premium option|best you (have|got))\b/i,
+      price:      /\b(price|prices|pricing|cost|costs|how much)\b/i,
+      stock:      /\b(in stock|out of stock|sold out|available|availability|restock|back in stock)\b/i,
+      flavor:     /\b(flavou?r\w*|taste\w*|tasting|profile|terpene\w*|smell\w*|aroma|nose|notes|sweet|fruity|citrus|berry|strawberry|banana|lemon|peach|vanilla|chocolate|hazelnut|nutty|creamy|cream|dessert|candy|maple|pancake|cereal|gassy|earthy|nugtella|shortcake|cake|buttery|doughy|tropical|minty|cool)\b/i,
+      compare:    /\b(differ\w*|compare|comparison|versus|\bvs\b|better than|which is better|instead of)\b/i,
+      gift:       /\b(gift|present|for my (friend|partner|wife|husband|brother|sister)|birthday|holiday|christmas)\b/i
+    };
+
+    var CATEGORY = [
+      { match: /\b(rosin|jar|jars|concentrate|dab|dabs|solventless|sorbetto)\b/i, test: /rosin/i, label: 'hash rosin', url: L.rosin },
+      { match: /\b(hash ?hole|donut+e?|pre-?roll|joint|preroll)\b/i,               test: /hash hole/i, label: 'hash holes', url: L.holes },
+      { match: /\b(flower|bud|buds|eighth|3\.5|nug|nugs|strain|strains)\b/i,       test: /flower/i,   label: '3.5G flower', url: L.flower },
+      { match: /\b(bucket|buckets|bulk|master case|case)\b/i,                      test: /bucket|case/i, label: 'buckets and cases', url: L.buckets }
+    ];
+
+    /* ══════════════════════════════════════════════════════════════════
+       5. THE PRODUCT ENGINE
+       Ranks the live catalogue against whatever the shopper asked for and
+       reports honestly when the catalogue has no good answer.
+    ══════════════════════════════════════════════════════════════════ */
+
+    function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+    function inCategory(p, test) {
+      var hay = (p.type || '') + ' ' + (p.tags || []).join(' ') + ' ' + (p.collections || []).join(' ') + ' ' + (p.title || '');
+      return test.test(hay);
+    }
+
+    function detectCategory(q) {
+      for (var i = 0; i < CATEGORY.length; i++) {
+        if (CATEGORY[i].match.test(q)) return CATEGORY[i];
+      }
+      return null;
+    }
+
+    /* Score every tagged product against one effect intent. Returns matches
+       for `want`, and separately the best `near` fallbacks, so the caller can
+       tell the shopper which of the two it is handing them. */
+    function matchEffect(intent, category) {
+      var pool = taggedProducts();
+      if (category) {
+        var narrowed = pool.filter(function (p) { return inCategory(p, category.test); });
+        if (narrowed.length) pool = narrowed;
+      }
+
+      var direct = [], adjacent = [];
+
+      pool.forEach(function (p) {
+        var eff    = effectsOf(p);
+        var best   = listOf(p.best_for).join(' ');
+        var strain = textOf(p.strain_type);
+        var time   = textOf(p.time_of_day);
+
+        var score = 0, hits = [];
+
+        intent.want.forEach(function (w) {
+          if (eff.indexOf(w) !== -1) { score += 3; hits.push(cap(w)); }
+          else if (best.indexOf(w) !== -1) { score += 1.5; }
+        });
+        if (intent.strain && strain && intent.strain.test(strain)) score += 2;
+        if (intent.time && time && intent.time.test(time)) score += 1.5;
+
+        if (score > 0) { direct.push({ p: p, score: score, hits: hits }); return; }
+
+        var nearScore = 0, nearHits = [];
+        intent.near.forEach(function (w) {
+          if (eff.indexOf(w) !== -1) { nearScore += 1; nearHits.push(cap(w)); }
+        });
+        if (nearScore > 0) adjacent.push({ p: p, score: nearScore, hits: nearHits });
+      });
+
+      /* Score decides. Stock only breaks a tie — a sold-out product is
+         still the honest answer when it is the better match. */
+      var bySort = function (x, y) {
+        if (y.score !== x.score) return y.score - x.score;
+        return (x.p.available === false ? 1 : 0) - (y.p.available === false ? 1 : 0);
+      };
+      direct.sort(bySort);
+      adjacent.sort(bySort);
+      return { direct: direct, adjacent: adjacent, poolSize: pool.length };
+    }
+
+    /* Flavour is descriptive, not a health claim, so this one is allowed to
+       read the product copy as well as the flavour metafield. */
+    function matchFlavor(q, category) {
+      var tokens = tokenize(q).filter(function (t) { return !ASK.flavor.test(t) || /^(sweet|fruity|citrus|berry|strawberry|banana|lemon|peach|vanilla|chocolate|hazelnut|nutty|creamy|cream|dessert|candy|maple|pancake|cereal|gassy|earthy|nugtella|shortcake|cake|buttery|doughy|tropical|minty|cool)$/.test(t); });
+      var pool = SITE.products;
+      if (category) {
+        var narrowed = pool.filter(function (p) { return inCategory(p, category.test); });
+        if (narrowed.length) pool = narrowed;
+      }
+
+      var scored = pool.map(function (p) {
+        var notes = listOf(p.flavor_notes).join(' ');
+        var body  = String(p.description || '').toLowerCase();
+        var title = String(p.title || '').toLowerCase();
+        var score = 0, hits = [];
+        tokens.forEach(function (t) {
+          if (t.length < 3) return;
+          if (notes.indexOf(t) !== -1) { score += 3; hits.push(cap(t)); }
+          else if (title.indexOf(t) !== -1) { score += 2.5; }
+          else if (body.indexOf(t) !== -1) { score += 1; hits.push(cap(t)); }
+        });
+        return { p: p, score: score, hits: hits.slice(0, 3) };
+      }).filter(function (r) { return r.score > 0; });
+
+      scored.sort(function (x, y) { return y.score - x.score; });
+      return scored;
+    }
+
+    /* Ranking by potency means comparing two different kinds of published
+       data: a THCa percentage where a product has one, and a written potency
+       level where it doesn't. A percentage and a word are not comparable
+       numbers, so both are folded onto the same 1-4 band first. The band is
+       only ever a sort key — cards still show whichever value the product
+       actually publishes, and no percentage is invented for anything. */
+    var LEVEL_BAND = {
+      'mild': 1, 'gentle': 1, 'light': 1,
+      'moderate': 2, 'medium': 2, 'balanced': 2,
+      'strong': 3, 'potent': 3,
+      'very strong': 4, 'extra strong': 4, 'heavy': 4
+    };
+
+    function potencyBand(p) {
+      var pct = thcaOf(p);
+      if (pct != null) {
+        var n = Number(pct);
+        if (!isNaN(n)) return n < 20 ? 1 : n < 28 ? 2 : n < 34 ? 3 : 4;
+      }
+      return LEVEL_BAND[textOf(p.potency_level).toLowerCase()] || 0;
+    }
+
+    function byPotency(desc, category) {
+      var pool = SITE.products.filter(function (p) { return potencyBand(p) > 0; });
+      if (category) {
+        var narrowed = pool.filter(function (p) { return inCategory(p, category.test); });
+        if (narrowed.length) pool = narrowed;
+      }
+      return pool.slice().sort(function (x, y) {
+        var band = desc ? potencyBand(y) - potencyBand(x) : potencyBand(x) - potencyBand(y);
+        if (band) return band;
+
+        var xn = thcaOf(x) != null ? Number(thcaOf(x)) : null;
+        var yn = thcaOf(y) != null ? Number(thcaOf(y)) : null;
+        if (xn != null && yn != null) return desc ? yn - xn : xn - yn;
+        /* Within a band, a product publishing a real number is the more
+           useful answer than one carrying only a label. */
+        if (xn != null) return -1;
+        if (yn != null) return 1;
+        return (x.price_cents || 0) - (y.price_cents || 0);
+      });
+    }
+
+    function byPrice(desc, category) {
+      var pool = SITE.products.filter(function (p) { return typeof p.price_cents === 'number' && p.price_cents > 0; });
+      if (category) {
+        var narrowed = pool.filter(function (p) { return inCategory(p, category.test); });
+        if (narrowed.length) pool = narrowed;
+      }
+      return pool.slice().sort(function (x, y) {
+        return desc ? y.price_cents - x.price_cents : x.price_cents - y.price_cents;
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       6. TEXT RETRIEVAL
+       Token overlap with a synonym map, scored across four kinds of source:
+       the curated answers above, plus every product, page and guide pulled
+       out of the site index. Field weights favour a title hit over a body
+       hit, so "refund policy" lands on the policy page rather than on some
+       product that happens to mention refunds.
+    ══════════════════════════════════════════════════════════════════ */
+    var STOP = {
+      'a':1,'an':1,'the':1,'is':1,'are':1,'am':1,'be':1,'do':1,'does':1,'did':1,'to':1,'of':1,
+      'in':1,'on':1,'for':1,'it':1,'i':1,'you':1,'your':1,'my':1,'me':1,'we':1,'can':1,'and':1,
+      'or':1,'that':1,'this':1,'have':1,'has':1,'with':1,'what':1,'whats':1,'how':1,'if':1,'so':1,
+      'about':1,'get':1,'any':1,'there':1,'from':1,'at':1,'as':1,'will':1,'would':1,'please':1,
+      'im':1,'ive':1,'want':1,'need':1,'looking':1,'something':1,'give':1,'make':1,'feel':1,
+      'anything':1,'everything':1,'got':1,'tell':1,'show':1,'like':1,'some':1,'one':1,'ones':1
+    };
+
+    var SYNONYMS = {
+      'thc':'thca','delta':'d9','weed':'flower','bud':'flower','pot':'flower','nug':'flower',
+      'preroll':'hash hole','prerolls':'hash hole','joint':'hash hole','joints':'hash hole','donutte':'hash hole',
+      'ship':'shipping','ships':'shipping','shipped':'shipping','deliver':'shipping','delivery':'shipping',
+      'cost':'price','pricing':'price','expensive':'price','cheap':'price',
+      'lab':'coa','labs':'coa','testing':'coa','tested':'coa','certificate':'coa',
+      'legality':'legal','lawful':'legal','allowed':'legal',
+      'refunds':'refund','returns':'return','exchange':'refund','money':'refund',
+      'buy':'shop','purchase':'shop','order':'order','ordering':'order',
+      'human':'contact','agent':'contact','someone':'contact','rep':'contact','support':'contact',
+      'concentrate':'rosin','dabs':'rosin','dab':'rosin','solventless':'rosin',
+      'kid':'age','kids':'age','minor':'age','underage':'age','old':'age',
+      'strain':'flower','strains':'flower','eighth':'flower'
+    };
+
+    function tokenize(text) {
+      var raw = String(text || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/);
+      var out = [];
+      for (var i = 0; i < raw.length; i++) {
+        var t = raw[i];
+        if (!t || t.length < 2 || STOP[t]) continue;
+        out.push(t);
+        if (SYNONYMS[t]) {
+          var extra = SYNONYMS[t].split(' ');
+          for (var j = 0; j < extra.length; j++) out.push(extra[j]);
+        }
+        /* crude singular so "states" matches "state" */
+        if (t.length > 3 && t.charAt(t.length - 1) === 's') out.push(t.slice(0, -1));
+      }
+      return out;
+    }
+
+    var CORPUS = [];
+
+    function corpusEntry(kind, title, keys, body, url, ref) {
+      return {
+        kind: kind,
+        title: title,
+        url: url || '',
+        ref: ref || null,
+        t_title: ' ' + tokenize(title).join(' ') + ' ',
+        t_keys:  ' ' + tokenize(keys).join(' ') + ' ',
+        t_body:  ' ' + tokenize(body).join(' ') + ' '
+      };
+    }
+
+    function buildCorpus() {
+      CORPUS = [];
+
+      SCOOP_KB.forEach(function (entry) {
+        CORPUS.push(corpusEntry('faq', entry.q, entry.k, entry.a.replace(/<[^>]+>/g, ' '), '', entry));
+      });
+
+      SITE.products.forEach(function (p) {
+        var keys = [p.type, (p.tags || []).join(' '), (p.collections || []).join(' '),
+                    listOf(p.flavor_notes).join(' '), listOf(p.effects).join(' '),
+                    textOf(p.strain_type), textOf(p.time_of_day)].join(' ');
+        CORPUS.push(corpusEntry('product', p.title, keys, p.description || '', p.url, p));
+      });
+
+      SITE.pages.forEach(function (pg) {
+        CORPUS.push(corpusEntry('page', pg.title, pg.title, pg.content || '', pg.url, pg));
+      });
+
+      SITE.articles.forEach(function (ar) {
+        CORPUS.push(corpusEntry('article', ar.title, ar.title, ar.content || '', ar.url, ar));
+      });
+    }
+
+    function search(question) {
+      var tokens = tokenize(question);
+      if (!tokens.length) return [];
+      var seen = {}, unique = [];
+      tokens.forEach(function (t) { if (!seen[t]) { seen[t] = 1; unique.push(t); } });
+
+      var scored = CORPUS.map(function (row) {
+        var score = 0;
+        for (var i = 0; i < unique.length; i++) {
+          var needle = ' ' + unique[i] + ' ';
+          if (row.t_title.indexOf(needle) !== -1) score += 2.2;
+          else if (row.t_keys.indexOf(needle) !== -1) score += 2;
+          else if (row.t_body.indexOf(needle) !== -1) score += 0.5;
+        }
+        /* Curated policy answers outrank a stray product mention of the same
+           word — a shipping question should not land on a jar of rosin. */
+        if (row.kind === 'faq') score *= 1.15;
+        return { row: row, score: score / Math.sqrt(unique.length) };
+      });
+
+      scored.sort(function (x, y) { return y.score - x.score; });
+      return scored;
+    }
+
+    var CONFIDENT = 1.35;
+
+    /* Direct product lookup — "tell me about Frosty Shorty". Requires a solid
+       chunk of the title to match so it doesn't fire on a single stray word. */
+    function findProductByName(q) {
+      var lower = ' ' + String(q).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ') + ' ';
+      var best = null, bestScore = 0;
+      SITE.products.forEach(function (p) {
+        var words = String(p.title).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)
+          .filter(function (w) { return w.length > 2 && !/^(the|and|hash|g|3|5)$/.test(w); });
+        if (!words.length) return;
+        var hit = 0;
+        words.forEach(function (w) { if (lower.indexOf(' ' + w + ' ') !== -1) hit++; });
+        var ratio = hit / words.length;
+        if (hit >= 2 && ratio > bestScore) { bestScore = ratio; best = p; }
+      });
+      return bestScore >= 0.5 ? best : null;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       7. RENDERING
+    ══════════════════════════════════════════════════════════════════ */
+    function scrollDown() { log.scrollTop = log.scrollHeight; }
+
+    function addMessage(html, who) {
+      var el = document.createElement('div');
+      el.className = 'scoop__msg scoop__msg--' + who;
+      el.innerHTML = html;
+      log.appendChild(el);
+      scrollDown();
+      return el;
+    }
+
+    function addTyping() {
+      var el = document.createElement('div');
+      el.className = 'scoop__msg scoop__msg--bot scoop__typing';
+      el.innerHTML = '<span></span><span></span><span></span>';
+      log.appendChild(el);
+      scrollDown();
+      return el;
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    /* A product card. `why` is the honest reason this one came back — either
+       the effect values you set in admin, or the flavour notes that matched. */
+    function productCard(p, why) {
+      var img = p.image
+        ? '<span class="scoop__card-img"><img src="' + escapeHtml(p.image) + '" alt="" loading="lazy" width="52" height="52"></span>'
+        : '<span class="scoop__card-img scoop__card-img--empty" aria-hidden="true">🍨</span>';
+
+      var meta = [];
+      if (p.price) meta.push(escapeHtml(p.price));
+      if (p.type)  meta.push(escapeHtml(p.type));
+      var thca = thcaOf(p);
+      if (thca != null) meta.push(escapeHtml(thca) + '% THCa');
+
+      var reason = why ? '<span class="scoop__card-why">' + escapeHtml(why) + '</span>' : '';
+      var soldOut = p.available === false ? '<span class="scoop__card-out">Sold out</span>' : '';
+
+      return '<a class="scoop__card" href="' + escapeHtml(p.url) + '">' +
+               img +
+               '<span class="scoop__card-body">' +
+                 '<span class="scoop__card-name">' + escapeHtml(p.title) + soldOut + '</span>' +
+                 '<span class="scoop__card-meta">' + meta.join(' &middot; ') + '</span>' +
+                 reason +
+               '</span>' +
+             '</a>';
+    }
+
+    function productCards(rows, whyFn) {
+      if (!rows.length) return '';
+      return '<span class="scoop__cards">' + rows.map(function (r) {
+        var p = r.p || r;
+        return productCard(p, whyFn ? whyFn(r) : '');
+      }).join('') + '</span>';
+    }
+
+    /* The reason line under a card, built only from published values. */
+    function effectWhy(row) {
+      var p = row.p;
+      var bits = [];
+      if (row.hits && row.hits.length) bits = bits.concat(row.hits.slice(0, 3));
+      else bits = bits.concat(effectsOf(p).slice(0, 3).map(cap));
+      var t = textOf(p.time_of_day);
+      if (t) bits.push(t);
+      return bits.join(' · ');
+    }
+
+    function DEFAULT_CHIPS_FN() {
+      var out = ['What would you recommend?'];
+      if (taggedProducts().length) out.push('Something relaxing?');
+      out.push('Which states do you not ship to?', 'Where are the lab results?', 'Leave a message');
+      return out;
+    }
+
+    function setChips(list) {
+      chips.innerHTML = '';
+      (list || []).forEach(function (label) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'scoop__chip';
+        b.textContent = label;
+        b.addEventListener('click', function () { submit(label); });
+        chips.appendChild(b);
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       8. ANSWER BUILDERS
+       Each returns { html, chips, lead } — `lead` asking for the handoff
+       form to follow the message.
+    ══════════════════════════════════════════════════════════════════ */
+
+    var NO_EFFECT_DATA =
+      '<p>I can talk flavour, format and price all day — but I can’t match products to how they feel yet, and I’m not going to guess at that one.</p>' +
+      '<p>Have a look at the ' + a(L.flavors, 'flavors page') + ' to see the lineup, or leave your question below and someone on the team will give you a straight answer.</p>';
+
+    function allSoldOut(rows) {
+      if (!rows.length) return false;
+      for (var i = 0; i < rows.length; i++) {
+        if ((rows[i].p || rows[i]).available !== false) return false;
+      }
+      return true;
+    }
+
+    /* When every effect match is sold out, show what can actually be bought
+       instead — by flavour and format only, since none of the in-stock
+       products publish an effect. Better than a dead end, and it claims
+       nothing that isn't on the page. */
+    function inStockSuggestion() {
+      var live = SITE.products.filter(function (p) { return p.available !== false; });
+      if (!live.length) return '';
+      live.sort(function (a1, b1) { return (a1.price_cents || 0) - (b1.price_cents || 0); });
+      return '<p>What is on the shelf today:</p>' +
+             productCards(live.slice(0, 3), function (r) {
+               var p = r.p || r;
+               return listOf(p.flavor_notes).slice(0, 3).map(cap).join(' · ');
+             });
+    }
+
+    var SOLD_OUT_NOTE =
+      '<p>One catch — everything above is sold out at the moment. Leave your ' +
+      'details and the team will let you know the day it lands.</p>';
+
+    function answerEffect(intent, category) {
+      if (!taggedProducts().length) {
+        return { html: NO_EFFECT_DATA, lead: true, chips: [] };
+      }
+
+      var m = matchEffect(intent, category);
+
+      if (m.direct.length) {
+        var top  = m.direct.slice(0, 3);
+        var gone = allSoldOut(top);
+        return {
+          html: '<p>For something <strong>' + intent.asked + '</strong>, this is what fits from what we carry:</p>' +
+                productCards(top, effectWhy) +
+                EFFECT_DISCLAIMER +
+                (gone ? SOLD_OUT_NOTE + inStockSuggestion() : ''),
+          lead: gone,
+          chips: gone ? [] : ['Where are the lab results?', 'What is in a hash hole?', 'Leave a message']
+        };
+      }
+
+      if (m.adjacent.length) {
+        var near = m.adjacent.slice(0, 2);
+        return {
+          html: '<p>Straight answer: nothing in the lineup right now is described as <strong>' + intent.asked + '</strong>, and I’d rather tell you that than talk you into something.</p>' +
+                '<p>The closest we have:</p>' +
+                productCards(near, effectWhy) +
+                EFFECT_DISCLAIMER +
+                (allSoldOut(near)
+                  ? '<p>Both are sold out right now as well — leave your details and the team can tell you what’s coming and when.</p>' + inStockSuggestion()
+                  : '<p>If that’s not the direction you wanted, leave your details and the team can tell you what’s coming.</p>'),
+          lead: true,
+          chips: []
+        };
+      }
+
+      return {
+        html: '<p>Nothing we carry is described as <strong>' + intent.asked + '</strong> — I’d be making it up if I said otherwise.</p>' +
+              '<p>Leave your question below and the team will point you somewhere useful.</p>',
+        lead: true,
+        chips: []
+      };
+    }
+
+    function answerProduct(p) {
+      var bits = [];
+      var desc = String(p.description || '').trim();
+      if (desc) bits.push('<p>' + escapeHtml(desc) + '</p>');
+
+      var facts = [];
+      if (textOf(p.strain_type))   facts.push('<strong>Type:</strong> ' + escapeHtml(textOf(p.strain_type)));
+      var thca = thcaOf(p);
+      if (thca != null)            facts.push('<strong>THCa:</strong> ' + escapeHtml(thca) + '%');
+      if (effectsOf(p).length)     facts.push('<strong>Reported effects:</strong> ' + effectsOf(p).map(cap).join(', '));
+      if (textOf(p.time_of_day))   facts.push('<strong>Best for:</strong> ' + escapeHtml(textOf(p.time_of_day)));
+      if (listOf(p.flavor_notes).length) facts.push('<strong>Flavour:</strong> ' + listOf(p.flavor_notes).map(cap).join(', '));
+      if (facts.length) bits.push('<ul><li>' + facts.join('</li><li>') + '</li></ul>');
+
+      if (p.available === false) bits.push('<p>It’s sold out at the moment — worth checking back.</p>');
+
+      var html = '<p><strong>' + escapeHtml(p.title) + '</strong>' + (p.price ? ' — ' + escapeHtml(p.price) : '') + '</p>' +
+                 bits.join('') +
+                 productCards([p]);
+
+      if (effectsOf(p).length) html += EFFECT_DISCLAIMER;
+
+      return { html: html, chips: ['What would you recommend?', 'Where are the lab results?'] };
+    }
+
+    function answerList(intro, rows, whyFn, withDisclaimer) {
+      return {
+        html: '<p>' + intro + '</p>' + productCards(rows, whyFn) + (withDisclaimer ? EFFECT_DISCLAIMER : ''),
+        chips: ['What would you recommend?', 'Where are the lab results?', 'Leave a message']
+      };
+    }
+
+    function answerCatalogue(category) {
+      if (category) {
+        var inCat = SITE.products.filter(function (p) { return inCategory(p, category.test); });
+        if (inCat.length) {
+          return answerList('Here’s the ' + category.label + ' lineup:',
+            inCat.slice(0, 5),
+            function (r) { var p = r.p || r; return listOf(p.flavor_notes).slice(0, 3).map(cap).join(' · '); });
+        }
+      }
+
+      if (!SITE.collections.length && !SITE.products.length) {
+        return {
+          html: '<p>Browse the full lineup here: ' + a(L.all, 'everything we make') + '.</p>',
+          chips: []
+        };
+      }
+
+      var lines = SITE.collections.slice(0, 6).map(function (c) {
+        return '<li>' + a(c.url, escapeHtml(c.title)) + ' — ' + c.count + ' ' + (c.count === 1 ? 'product' : 'products') + '</li>';
+      });
+
+      return {
+        html: '<p>Here’s what Sundaze makes right now:</p><ul>' + lines.join('') + '</ul>' +
+              '<p>Or browse ' + a(L.all, 'everything') + '. Tell me what kind of session you’re after and I’ll narrow it down.</p>',
+        chips: ['Something relaxing?', 'What’s your strongest?', 'What flavors do you have?']
+      };
+    }
+
+    function answerRecommend(category) {
+      var pool = SITE.products.filter(function (p) { return p.available !== false; });
+      if (category) {
+        var narrowed = pool.filter(function (p) { return inCategory(p, category.test); });
+        if (narrowed.length) pool = narrowed;
+      }
+      if (!pool.length) return answerCatalogue(category);
+
+      return {
+        html: '<p>Depends what you’re after — but these are the ones I’d put in front of you first:</p>' +
+              productCards(pool.slice(0, 3), function (r) {
+                var p = r.p || r;
+                var notes = listOf(p.flavor_notes).slice(0, 3).map(cap).join(' · ');
+                return notes || String(p.type || '');
+              }) +
+              '<p>Tell me the vibe you want — relaxing, social, something for the evening — and I’ll get more specific.</p>',
+        chips: ['Something relaxing?', 'What’s your strongest?', 'What’s the cheapest?']
+      };
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       9. ROUTING — what kind of question is this?
+    ══════════════════════════════════════════════════════════════════ */
+    var DEFINITIONAL = /^\s*(?:what|what'?s|whats|how|tell me)\s+(?:is|are|do|does|much|many|big|long|the difference|in|inside|comes?|goes?|about)\b/i;
+
+    /* "Is your flower indoor?" names a category too, but it wants a fact about
+       how the thing is made, not a list of jars. Same for lab testing, micron
+       and cold cure. These go to the curated answers instead. */
+    var SPEC = /\b(indoor|outdoor|grown|lab ?tested|third[- ]party|solventless|micron|microns|90u|120u|small ?batch|fresh ?frozen|cold ?cure|hand ?rolled|glass tip|artificial|additives?|fillers?|cutting agents?)\b/i;
+
+    function route(q) {
+      var category = detectCategory(q);
+
+      /* A named product beats everything else — if someone types a product
+         name, that is what they want to hear about. */
+      var named = findProductByName(q);
+      if (named) return answerProduct(named);
+
+      /* Effects — metafield-driven, never inferred from marketing copy. */
+      for (var i = 0; i < EFFECT_INTENTS.length; i++) {
+        if (EFFECT_INTENTS[i].match.test(q)) return answerEffect(EFFECT_INTENTS[i], category);
+      }
+
+      /* Mildest is tested first on purpose: "something not too strong" and
+         "I'm new to this, nothing heavy" both contain the words the strongest
+         branch looks for. A beginner asking for something gentle must never be
+         handed the hardest-hitting jar on the shelf. */
+      if (ASK.mildest.test(q)) {
+        var mild = byPotency(false, category);
+        if (mild.length) {
+          return answerList('If you want to start easy, these sit at the lower end of what we carry:', mild.slice(0, 3), function (r) {
+            var p = r.p || r;
+            return (p.thca_percent != null ? p.thca_percent + '% THCa' : textOf(p.potency_level));
+          }, true);
+        }
+      }
+
+      if (ASK.strongest.test(q) && !ASK.mildest.test(q)) {
+        var strong = byPotency(true, category);
+        if (strong.length) {
+          return answerList('Strongest we carry, by the numbers on the label:', strong.slice(0, 3), function (r) {
+            var p = r.p || r;
+            return (p.thca_percent != null ? p.thca_percent + '% THCa' : textOf(p.potency_level));
+          }, true);
+        }
+      }
+
+      if (ASK.cheapest.test(q)) {
+        var cheap = byPrice(false, category);
+        if (cheap.length) return answerList('Lowest-priced first:', cheap.slice(0, 3));
+      }
+
+      if (ASK.priciest.test(q) || ASK.gift.test(q)) {
+        var lux = byPrice(true, category);
+        if (lux.length) {
+          return answerList(ASK.gift.test(q) ? 'These are the ones that give best as a gift:' : 'Top of the range:', lux.slice(0, 3));
+        }
+      }
+
+      if (ASK.flavor.test(q)) {
+        var flav = matchFlavor(q, category);
+        /* A body-only hit scores 1 and normally isn't enough on its own. But
+           when no product publishes flavour metafields, product copy is the
+           only flavour source in the store — so the bar has to come down to
+           it, or "anything chocolate?" returns a shrug next to a product page
+           with the word chocolate written on it. */
+        var haveNotes = SITE.products.some(function (p) { return listOf(p.flavor_notes).length; });
+        if (flav.length && flav[0].score >= (haveNotes ? 2 : 1)) {
+          return answerList('Going by flavour, these are the closest:', flav.slice(0, 3), function (r) {
+            var p = r.p || r;
+            var notes = listOf(p.flavor_notes).slice(0, 3).map(cap).join(' · ');
+            return notes || (r.hits || []).join(' · ');
+          });
+        }
+        var all = SITE.products.filter(function (p) { return listOf(p.flavor_notes).length || p.description; });
+        if (all.length) {
+          return answerList('Here’s the flavour lineup — the ' + a(L.flavors, 'flavors page') + ' has all of it:', all.slice(0, 5), function (r) {
+            var p = r.p || r;
+            return listOf(p.flavor_notes).slice(0, 3).map(cap).join(' · ');
+          });
+        }
+      }
+
+      if (ASK.stock.test(q)) {
+        var live = SITE.products.filter(function (p) { return p.available !== false; });
+        var gone = SITE.products.filter(function (p) { return p.available === false; });
+        if (SITE.products.length) {
+          var html = '<p>' + live.length + ' of ' + SITE.products.length + ' products are in stock right now.</p>';
+          if (gone.length) html += '<p>Currently sold out: ' + gone.map(function (p) { return escapeHtml(p.title); }).join(', ') + '.</p>';
+          return { html: html + productCards(live.slice(0, 3)), chips: ['What would you recommend?'] };
+        }
+      }
+
+      if (ASK.price.test(q) && (category || ASK.recommend.test(q))) {
+        var priced = byPrice(false, category);
+        if (priced.length) {
+          return answerList('Current pricing — the product page is always the final word:', priced.slice(0, 5));
+        }
+      }
+
+      if (ASK.recommend.test(q)) return answerRecommend(category);
+
+      /* "What is hash rosin?" names a category but wants an explanation, not
+         a product list. Hand those to the curated answers and the guides. */
+      if (category && !DEFINITIONAL.test(q) && !SPEC.test(q)) return answerCatalogue(category);
+
+      return null;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       10. CONVERSATION FLOW
+    ══════════════════════════════════════════════════════════════════ */
+    var GREETING = /^\s*(hi|hey|hello|yo|howdy|sup|good (morning|afternoon|evening))\b/i;
+    var THANKS   = /\b(thanks|thank you|thx|ty|appreciate it|cheers)\b/i;
+    var HUMAN    = /\b(leave a message|human|real person|speak to someone|talk to someone|agent|representative|call me|email me|contact me)\b/i;
+
+    var lastUnanswered = '';
+
+    function deliver(result) {
+      addMessage(result.html, 'bot');
+      if (result.lead) renderLeadForm(lastUnanswered || '');
+      else setChips(result.chips && result.chips.length ? result.chips : DEFAULT_CHIPS_FN());
+      scrollDown();
+    }
+
+    function respond(question) {
+      loadSite();
+      var typing = addTyping();
+
+      function finish(build, delay) {
+        setTimeout(function () {
+          typing.remove();
+          build();
+        }, delay || 460);
+      }
+
+      /* Compliance first — nothing gets to answer around it. */
+      var stop = complianceCheck(question);
+      if (stop) {
+        lastUnanswered = '';
+        return finish(function () { deliver(stop); });
+      }
+
+      if (HUMAN.test(question)) {
+        return finish(function () {
+          addMessage('<p>I’m SCOOP, the automated Sundaze assistant — but there’s a real team behind me, and they answer within about 24 hours. Drop your details below and I’ll pass everything along.</p>', 'bot');
+          renderLeadForm(lastUnanswered || question);
+        });
+      }
+
+      if (GREETING.test(question) && question.trim().split(/\s+/).length <= 4) {
+        return finish(function () {
+          addMessage('<p>Hey! I’m SCOOP 🍨 Ask me about the lineup, shipping, lab results — or just tell me the kind of session you’re after and I’ll find something.</p>', 'bot');
+          setChips(DEFAULT_CHIPS_FN());
+        });
+      }
+
+      if (THANKS.test(question) && question.trim().split(/\s+/).length <= 5) {
+        return finish(function () {
+          addMessage('<p>Anytime. That’s the scoop — shout if anything else comes up.</p>', 'bot');
+          setChips(DEFAULT_CHIPS_FN());
+        });
+      }
+
+      askAi(question).then(function (aiAnswer) {
+        if (aiAnswer) {
+          return finish(function () {
+            addMessage('<p>' + escapeHtml(aiAnswer).replace(/\n+/g, '</p><p>') + '</p>', 'bot');
+            setChips(DEFAULT_CHIPS_FN());
+          }, 200);
+        }
+
+        /* Catalogue questions — answered live from the site index. */
+        var routed = route(question);
+        if (routed) {
+          lastUnanswered = routed.lead ? question : '';
+          return finish(function () { deliver(routed); });
+        }
+
+        /* Everything else — curated answers, pages and guides. */
+        var results = search(question);
+        var best = results[0];
+
+        if (best && best.score >= CONFIDENT) {
+          lastUnanswered = '';
+          var row = best.row;
+
+          if (row.kind === 'faq') {
+            var related = results.slice(1, 3)
+              .filter(function (r) { return r.score >= CONFIDENT * 0.55 && r.row.kind === 'faq'; })
+              .map(function (r) { return r.row.title; });
+            return finish(function () {
+              addMessage(row.ref.a, 'bot');
+              setChips(related.length ? related : DEFAULT_CHIPS_FN());
+            });
+          }
+
+          if (row.kind === 'product') return finish(function () { deliver(answerProduct(row.ref)); });
+
+          /* A page or a guide — quote what it says and link to the whole thing. */
+          /* First few sentences of the page. Matching whole sentences avoids a
+             lookbehind, which older Safari does not support. */
+          var body = String(row.ref.content || '');
+          var excerpt = (body.match(/[^.!?]+[.!?]+/g) || [body]).slice(0, 3).join(' ').trim();
+          return finish(function () {
+            addMessage(
+              '<p>' + escapeHtml(excerpt) + '</p>' +
+              '<p>Full detail here: ' + a(row.url, escapeHtml(row.title)) + '.</p>',
+              'bot'
+            );
+            setChips(DEFAULT_CHIPS_FN());
+          });
+        }
+
+        /* Not confident — don't invent an answer, capture the question. */
+        lastUnanswered = question;
+        finish(function () {
+          var near = results.slice(0, 2)
+            .filter(function (r) { return r.score > 0.5 && r.row.kind === 'faq'; })
+            .map(function (r) { return r.row.title; });
+
+          var html = '<p>That one’s outside what I’ve got on hand — and I’d rather not guess.</p>';
+          html += near.length
+            ? '<p>I can answer these if either is close, otherwise leave your details below and the team will get you a proper answer.</p>'
+            : '<p>Leave your email or phone with the question and the Sundaze team will get back to you.</p>';
+          addMessage(html, 'bot');
+          renderLeadForm(question);
+          if (near.length) setChips(near);
+        }, 620);
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       11. OPTIONAL LLM HOP
+       Dormant unless `ai_endpoint` is set at the top of this snippet. When
+       it is, SCOOP sends the question, the recent transcript AND the site
+       content it just retrieved, so the model answers from this store rather
+       than from whatever it happens to remember about hemp. Anything
+       unexpected resolves to null and the engine above takes over.
+
+       Never put an API key in here — this file is public. The endpoint has
+       to be something you control that holds the key server-side.
+    ══════════════════════════════════════════════════════════════════ */
+    function askAi(question) {
+      if (!AI_ENDPOINT) return Promise.resolve(null);
+
+      var history = [].slice.call(log.querySelectorAll('.scoop__msg')).slice(-6).map(function (el) {
+        return {
+          role: el.classList.contains('scoop__msg--user') ? 'user' : 'assistant',
+          content: el.textContent.trim()
+        };
+      });
+
+      /* Ground the model in the same site content the local engine found. */
+      var context = search(question).slice(0, 5).map(function (r) {
+        return { kind: r.row.kind, title: r.row.title, url: r.row.url, text: r.row.ref && (r.row.ref.a || r.row.ref.content || r.row.ref.description) || '' };
+      });
+
+      return fetch(AI_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: question, history: history, context: context })
+      })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { return (d && typeof d.answer === 'string' && d.answer.trim()) ? d.answer.trim() : null; })
+        .catch(function () { return null; });
+    }
+
+    function submit(text) {
+      var question = String(text || input.value).trim();
+      if (!question) return;
+      input.value = '';
+      input.style.height = 'auto';
+      addMessage('<p>' + escapeHtml(question) + '</p>', 'user');
+      setChips([]);
+      respond(question);
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       12. HANDOFF TO A HUMAN
+       Posts through Shopify's own contact form, so a question SCOOP could
+       not answer lands in the store's notification inbox beside every other
+       enquiry. An unanswered question is a lead, which is the whole point of
+       refusing to guess.
+    ══════════════════════════════════════════════════════════════════ */
+    function renderLeadForm(prefill) {
+      var card = document.createElement('div');
+      card.className = 'scoop__msg scoop__msg--bot scoop__lead';
+      card.innerHTML =
+        '<h4>Let a human take it from here</h4>' +
+        '<p class="scoop__lead-sub">Leave an email <em>or</em> a phone number and the Sundaze team will come back to you — usually within 24 hours.</p>' +
+        '<label for="scoopLeadName">Name (optional)</label>' +
+        '<input type="text" id="scoopLeadName" autocomplete="name" placeholder="Jordan">' +
+        '<label for="scoopLeadEmail">Email</label>' +
+        '<input type="email" id="scoopLeadEmail" autocomplete="email" placeholder="you@example.com">' +
+        '<label for="scoopLeadPhone">Phone</label>' +
+        '<input type="tel" id="scoopLeadPhone" autocomplete="tel" placeholder="(555) 123-4567">' +
+        '<label for="scoopLeadMsg">Your question</label>' +
+        '<textarea id="scoopLeadMsg" rows="3" placeholder="What can we help with?"></textarea>' +
+        '<p class="scoop__lead-err" id="scoopLeadErr"></p>' +
+        '<button type="button" class="scoop__lead-btn" id="scoopLeadSend">Send it over</button>';
+      log.appendChild(card);
+
+      var msgField = card.querySelector('#scoopLeadMsg');
+      if (prefill) msgField.value = prefill;
+
+      card.querySelector('#scoopLeadSend').addEventListener('click', function () {
+        submitLead(card, this);
+      });
+
+      scrollDown();
+      setChips([]);
+    }
+
+    function submitLead(card, button) {
+      var name  = card.querySelector('#scoopLeadName').value.trim();
+      var email = card.querySelector('#scoopLeadEmail').value.trim();
+      var phone = card.querySelector('#scoopLeadPhone').value.trim();
+      var body  = card.querySelector('#scoopLeadMsg').value.trim();
+      var err   = card.querySelector('#scoopLeadErr');
+
+      function fail(text) {
+        err.textContent = text;
+        err.classList.add('is-shown');
+      }
+
+      if (!email && !phone) return fail('Please leave either an email or a phone number so we can reply.');
+      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail('That email doesn’t look quite right.');
+      if (!body) return fail('Add your question so the team knows what to answer.');
+
+      err.classList.remove('is-shown');
+      button.disabled = true;
+      button.textContent = 'Sending…';
+
+      /* Shopify's contact form needs a syntactically valid email address. If a
+         shopper only left a phone number we still post — the number and the
+         question are both in the body, so the team has what it needs to call
+         back. Reply-to just won't be useful in that case. */
+      var replyTo = email || ('no-reply@' + window.location.hostname);
+
+      var lines = [
+        'New question from SCOOP (site chat)',
+        '',
+        'Name:  ' + (name || 'Not given'),
+        'Email: ' + (email || 'Not given'),
+        'Phone: ' + (phone || 'Not given'),
+        'Page:  ' + window.location.href,
+        '',
+        'Question:',
+        body
+      ];
+
+      var data = new FormData();
+      data.append('form_type', 'contact');
+      data.append('utf8', '✓');
+      data.append('contact[email]', replyTo);
+      if (name) data.append('contact[name]', name);
+      if (phone) data.append('contact[phone]', phone);
+      data.append('contact[body]', lines.join('\n'));
+
+      fetch('/contact', { method: 'POST', body: data, headers: { 'Accept': 'text/html' } })
+        .then(function (res) {
+          if (!res.ok) throw new Error('contact form rejected the submission');
+          card.remove();
+          addMessage(
+            '<p>Got it — that’s on its way to the team. 🍨</p>' +
+            '<p>They usually reply within 24 hours. Anything else I can dig up in the meantime?</p>',
+            'bot'
+          );
+          setChips(DEFAULT_CHIPS_FN());
+        })
+        .catch(function () {
+          button.disabled = false;
+          button.textContent = 'Send it over';
+          fail('That didn’t go through. You can also reach us on the contact page.');
+        });
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       13. OPEN / CLOSE
+    ══════════════════════════════════════════════════════════════════ */
+    var started = false;
+
+    function greet() {
+      if (started) return;
+      started = true;
+      loadSite();
+
+      var count = SITE.products.length;
+      addMessage(
+        '<p>Hi, I’m <strong>SCOOP</strong> 🍨 — here to give you the inside scoop on Sundaze.</p>' +
+        '<p>I know ' + (count ? 'all ' + count + ' products' : 'the lineup') + ', the guides and the policies on this site. Ask me anything — or tell me the kind of session you’re after and I’ll find something. If I don’t know, I’ll get you to someone who does.</p>',
+        'bot'
+      );
+      setChips(DEFAULT_CHIPS_FN());
+    }
+
+    function openPanel() {
+      widget.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      launcher.setAttribute('aria-expanded', 'true');
+      badge.hidden = true;
+      try { sessionStorage.setItem('scoop_seen', '1'); } catch (e) {}
+      greet();
+      setTimeout(function () { input.focus(); }, 220);
+    }
+
+    function closePanel() {
+      widget.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+      launcher.setAttribute('aria-expanded', 'false');
+      launcher.focus();
+    }
+
+    launcher.addEventListener('click', function () {
+      widget.classList.contains('is-open') ? closePanel() : openPanel();
+    });
+    closeBtn.addEventListener('click', closePanel);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && widget.classList.contains('is-open')) closePanel();
+    });
+
+    sendBtn.addEventListener('click', function () { submit(); });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submit();
+      }
+    });
+
+    input.addEventListener('input', function () {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 96) + 'px';
+    });
+
+    try {
+      if (sessionStorage.getItem('scoop_seen')) badge.hidden = true;
+    } catch (e) {}
+  })();
+</script>

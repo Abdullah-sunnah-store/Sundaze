@@ -1,0 +1,310 @@
+{% comment %}
+  Sundaze — Collection education module
+  Blueprint 8. Sits BELOW the product grid so shoppers browse first and search
+  engines still get category context.
+
+  Per-collection copy without a template per collection: set the metafields
+  custom.seo_heading (single line text) and custom.seo_body (rich text) on a
+  collection and they win over the section defaults below.
+{% endcomment %}
+
+{%- liquid
+  assign heading = section.settings.heading
+  if collection.metafields.custom.seo_heading != blank
+    assign heading = collection.metafields.custom.seo_heading
+  endif
+
+  assign body = section.settings.body
+  if collection.metafields.custom.seo_body != blank
+    assign body = collection.metafields.custom.seo_body
+  endif
+-%}
+
+{%- if heading != blank or body != blank -%}
+  <section class="sz-ce" id="sz-ce-{{ section.id }}">
+    <div class="sz-ce__inner">
+      <div class="sz-ce__card">
+        <div class="sz-ce__copy">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="sz-ce__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+
+          {%- if heading != blank -%}
+            <h2 class="sz-ce__title">{{ heading }}</h2>
+          {%- endif -%}
+
+          {%- if body != blank -%}
+            <div class="sz-ce__body">{{ body }}</div>
+          {%- endif -%}
+        </div>
+
+        {%- if section.blocks.size > 0 -%}
+          <nav class="sz-ce__links" aria-label="{{ section.settings.links_title | default: 'Related guides' | escape }}">
+            {%- if section.settings.links_title != blank -%}
+              <p class="sz-ce__links-title">{{ section.settings.links_title }}</p>
+            {%- endif -%}
+            <ul>
+              {%- for block in section.blocks -%}
+                <li {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.link | default: '#' }}">
+                    <span>{{ block.settings.title }}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+  #sz-ce-{{ section.id }} {
+    --sun-rose:  #c4607a;
+    --sun-mauve: #a84f6a;
+    --sun-ink:   #1e1118;
+    --sun-text:  rgba(30,17,24,0.82);
+    --sun-muted: rgba(30,17,24,0.48);
+    --sun-line:  rgba(196,96,122,0.18);
+
+    display: block;
+    background: {{ section.settings.bg_color }};
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sun-ink);
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  #sz-ce-{{ section.id }} * { box-sizing: border-box; }
+
+  #sz-ce-{{ section.id }} .sz-ce__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: clamp(28px, 4vw, 40px);
+    padding: clamp(30px, 4vw, 52px);
+    border-radius: 26px;
+    border: 1px solid var(--sun-line);
+    background: linear-gradient(150deg, #fff8e8 0%, #ffffff 55%);
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-rose);
+    margin: 0 0 14px;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+    color: #111111;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__copy {
+    max-width: 760px;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__body p {
+    font-size: clamp(15px, 1.5vw, 16.5px);
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--sun-text);
+    margin: 0 auto 16px;
+    max-width: 66ch;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__body a {
+    color: var(--sun-mauve);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__links-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-mauve);
+    margin: 0 auto 16px;
+    padding-bottom: 12px;
+    max-width: 260px;
+    border-bottom: 1px solid var(--sun-line);
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__links {
+    width: 100%;
+  }
+
+  /* Rows keep the label left and the arrow on the right edge so the list
+     reads as a column, not a ragged stack of centered lines. */
+  #sz-ce-{{ section.id }} .sz-ce__links ul {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 420px;
+    display: grid;
+    gap: 2px;
+    text-align: left;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__links a,
+  #sz-ce-{{ section.id }} .sz-ce__links a:link,
+  #sz-ce-{{ section.id }} .sz-ce__links a:visited {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    margin: 0 -12px;
+    border-radius: 12px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--sun-ink);
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__links a:hover {
+    background: rgba(196,96,122,0.09);
+    color: var(--sun-mauve);
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__links svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  #sz-ce-{{ section.id }} .sz-ce__links a:hover svg {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #sz-ce-{{ section.id }} .sz-ce__links a,
+    #sz-ce-{{ section.id }} .sz-ce__links svg { transition: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sundaze Collection SEO",
+  "tag": "section",
+  "class": "sundaze-collection-education-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Per-collection copy: set the metafields custom.seo_heading and custom.seo_body on a collection to override the defaults below."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Category Guide"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (H2)",
+      "default": "Premium THCA Flower, Explained"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy",
+      "default": "<p>Sundaze flower is presented around strain identity, aroma, appearance and transparent laboratory information. Use each product page to compare its available cannabinoid results and product details, then visit the Knowledge Hub to learn how THCA, terpenes, trichomes, storage and lab reports fit together.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Related guides"
+    },
+    {
+      "type": "text",
+      "id": "links_title",
+      "label": "Links heading",
+      "default": "Related Guides"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Guide link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "What Is THCA?"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Sundaze Collection SEO",
+      "blocks": [
+        { "type": "link", "settings": { "title": "What Is THCA?" } },
+        { "type": "link", "settings": { "title": "What Are Terpenes?" } },
+        { "type": "link", "settings": { "title": "How to Read a COA" } },
+        { "type": "link", "settings": { "title": "How to Store THCA" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
